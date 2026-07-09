@@ -30,8 +30,29 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~4,600–5,310 ft",
     color: "#C0392B",
     polygon: [
-      [40.55, -111.10], [40.55, -109.50], [40.95, -109.50],
-      [40.95, -111.10], [40.55, -111.10],
+      // Traced from Wikipedia Uinta Mountains boundary map
+      // Western notch/lobe (distinctive protrusion on the west side)
+      [40.885, -111.135],
+      [40.773, -111.135],
+      [40.729, -111.045],
+      [40.639, -111.045],
+      // Southern edge — broad, curving south
+      [40.564, -110.863],
+      [40.535, -110.581],
+      [40.527, -110.298],
+      [40.550, -110.036],
+      [40.594, -109.835],
+      // Eastern end — rounded
+      [40.729, -109.482],
+      [40.878, -109.482],
+      // Northern edge — flatter, near Wyoming border
+      [41.064, -109.794],
+      [41.094, -110.238],
+      [41.064, -110.581],
+      [41.012, -110.783],
+      // Back to western notch
+      [40.922, -111.045],
+      [40.885, -111.135],
     ],
   },
   {
