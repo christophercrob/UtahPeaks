@@ -118,9 +118,9 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~1,024 ft",
     color: "#6C3483",
     polygon: [
-      // Northern boundary moved south to ~38.10 (was 38.35 — too far north)
-      [37.85, -111.00], [37.85, -110.60], [38.10, -110.60],
-      [38.10, -111.00], [37.85, -111.00],
+      // Northern boundary at 38.22 — covers Mount Ellen (38.1089°N) plus the full northern massif
+      [37.75, -111.05], [37.75, -110.55], [38.22, -110.55],
+      [38.22, -111.05], [37.75, -111.05],
     ],
   },
   {
