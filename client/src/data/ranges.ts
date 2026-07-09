@@ -86,24 +86,25 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~3,300–3,500 ft",
     color: "#2471A3",
     polygon: [
-      // Northern tip near Idaho border, wide enough to cover Bear River Range / Cache Valley mountains
-      [42.00, -112.00], [42.00, -111.40],
-      // Narrows slightly through Logan / Ogden / Bountiful corridor
+      // Northern tip near Idaho border
+      [42.00, -112.05], [42.00, -111.40],
+      // East side — follows the crest south through Logan, Ogden, Bountiful, SLC
       [41.70, -111.38], [41.40, -111.38],
-      // Ogden area — range widens slightly east of Ogden
       [41.20, -111.42], [41.00, -111.45],
-      // Salt Lake / Bountiful / Davis County mountains
       [40.80, -111.48], [40.60, -111.50],
       [40.30, -111.52], [40.10, -111.55],
       // Southern tip near Nephi / Mt. Nebo
       [39.75, -111.65],
-      // West side back up
-      [39.75, -111.95],
-      [40.10, -111.82], [40.30, -111.78],
-      [40.60, -111.75], [40.80, -111.72],
-      [41.00, -111.70], [41.20, -111.68],
-      [41.40, -111.62], [41.70, -111.62],
-      [42.00, -112.00],
+      // West side — shifted westward to capture the full mountain front
+      // from SLC (~111.90) widening north to Logan/Cache Valley (~112.05)
+      [39.75, -112.00],
+      [40.10, -111.92], [40.30, -111.90],
+      [40.60, -111.88], [40.80, -111.88],
+      // Ogden / Bountiful / Davis County front — west edge ~111.90–111.95
+      [41.00, -111.90], [41.20, -111.92],
+      // Logan corridor widens westward toward Cache Valley
+      [41.40, -111.95], [41.70, -112.00],
+      [42.00, -112.05],
     ],
   },
   {
