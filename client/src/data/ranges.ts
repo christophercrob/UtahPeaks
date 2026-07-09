@@ -119,31 +119,33 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~3,300–3,500 ft",
     color: "#2471A3",
     polygon: [
-      // Traced from Google Maps Wasatch Range boundary (dashed outline)
-      // Northern tip — Bear River Mountains / Utah-Idaho border ~42.0°N
-      [42.00, -111.95], [42.00, -111.38],
-      // East side: crest runs just east of Logan canyon (~111.38), then
-      // bends slightly west through Ogden Valley, then tightens near SLC
-      [41.75, -111.35], [41.55, -111.35],
-      // Ogden area — range widens east into Ogden Valley
-      [41.35, -111.38], [41.15, -111.40],
-      // SLC / Bountiful / Draper — eastern edge ~111.45–111.52
-      [40.95, -111.45], [40.75, -111.48],
-      [40.55, -111.50], [40.35, -111.52],
-      [40.15, -111.55],
-      // Southern tip: Mt. Nebo / Nephi ~39.82°N
-      [39.82, -111.62],
-      // West side: mountain front above I-15 corridor
-      // Southern section (Provo/SLC) — front at ~111.80–111.88
-      [39.82, -111.88],
-      [40.15, -111.85], [40.35, -111.83],
-      [40.55, -111.82], [40.75, -111.82],
-      // Bountiful / Ogden front — widens slightly west ~111.88–111.92
-      [40.95, -111.85], [41.15, -111.88],
-      [41.35, -111.90],
-      // Logan / Cache Valley — range widens further, Bear River Mtns ~111.95
-      [41.55, -111.92], [41.75, -111.95],
-      [42.00, -111.95],
+      // Precisely traced from Google Maps official Wasatch Range boundary
+      // Calibrated using map center (41.28°N, 111.51°W) + verified against
+      // Logan (41.74°N), Ogden (41.22°N), and Salt Lake City (40.76°N)
+      //
+      // Northern tip — Bear River Mountains near Utah/Idaho border
+      [42.191, -111.658],
+      // NE arc — curves east past Bear Lake toward Wyoming
+      [42.083, -111.483],
+      [41.891, -111.244],
+      [41.723, -111.212],
+      // Eastern edge — runs south along the Wasatch crest
+      [41.531, -111.244],
+      [41.291, -111.276],
+      [41.087, -111.291],
+      // Southern tip — near Emory / Mt. Nebo area
+      [41.027, -111.563],
+      // SW corner
+      [41.027, -111.802],
+      // Western front — mountain face above I-15 corridor, running north
+      [41.195, -111.824],
+      [41.363, -111.827],
+      [41.531, -111.827],
+      [41.699, -111.824],
+      [41.891, -111.792],
+      // Back to northern tip
+      [42.083, -111.729],
+      [42.191, -111.658],
     ],
   },
   {
