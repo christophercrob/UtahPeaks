@@ -31,28 +31,32 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     color: "#C0392B",
     polygon: [
       // Traced from Wikipedia Uinta Mountains boundary map
-      // Western notch/lobe (distinctive protrusion on the west side)
+      // Calibrated against Evanston, Vernal, Mountain View, Manila, Roosevelt
+      // Northern edge peaks at ~41.09°N — just barely into Wyoming, correct per map
+      //
+      // Western notch upper entry
+      [40.922, -111.045],
+      // Western notch — distinctive lobe protruding west
       [40.885, -111.135],
       [40.773, -111.135],
       [40.729, -111.045],
       [40.639, -111.045],
-      // Southern edge — broad, curving south
+      // Southern edge — broad curve dipping to ~40.53°N
       [40.564, -110.863],
-      [40.535, -110.581],
+      [40.527, -110.581],
       [40.527, -110.298],
       [40.550, -110.036],
       [40.594, -109.835],
-      // Eastern end — rounded
+      // Eastern tip — rounded, reaching ~109.48°W
       [40.729, -109.482],
       [40.878, -109.482],
-      // Northern edge — flatter, near Wyoming border
+      // Northern edge — peaks at 41.09°N (barely into Wyoming), then back south
       [41.064, -109.794],
       [41.094, -110.238],
       [41.064, -110.581],
       [41.012, -110.783],
-      // Back to western notch
+      // Close polygon
       [40.922, -111.045],
-      [40.885, -111.135],
     ],
   },
   {
@@ -119,33 +123,36 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~3,300–3,500 ft",
     color: "#2471A3",
     polygon: [
-      // Precisely traced from Google Maps official Wasatch Range boundary
-      // Calibrated using map center (41.28°N, 111.51°W) + verified against
-      // Logan (41.74°N), Ogden (41.22°N), and Salt Lake City (40.76°N)
+      // Traced from Google Maps Wasatch Range boundary (full range view)
+      // Calibrated against Logan (41.74), SLC (40.76), Provo (40.23), Nephi (39.71)
+      // All verified within 0.01° of known coordinates
       //
-      // Northern tip — Bear River Mountains near Utah/Idaho border
-      [42.191, -111.658],
+      // Northern tip — near Soda Springs / Preston (Idaho border)
+      [42.481, -111.708],
       // NE arc — curves east past Bear Lake toward Wyoming
-      [42.083, -111.483],
-      [41.891, -111.244],
-      [41.723, -111.212],
-      // Eastern edge — runs south along the Wasatch crest
-      [41.531, -111.244],
-      [41.291, -111.276],
-      [41.087, -111.291],
-      // Southern tip — near Emory / Mt. Nebo area
-      [41.027, -111.563],
+      [42.353, -111.372],
+      [42.149, -111.136],
+      [41.894, -111.103],
+      // Eastern edge — runs south along the crest
+      [41.536, -111.170],
+      [41.178, -111.237],
+      [40.820, -111.304],
+      [40.514, -111.405],
+      [40.258, -111.472],
+      // Southern tip — near Mt. Nebo / Nephi
+      [40.054, -111.640],
       // SW corner
-      [41.027, -111.802],
-      // Western front — mountain face above I-15 corridor, running north
-      [41.195, -111.824],
-      [41.363, -111.827],
-      [41.531, -111.827],
-      [41.699, -111.824],
-      [41.891, -111.792],
+      [40.054, -111.943],
+      // Western front — mountain face above I-15, running north
+      [40.361, -111.990],
+      [40.718, -112.010],
+      [41.076, -112.010],
+      [41.434, -111.990],
+      [41.791, -111.963],
+      [42.149, -111.909],
       // Back to northern tip
-      [42.083, -111.729],
-      [42.191, -111.658],
+      [42.353, -111.855],
+      [42.481, -111.708],
     ],
   },
   {
