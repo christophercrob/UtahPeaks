@@ -140,9 +140,12 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
       [40.514, -111.405],
       [40.258, -111.472],
       // Southern tip — near Mt. Nebo / Nephi
-      [40.054, -111.640],
+      // Mt. Nebo is at 39.822°N — extend south to 39.75°N to fully enclose it
+      [39.820, -111.640],
+      [39.750, -111.700],
       // SW corner
-      [40.054, -111.943],
+      [39.750, -111.900],
+      [39.820, -111.943],
       // Western front — mountain face above I-15, running north
       [40.361, -111.990],
       [40.718, -112.010],
