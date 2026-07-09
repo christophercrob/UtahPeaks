@@ -9,6 +9,8 @@ export interface MountainRange {
   lat: number;
   lon: number;
   trailhead: string;
+  trailheadLat: number;
+  trailheadLon: number;
   gain: string;
   color: string;
   polygon: Array<[number, number]>; // [lat, lon] pairs
@@ -23,6 +25,8 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     lat: 40.7763,
     lon: -110.3728,
     trailhead: "Henrys Fork Trailhead",
+    trailheadLat: 40.9285,
+    trailheadLon: -110.6318,
     gain: "~4,600–5,310 ft",
     color: "#C0392B",
     polygon: [
@@ -38,6 +42,8 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     lat: 38.4383,
     lon: -109.2292,
     trailhead: "La Sal Pass Trailhead",
+    trailheadLat: 38.3667,
+    trailheadLon: -109.2417,
     gain: "~2,580–2,661 ft",
     color: "#D35400",
     polygon: [
@@ -53,6 +59,8 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     lat: 38.3689,
     lon: -112.3715,
     trailhead: "Big John Flat Trailhead",
+    trailheadLat: 38.3983,
+    trailheadLon: -112.3317,
     gain: "~1,625–1,700 ft",
     color: "#16A085",
     polygon: [
@@ -68,6 +76,8 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     lat: 39.8449,
     lon: -113.9106,
     trailhead: "Granite Creek Trailhead",
+    trailheadLat: 39.8617,
+    trailheadLon: -113.8883,
     gain: "~5,700–5,900 ft",
     color: "#1A5276",
     polygon: [
@@ -83,6 +93,8 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     lat: 39.8216,
     lon: -111.7605,
     trailhead: "North Nebo Trailhead",
+    trailheadLat: 39.9033,
+    trailheadLon: -111.7617,
     gain: "~3,300–3,500 ft",
     color: "#2471A3",
     polygon: [
@@ -115,6 +127,8 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     lat: 38.1089,
     lon: -110.8133,
     trailhead: "Bull Creek Pass Trailhead",
+    trailheadLat: 38.0817,
+    trailheadLon: -110.7283,
     gain: "~1,024 ft",
     color: "#6C3483",
     polygon: [
@@ -131,6 +145,8 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     lat: 37.8394,
     lon: -109.4626,
     trailhead: "Cooley Pass",
+    trailheadLat: 37.8883,
+    trailheadLon: -109.4567,
     gain: "~1,600 ft",
     color: "#BA4A00",
     polygon: [
@@ -146,6 +162,8 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     lat: 40.4594,
     lon: -112.6264,
     trailhead: "Loop Campground (Mill Fork)",
+    trailheadLat: 40.4583,
+    trailheadLon: -112.5967,
     gain: "~3,613 ft",
     color: "#B7950B",
     polygon: [
@@ -161,6 +179,8 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     lat: 40.3723,
     lon: -112.1890,
     trailhead: "Ophir Canyon",
+    trailheadLat: 40.3733,
+    trailheadLon: -112.2667,
     gain: "~2,920–3,540 ft",
     color: "#1A6B8A",
     polygon: [
@@ -176,6 +196,8 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     lat: 37.3195,
     lon: -113.4922,
     trailhead: "Oak Grove Trailhead",
+    trailheadLat: 37.3883,
+    trailheadLon: -113.5050,
     gain: "~4,480–4,630 ft",
     color: "#1E8449",
     polygon: [
