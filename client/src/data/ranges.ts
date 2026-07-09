@@ -98,25 +98,31 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~3,300–3,500 ft",
     color: "#2471A3",
     polygon: [
-      // Northern tip near Idaho border
-      [42.00, -112.05], [42.00, -111.40],
-      // East side — follows the crest south through Logan, Ogden, Bountiful, SLC
-      [41.70, -111.38], [41.40, -111.38],
-      [41.20, -111.42], [41.00, -111.45],
-      [40.80, -111.48], [40.60, -111.50],
-      [40.30, -111.52], [40.10, -111.55],
-      // Southern tip near Nephi / Mt. Nebo
-      [39.75, -111.65],
-      // West side — shifted westward to capture the full mountain front
-      // from SLC (~111.90) widening north to Logan/Cache Valley (~112.05)
-      [39.75, -112.00],
-      [40.10, -111.92], [40.30, -111.90],
-      [40.60, -111.88], [40.80, -111.88],
-      // Ogden / Bountiful / Davis County front — west edge ~111.90–111.95
-      [41.00, -111.90], [41.20, -111.92],
-      // Logan corridor widens westward toward Cache Valley
-      [41.40, -111.95], [41.70, -112.00],
-      [42.00, -112.05],
+      // Traced from Google Maps Wasatch Range boundary (dashed outline)
+      // Northern tip — Bear River Mountains / Utah-Idaho border ~42.0°N
+      [42.00, -111.95], [42.00, -111.38],
+      // East side: crest runs just east of Logan canyon (~111.38), then
+      // bends slightly west through Ogden Valley, then tightens near SLC
+      [41.75, -111.35], [41.55, -111.35],
+      // Ogden area — range widens east into Ogden Valley
+      [41.35, -111.38], [41.15, -111.40],
+      // SLC / Bountiful / Draper — eastern edge ~111.45–111.52
+      [40.95, -111.45], [40.75, -111.48],
+      [40.55, -111.50], [40.35, -111.52],
+      [40.15, -111.55],
+      // Southern tip: Mt. Nebo / Nephi ~39.82°N
+      [39.82, -111.62],
+      // West side: mountain front above I-15 corridor
+      // Southern section (Provo/SLC) — front at ~111.80–111.88
+      [39.82, -111.88],
+      [40.15, -111.85], [40.35, -111.83],
+      [40.55, -111.82], [40.75, -111.82],
+      // Bountiful / Ogden front — widens slightly west ~111.88–111.92
+      [40.95, -111.85], [41.15, -111.88],
+      [41.35, -111.90],
+      // Logan / Cache Valley — range widens further, Bear River Mtns ~111.95
+      [41.55, -111.92], [41.75, -111.95],
+      [42.00, -111.95],
     ],
   },
   {
