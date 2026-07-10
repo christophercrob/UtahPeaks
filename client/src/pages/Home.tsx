@@ -416,7 +416,7 @@ export default function Home() {
             <path d="M14 6L17 4L20 9" stroke="white" strokeWidth="1" strokeOpacity="0.4" fill="none" />
           </svg>
           <div>
-            <div className="text-base font-bold leading-tight" style={{ color: "#EEE8DC", fontFamily: "var(--font-display)" }}>
+            <div className="text-base font-bold leading-tight" style={{ color: "#EEE8DC", fontFamily: "var(--font-body)" }}>
               Utah Mountain Ranges
             </div>
             <div className="text-xs" style={{ color: "rgba(238,232,220,0.55)" }}>
@@ -495,4 +495,3 @@ export default function Home() {
     </div>
   );
 }
-
