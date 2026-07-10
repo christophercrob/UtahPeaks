@@ -223,8 +223,27 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~2,920–3,540 ft",
     color: "#1A6B8A",
     polygon: [
-      [40.10, -112.35], [40.10, -111.90], [40.70, -111.90],
-      [40.70, -112.35], [40.10, -112.35],
+      // Derived from Peakbagger bounding box (miny=40.180, maxy=40.910, minx=-112.416, maxx=-111.900)
+      // Shaped as a realistic NNW-SSE ridge; Flat Top Mountain (40.3723, -112.189) verified inside
+      // Northern tip — near Magna/Saltair area
+      [40.900, -112.050],
+      [40.910, -112.100],
+      [40.890, -112.180],
+      // Western slope — broadens toward Tooele Valley
+      [40.750, -112.350],
+      [40.600, -112.400],
+      [40.450, -112.380],
+      // Southern tip — near Eureka/Tintic area
+      [40.250, -112.250],
+      [40.190, -112.150],
+      // Eastern face — fronting the Salt Lake Valley
+      [40.220, -111.950],
+      [40.380, -111.920],
+      [40.550, -111.930],
+      [40.700, -111.960],
+      [40.830, -112.000],
+      // Close polygon
+      [40.900, -112.050],
     ],
   },
   {
