@@ -370,13 +370,8 @@ export default function Home() {
       // Range label at centroid
       const centLat = r.polygon.reduce((s, p) => s + p[0], 0) / r.polygon.length;
       const centLng = r.polygon.reduce((s, p) => s + p[1], 0) / r.polygon.length;
-      const labelEl = document.createElement("div");
-      labelEl.style.cssText = `font-family:'Source Sans 3',sans-serif;font-size:11px;font-weight:700;color:${r.color};
-        text-shadow:1px 1px 2px #fff,-1px -1px 2px #fff,1px -1px 2px #fff,-1px 1px 2px #fff;
-        white-space:nowrap;pointer-events:none;transform:translateX(-50%);`;
-      labelEl.textContent = r.range;
-      const lm = new google.maps.marker.AdvancedMarkerElement({ map, position: { lat: centLat, lng: centLng }, content: labelEl, zIndex: 1 });
-      labelsRef.current.push(lm);
+      // Range name is now shown directly below the peak pin — no separate centroid label needed
+      void centLat; void centLng;
 
       // Peak pin
       const pinEl = createPinElement("#CC0000");
@@ -388,17 +383,16 @@ export default function Home() {
 
       // Peak name label
       const peakLabelEl = document.createElement("div");
-      // Position label to the RIGHT of the pin tip.
-      // The pin is 18px wide, anchored at its tip (bottom-center).
-      // We wrap the label in a flex row: [18px spacer for pin] + [text]
-      // so the text starts immediately right of the pin at the same vertical level.
+      // Layout: peak name ABOVE pin, range name BELOW pin — both centered on the pin.
+      // The pin SVG is 18×26px, anchored at its tip (bottom-center of the 26px height).
+      // We build a vertical stack: [peak name] [26px pin space] [range name]
+      // The whole container is centered horizontally on the pin coordinate.
       peakLabelEl.style.cssText = `
-        display:flex;align-items:flex-end;gap:4px;
+        display:flex;flex-direction:column;align-items:center;gap:2px;
         pointer-events:none;
-        transform:translateY(-26px);
+        transform:translate(-50%, -100%);
       `;
-      const spacer = document.createElement("span");
-      spacer.style.cssText = "display:inline-block;width:20px;flex-shrink:0;";
+      // Peak name (above the pin)
       const textSpan = document.createElement("span");
       textSpan.style.cssText = `
         font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:800;letter-spacing:0.01em;
@@ -412,9 +406,25 @@ export default function Home() {
         background:none;padding:0;
       `;
       textSpan.textContent = r.peak;
-      peakLabelEl.appendChild(spacer);
       peakLabelEl.appendChild(textSpan);
+      // Spacer for the pin itself (26px tall)
+      const pinSpacer = document.createElement("span");
+      pinSpacer.style.cssText = "display:block;height:28px;";
+      peakLabelEl.appendChild(pinSpacer);
+      // Range name (below the pin)
+      const rangeSpan = document.createElement("span");
+      rangeSpan.style.cssText = `
+        font-family:'Source Sans 3',sans-serif;font-size:10.5px;font-weight:700;
+        color:${r.color};white-space:nowrap;line-height:1.2;
+        text-shadow:1px 1px 2px #fff,-1px -1px 2px #fff,1px -1px 2px #fff,-1px 1px 2px #fff,
+          0 0 4px #fff, 0 0 8px #fff;
+      `;
+      rangeSpan.textContent = r.range;
+      peakLabelEl.appendChild(rangeSpan);
       new google.maps.marker.AdvancedMarkerElement({ map, position: { lat: r.lat, lng: r.lon }, content: peakLabelEl, zIndex: 9 });
+
+      // Remove the separate centroid range label since range name is now under the pin
+      // (keep it for ranges where the pin is far from center — but suppress it here)
     });
   }, []);
 

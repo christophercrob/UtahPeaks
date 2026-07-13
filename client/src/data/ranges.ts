@@ -156,7 +156,7 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
   },
   {
     range: "Wasatch Range",
-    peak: "Mount Nebo (North Peak)",
+    peak: "Mount Nebo",
     elevation: "11,929 ft",
     elevationFt: 11929,
     lat: 39.8216,
