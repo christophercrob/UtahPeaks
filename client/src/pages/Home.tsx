@@ -401,12 +401,14 @@ export default function Home() {
       spacer.style.cssText = "display:inline-block;width:20px;flex-shrink:0;";
       const textSpan = document.createElement("span");
       textSpan.style.cssText = `
-        font-family:'Source Sans 3',sans-serif;font-size:11px;font-weight:800;
+        font-family:'Source Sans 3',sans-serif;font-size:11px;font-weight:800;letter-spacing:0.01em;
         color:#1a1a1a;white-space:nowrap;line-height:1;
-        text-shadow:1px 1px 3px #fff,-1px -1px 3px #fff,1px -1px 3px #fff,-1px 1px 3px #fff,
-                    0 0 6px #fff;
-        background:rgba(255,255,255,0.75);border-radius:2px;padding:1px 4px;
-        letter-spacing:0.01em;
+        text-shadow:
+          0 0 4px #fff, 0 0 8px #fff, 0 0 12px #fff,
+          1px 1px 0 #fff, -1px -1px 0 #fff,
+          1px -1px 0 #fff, -1px 1px 0 #fff;
+        background:rgba(255,255,255,0.82);border-radius:3px;padding:2px 5px;
+        box-shadow:0 0 6px rgba(255,255,255,0.9);
       `;
       textSpan.textContent = r.peak;
       peakLabelEl.appendChild(spacer);
