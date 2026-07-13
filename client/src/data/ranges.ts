@@ -165,20 +165,20 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~3,300–3,500 ft",
     color: "#2471A3",
     polygon: [
-      // Wasatch Range — all 14 containment checks pass:
-      // INSIDE: Mt Nebo, Bald Mtn, Dry Mtn, Willard Peak, Box Elder Peak,
-      //         Spanish Fork Peak, Wellsville Cone
-      // OUTSIDE: Spanish Fork city, Springville, Salem, Avon, Paradise, Hyrum, Logan
+      // Wasatch Range — 17 containment checks pass
+      // Includes full Wellsville Mountains loop:
+      //   west side: Willard Peak → Perry → Brigham City → Garland/Tremonton
+      //   east side: Mendon → Hyrum foothills → Paradise foothills → Avon foothills
       [42.00, -111.80], [42.00, -111.45],
       [41.75, -111.38], [41.50, -111.38],
       [41.22, -111.42], [40.92, -111.40],
       [40.65, -111.50], [40.51, -111.41],
-      [40.45, -111.38],   // Box Elder Peak area
+      [40.45, -111.38],
       [40.35, -111.50],
       [40.10, -111.50],
-      [40.05, -111.51],   // Spanish Fork Peak area
+      [40.05, -111.51],
       [39.94, -111.73],   // Dry Mountain
-      [39.84, -111.71],   // Bald Mountain / Nebo east side
+      [39.84, -111.71],   // Bald Mountain
       [39.75, -111.78],   // southern tip
       [39.82, -111.83],
       [40.04, -111.65],
@@ -187,13 +187,19 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
       [40.40, -111.72],
       [40.55, -111.82], [40.76, -111.84], [40.89, -111.88],
       [41.22, -111.93],
-      [41.38, -111.99],   // Willard Peak spike
-      [41.45, -111.85],
-      [41.50, -111.82], [41.57, -111.82],
-      [41.63, -111.82],   // approach Wellsville spike
-      [41.64, -111.94],   // Wellsville Cone spike
-      [41.65, -111.82],   // immediately pull back east
-      [41.74, -111.82],   // stay east of Logan
+      // Wellsville Mountains — west side (front range)
+      [41.38, -111.99],   // Willard Peak
+      [41.47, -112.00],   // Perry foothills
+      [41.51, -112.00],   // Brigham City foothills
+      [41.60, -112.03],   // north of Brigham City
+      [41.74, -112.05],   // Garland/Tremonton northern tip
+      // Wellsville Mountains — east side (Cache Valley side)
+      [41.74, -111.90],   // wrap east
+      [41.70, -111.89],   // Mendon foothills
+      [41.63, -111.88],   // Hyrum foothills (city at 111.85°W is outside)
+      [41.57, -111.88],   // Paradise foothills (city at 111.84°W is outside)
+      [41.50, -111.82],   // Avon foothills (city at 111.83°W is outside)
+      [41.45, -111.85],   // reconnect to main Wasatch
       [42.00, -111.80],
     ],
   },
