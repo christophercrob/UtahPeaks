@@ -165,27 +165,31 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~3,300–3,500 ft",
     color: "#2471A3",
     polygon: [
-      // Terrain-accurate boundary using known Wasatch Front geography
-      // Western edge follows the mountain front above the I-15 valley floor
-      // Eastern edge follows the Wasatch Back / Heber Valley / Bear River Mtns
-      // Northern tip: ~42.0°N near Idaho border (Bear River Mountains)
-      // Southern tip: ~39.75°N at Mt Nebo near Nephi
+      // Wasatch Range terrain-accurate boundary
+      // Includes: Wellsville Mtns (W of Logan), Box Elder Peak, Spanish Fork Peak, Mt Nebo
+      // Excludes: Springville, Salem, Spanish Fork city, Provo, Orem, Payson (valley cities)
       [42.00, -111.80], [42.00, -111.45],
-      // East side — Wasatch Back, Park City, Heber Valley
+      // East side — Bear River Mtns, Wasatch Back, Park City, Heber Valley
       [41.75, -111.38], [41.50, -111.38],
       [41.22, -111.42], [40.92, -111.40],
       [40.65, -111.50], [40.51, -111.41],
-      [40.35, -111.52], [40.10, -111.55],
-      // Southern tip — Mt Nebo (39.82°N, 111.76°W) is inside
-      [39.82, -111.62],
-      [39.75, -111.70],
-      [39.75, -111.82],
-      // West side — Wasatch Front mountain face above I-15 cities
-      [40.04, -111.73], [40.11, -111.65],
-      [40.27, -111.68], [40.55, -111.82],
-      [40.76, -111.84], [40.89, -111.88],
-      [41.22, -111.93], [41.51, -111.85],
-      [41.74, -111.83], [42.00, -111.80],
+      // Box Elder Peak area (40.45°N, 111.63°W) — extend east
+      [40.45, -111.38],
+      [40.35, -111.50],
+      [40.10, -111.50],
+      // Spanish Fork Peak (40.05°N, 111.52°W) — extend east to include it
+      [40.05, -111.51],
+      // Southern tip — Mt Nebo
+      [39.82, -111.62], [39.75, -111.70], [39.75, -111.82],
+      // West side — narrow waist near Spanish Fork/Salem to exclude valley cities
+      [40.04, -111.65],
+      [40.10, -111.60],   // excludes Spanish Fork city (111.65°W)
+      [40.27, -111.60],   // excludes Springville (111.61°W)
+      [40.40, -111.72],
+      [40.55, -111.82], [40.76, -111.84], [40.89, -111.88],
+      // Wellsville Mountains (W of Logan, 41.5-41.7°N) — extend west to ~111.93°W
+      [41.22, -111.93], [41.51, -111.93], [41.74, -111.93],
+      [42.00, -111.80],
     ],
   },
   {
