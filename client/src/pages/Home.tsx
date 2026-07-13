@@ -403,9 +403,13 @@ export default function Home() {
       textSpan.style.cssText = `
         font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:800;letter-spacing:0.01em;
         color:#111;white-space:nowrap;line-height:1.2;
-        background:rgba(255,255,255,0.90);
-        border-radius:3px;padding:2px 6px;
-        box-shadow:0 1px 4px rgba(0,0,0,0.25);
+        text-shadow:
+          0 0 3px #fff, 0 0 6px #fff, 0 0 10px #fff, 0 0 14px #fff,
+          1px 1px 0 #fff, -1px -1px 0 #fff,
+          1px -1px 0 #fff, -1px 1px 0 #fff,
+          2px 2px 0 #fff, -2px -2px 0 #fff,
+          2px -2px 0 #fff, -2px 2px 0 #fff;
+        background:none;padding:0;
       `;
       textSpan.textContent = r.peak;
       peakLabelEl.appendChild(spacer);
