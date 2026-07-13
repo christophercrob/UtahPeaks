@@ -388,9 +388,27 @@ export default function Home() {
 
       // Peak name label
       const peakLabelEl = document.createElement("div");
-      peakLabelEl.style.cssText = `font-family:'Source Sans 3',sans-serif;font-size:10px;font-weight:600;color:#1a1a1a;
+      // Position label to the RIGHT of the pin tip.
+      // The pin is 18px wide, anchored at its tip (bottom-center).
+      // We wrap the label in a flex row: [18px spacer for pin] + [text]
+      // so the text starts immediately right of the pin at the same vertical level.
+      peakLabelEl.style.cssText = `
+        display:flex;align-items:flex-end;gap:4px;
+        pointer-events:none;
+        transform:translateY(-26px);
+      `;
+      const spacer = document.createElement("span");
+      spacer.style.cssText = "display:inline-block;width:20px;flex-shrink:0;";
+      const textSpan = document.createElement("span");
+      textSpan.style.cssText = `
+        font-family:'Source Sans 3',sans-serif;font-size:10.5px;font-weight:600;
+        color:#1a1a1a;white-space:nowrap;line-height:1;
         text-shadow:1px 1px 2px #fff,-1px -1px 2px #fff,1px -1px 2px #fff,-1px 1px 2px #fff;
-        white-space:nowrap;pointer-events:none;transform:translate(12px,-20px);`;
+        background:rgba(255,255,255,0.65);border-radius:2px;padding:1px 3px;
+      `;
+      textSpan.textContent = r.peak;
+      peakLabelEl.appendChild(spacer);
+      peakLabelEl.appendChild(textSpan);
       peakLabelEl.textContent = r.peak;
       new google.maps.marker.AdvancedMarkerElement({ map, position: { lat: r.lat, lng: r.lon }, content: peakLabelEl, zIndex: 9 });
     });

@@ -147,13 +147,15 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
       [39.750, -111.900],
       [39.820, -111.943],
       // Western front — mountain face above I-15, running north
-      [40.361, -111.990],
-      [40.718, -112.010],
-      [41.076, -112.010],
-      [41.434, -111.990],
-      [41.791, -111.963],
-      [42.149, -111.909],
+      // Trimmed west edge to ~111.88W to avoid overlapping the Oquirrh Mountains
+      // (Oquirrh eastern edge is ~111.92W; Salt Lake Valley lies between them)
+      [40.361, -111.880],
+      [40.718, -111.880],
+      [41.076, -111.890],
+      [41.434, -111.900],
+      [41.791, -111.920],
       // Back to northern tip
+      [42.149, -111.909],
       [42.353, -111.855],
       [42.481, -111.708],
     ],
