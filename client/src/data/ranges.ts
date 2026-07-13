@@ -131,27 +131,27 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~5,700–5,900 ft",
     color: "#1A5276",
     polygon: [
-      // Trimmed: southern end pulled north to ~39.65°N, eastern edge to ~113.75°W
-      // Northern tip near Gold Hill (~40.15°N)
-      // The range proper ends ~39.65°N; small Nevada extension at south
-      [40.150, -113.820],
-      [40.150, -113.750],
-      [40.050, -113.720],
-      [39.950, -113.720],
-      [39.850, -113.730],
-      [39.750, -113.740],
-      [39.650, -113.760],
-      // Small southern curl into Nevada (trimmed from 39.52 to 39.62)
-      [39.620, -113.840],
-      [39.620, -113.960],
-      [39.650, -114.020],
-      // Western edge back north
-      [39.750, -113.990],
-      [39.850, -113.950],
-      [39.950, -113.920],
-      [40.050, -113.900],
-      [40.150, -113.880],
-      [40.150, -113.820],
+      // Terrain-accurate boundary traced from satellite imagery
+      // North: mountains end just south of Gold Hill (~40.10°N)
+      // East: terrain break at ~113.73°W (Snake Valley desert floor)
+      // West: terrain break at ~113.96-113.98°W (Deep Creek Valley)
+      // South: range ends ~39.55°N near Partoun
+      [40.100, -113.830],
+      [40.100, -113.760],
+      [40.000, -113.730],
+      [39.900, -113.730],
+      [39.800, -113.740],
+      [39.700, -113.750],
+      [39.600, -113.760],
+      [39.550, -113.820],
+      [39.550, -113.930],
+      [39.600, -113.970],
+      [39.700, -113.980],
+      [39.800, -113.970],
+      [39.900, -113.960],
+      [40.000, -113.940],
+      [40.100, -113.910],
+      [40.100, -113.830],
     ],
   },
   {
