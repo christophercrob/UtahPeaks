@@ -237,5 +237,24 @@ export default defineConfig({
       strict: true,
       deny: ["**/.*"],
     },
+    proxy: {
+      // Proxy Google Maps API requests through the Forge proxy in dev
+      // This avoids the 403 that occurs when the dev preview URL isn't whitelisted
+      "/__maps_proxy": {
+        target: process.env.VITE_FRONTEND_FORGE_API_URL || "https://forge.butterfly-effect.dev",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/__maps_proxy/, "/v1/maps/proxy"),
+        secure: true,
+        configure: (proxy) => {
+          // The Forge Maps proxy validates the Referer/Origin against the registered app domain.
+          // Override headers so the request appears to come from the published site.
+          const publishedOrigin = "https://utahpeaks-povn8sfs.manus.space";
+          proxy.on("proxyReq", (proxyReq) => {
+            proxyReq.setHeader("Referer", publishedOrigin + "/");
+            proxyReq.setHeader("Origin", publishedOrigin);
+          });
+        },
+      },
+    },
   },
 });

@@ -90,20 +90,35 @@ const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
 const FORGE_BASE_URL =
   import.meta.env.VITE_FRONTEND_FORGE_API_URL ||
   "https://forge.butterfly-effect.dev";
-const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
+// In dev, use the Vite server proxy to avoid CORS/auth issues with the dev preview URL.
+// In production, use the Forge proxy directly.
+const IS_DEV = import.meta.env.DEV;
+const MAPS_PROXY_URL = IS_DEV
+  ? `${window.location.origin}/__maps_proxy`
+  : `${FORGE_BASE_URL}/v1/maps/proxy`;
 
 function loadMapScript() {
   return new Promise(resolve => {
+    // If Google Maps is already loaded, resolve immediately
+    if (window.google?.maps) {
+      resolve(null);
+      return;
+    }
+    // If a script with the same src is already in the DOM, wait for it
+    const existingScript = document.querySelector(`script[src*="maps/api/js"]`);
+    if (existingScript) {
+      existingScript.addEventListener('load', () => resolve(null));
+      return;
+    }
     const script = document.createElement("script");
     script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
     script.async = true;
-    script.crossOrigin = "anonymous";
     script.onload = () => {
       resolve(null);
-      script.remove(); // Clean up immediately
     };
     script.onerror = () => {
       console.error("Failed to load Google Maps script");
+      resolve(null); // resolve anyway so UI doesn't hang
     };
     document.head.appendChild(script);
   });
@@ -131,6 +146,10 @@ export function MapView({
       console.error("Map container not found");
       return;
     }
+    if (!window.google?.maps) {
+      console.error("Google Maps failed to load");
+      return;
+    }
     map.current = new window.google.maps.Map(mapContainer.current, {
       zoom: initialZoom,
       center: initialCenter,
@@ -138,8 +157,18 @@ export function MapView({
       fullscreenControl: true,
       zoomControl: true,
       streetViewControl: true,
-      mapId: "DEMO_MAP_ID",
     });
+    // Dismiss the "This page can't load Google Maps correctly" dialog
+    // that appears in dev when the domain isn't registered
+    if (IS_DEV) {
+      setTimeout(() => {
+        const dialogs = document.querySelectorAll('[role="dialog"], .dismissButton, .gm-err-container');
+        dialogs.forEach(el => (el as HTMLElement).style.display = 'none');
+        // Also try clicking any close/dismiss button
+        const closeBtn = document.querySelector('.gm-err-container button, [aria-label="Close"]') as HTMLElement;
+        if (closeBtn) closeBtn.click();
+      }, 500);
+    }
     if (onMapReady) {
       onMapReady(map.current);
     }
