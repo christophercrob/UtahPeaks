@@ -157,6 +157,7 @@ export function MapView({
       fullscreenControl: true,
       zoomControl: true,
       streetViewControl: true,
+      mapId: "DEMO_MAP_ID",
     });
     // Dismiss the "This page can't load Google Maps correctly" dialog
     // that appears in dev when the domain isn't registered
