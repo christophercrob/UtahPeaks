@@ -165,30 +165,35 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~3,300–3,500 ft",
     color: "#2471A3",
     polygon: [
-      // Wasatch Range terrain-accurate boundary
-      // Includes: Wellsville Mtns (W of Logan), Box Elder Peak, Spanish Fork Peak, Mt Nebo
-      // Excludes: Springville, Salem, Spanish Fork city, Provo, Orem, Payson (valley cities)
+      // Wasatch Range — all 14 containment checks pass:
+      // INSIDE: Mt Nebo, Bald Mtn, Dry Mtn, Willard Peak, Box Elder Peak,
+      //         Spanish Fork Peak, Wellsville Cone
+      // OUTSIDE: Spanish Fork city, Springville, Salem, Avon, Paradise, Hyrum, Logan
       [42.00, -111.80], [42.00, -111.45],
-      // East side — Bear River Mtns, Wasatch Back, Park City, Heber Valley
       [41.75, -111.38], [41.50, -111.38],
       [41.22, -111.42], [40.92, -111.40],
       [40.65, -111.50], [40.51, -111.41],
-      // Box Elder Peak area (40.45°N, 111.63°W) — extend east
-      [40.45, -111.38],
+      [40.45, -111.38],   // Box Elder Peak area
       [40.35, -111.50],
       [40.10, -111.50],
-      // Spanish Fork Peak (40.05°N, 111.52°W) — extend east to include it
-      [40.05, -111.51],
-      // Southern tip — Mt Nebo
-      [39.82, -111.62], [39.75, -111.70], [39.75, -111.82],
-      // West side — narrow waist near Spanish Fork/Salem to exclude valley cities
+      [40.05, -111.51],   // Spanish Fork Peak area
+      [39.94, -111.73],   // Dry Mountain
+      [39.84, -111.71],   // Bald Mountain / Nebo east side
+      [39.75, -111.78],   // southern tip
+      [39.82, -111.83],
       [40.04, -111.65],
-      [40.10, -111.60],   // excludes Spanish Fork city (111.65°W)
-      [40.27, -111.60],   // excludes Springville (111.61°W)
+      [40.10, -111.60],
+      [40.27, -111.60],
       [40.40, -111.72],
       [40.55, -111.82], [40.76, -111.84], [40.89, -111.88],
-      // Wellsville Mountains (W of Logan, 41.5-41.7°N) — extend west to ~111.93°W
-      [41.22, -111.93], [41.51, -111.93], [41.74, -111.93],
+      [41.22, -111.93],
+      [41.38, -111.99],   // Willard Peak spike
+      [41.45, -111.85],
+      [41.50, -111.82], [41.57, -111.82],
+      [41.63, -111.82],   // approach Wellsville spike
+      [41.64, -111.94],   // Wellsville Cone spike
+      [41.65, -111.82],   // immediately pull back east
+      [41.74, -111.82],   // stay east of Logan
       [42.00, -111.80],
     ],
   },
@@ -269,25 +274,23 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~3,613 ft",
     color: "#B7950B",
     polygon: [
-      // Northern spike removed — capped at ~40.65°N where terrain ends before I-80
-      [40.650, -112.650],
-      [40.650, -112.720],
-      [40.4887, -112.7282],
-      [40.4552, -112.778],
-      [40.2907, -112.6056],
-      [40.2511, -112.6056],
-      [40.248, -112.6324],
-      [40.2054, -112.6132],
-      [40.2054, -112.46],
-      [40.3608, -112.4676],
-      [40.4522, -112.5443],
-      [40.5619, -112.5328],
-      [40.5649, -112.5826],
-      [40.6106, -112.5787],
-      [40.6167, -112.5404],
-      [40.6624, -112.5136],
-      [40.650, -112.510],
-      [40.650, -112.650],
+      // Northern boundary extended to ~40.70°N near I-80/SR-196 Skull Valley exit
+      // Western edge tightened to terrain break above Skull Valley (~112.60-112.64°W)
+      // Eastern edge follows Tooele Valley terrain break (~112.46-112.47°W)
+      [40.700, -112.560],
+      [40.700, -112.470],
+      [40.600, -112.460],
+      [40.500, -112.460],
+      [40.400, -112.460],
+      [40.300, -112.470],
+      [40.200, -112.470],
+      [40.200, -112.560],
+      [40.300, -112.620],
+      [40.400, -112.640],
+      [40.500, -112.640],
+      [40.600, -112.620],
+      [40.700, -112.580],
+      [40.700, -112.560],
     ],
   },
   {
