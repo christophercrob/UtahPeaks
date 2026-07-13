@@ -96,7 +96,7 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     trailheadLat: 38.3983,
     trailheadLon: -112.3317,
     gain: "~1,625–1,700 ft",
-    color: "#16A085",
+    color: "#E91E8C",
     polygon: [
       // Shifted west ~0.12° so US-89 (~112.22°W) defines eastern edge
       // and Beaver/Cove Fort/Sulphurdale (~112.64-112.66°W) define western edge
