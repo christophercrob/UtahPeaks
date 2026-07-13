@@ -131,27 +131,24 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~5,700–5,900 ft",
     color: "#1A5276",
     polygon: [
-      // Terrain-accurate boundary traced from satellite imagery
-      // North: mountains end just south of Gold Hill (~40.10°N)
-      // East: terrain break at ~113.73°W (Snake Valley desert floor)
-      // West: terrain break at ~113.96-113.98°W (Deep Creek Valley)
-      // South: range ends ~39.55°N near Partoun
-      [40.100, -113.830],
-      [40.100, -113.760],
-      [40.000, -113.730],
-      [39.900, -113.730],
-      [39.800, -113.740],
-      [39.700, -113.750],
-      [39.600, -113.760],
-      [39.550, -113.820],
-      [39.550, -113.930],
-      [39.600, -113.970],
-      [39.700, -113.980],
-      [39.800, -113.970],
-      [39.900, -113.960],
-      [40.000, -113.940],
-      [40.100, -113.910],
-      [40.100, -113.830],
+      // Corrected from user's screenshot — eastern edge pulled in, southern end trimmed
+      // North: just south of Gold Hill (~40.10°N) ✓
+      // East: terrain break at ~113.74-113.76°W (tighter against mountain slope)
+      // West: Deep Creek Valley floor ~113.99-114.00°W
+      // South: terrain ends just above Trout Creek (~39.70°N, not 39.55°N)
+      [40.100, -113.850],
+      [40.100, -113.770],
+      [40.080, -113.758],
+      [39.920, -113.740],
+      [39.750, -113.767],
+      [39.670, -113.785],
+      [39.700, -113.830],
+      [39.700, -113.920],
+      [39.750, -114.000],
+      [39.830, -113.991],
+      [39.960, -114.000],
+      [40.100, -113.940],
+      [40.100, -113.850],
     ],
   },
   {
