@@ -72,8 +72,27 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~2,580–2,661 ft",
     color: "#D35400",
     polygon: [
-      [38.30, -109.40], [38.30, -109.10], [38.55, -109.10],
-      [38.55, -109.40], [38.30, -109.40],
+      // Terrain-following polygon — compact NNW-SSE oval with 3 peak clusters
+      // Peakbagger bbox: miny=38.071, maxy=38.818, minx=-109.606, maxx=-108.805
+      // Straddles Utah-Colorado border; eastern edge near ~109.11°W
+      // Northern tip — Mt Waas cluster
+      [38.540, -109.280],
+      [38.530, -109.200],
+      [38.510, -109.140],
+      // Eastern edge — near Colorado border
+      [38.450, -109.110],
+      [38.380, -109.120],
+      [38.310, -109.150],
+      // Southern tip — Mt Tukuhnikivatz area
+      [38.260, -109.220],
+      [38.270, -109.310],
+      // Western edge
+      [38.320, -109.360],
+      [38.390, -109.370],
+      [38.450, -109.360],
+      [38.500, -109.340],
+      // Close
+      [38.540, -109.280],
     ],
   },
   {
@@ -89,8 +108,28 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~1,625–1,700 ft",
     color: "#16A085",
     polygon: [
-      [38.20, -112.55], [38.20, -112.20], [38.55, -112.20],
-      [38.55, -112.55], [38.20, -112.55],
+      // Terrain-following polygon — bounded by I-15 (W), I-70 (N), US-89 (E), UT-20 (S)
+      // Wikipedia: "bounded roughly by I-15 to the west, I-70 to the north,
+      //  US-89 to the east and U-20 to the south"
+      // Northern boundary — near I-70 / Clear Creek Canyon (~38.62-38.64°N)
+      [38.620, -112.450],
+      [38.640, -112.300],
+      [38.620, -112.100],
+      [38.580, -111.980],
+      // Eastern edge — along US-89 corridor (~111.93-111.98°W)
+      [38.480, -111.930],
+      [38.380, -111.940],
+      [38.280, -111.980],
+      // Southern boundary — near UT-20 (~38.17-38.19°N)
+      [38.180, -112.080],
+      [38.170, -112.250],
+      [38.190, -112.420],
+      // Western edge — along I-15 corridor (~112.49-112.52°W)
+      [38.300, -112.500],
+      [38.420, -112.520],
+      [38.540, -112.490],
+      // Close
+      [38.620, -112.450],
     ],
   },
   {
