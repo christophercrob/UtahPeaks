@@ -280,23 +280,22 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~3,613 ft",
     color: "#B7950B",
     polygon: [
-      // Northern boundary extended to ~40.70°N near I-80/SR-196 Skull Valley exit
-      // Western edge tightened to terrain break above Skull Valley (~112.60-112.64°W)
-      // Eastern edge follows Tooele Valley terrain break (~112.46-112.47°W)
+      // Shifted west ~0.09° — eastern edge now at ~112.55-112.57°W (terrain break above Tooele Valley)
+      // Western edge at ~112.64-112.73°W (terrain break above Skull Valley)
+      [40.700, -112.650],
       [40.700, -112.560],
-      [40.700, -112.470],
-      [40.600, -112.460],
-      [40.500, -112.460],
-      [40.400, -112.460],
-      [40.300, -112.470],
-      [40.200, -112.470],
+      [40.600, -112.550],
+      [40.500, -112.550],
+      [40.400, -112.550],
+      [40.300, -112.560],
       [40.200, -112.560],
-      [40.300, -112.620],
-      [40.400, -112.640],
-      [40.500, -112.640],
-      [40.600, -112.620],
-      [40.700, -112.580],
-      [40.700, -112.560],
+      [40.200, -112.650],
+      [40.300, -112.710],
+      [40.400, -112.730],
+      [40.500, -112.730],
+      [40.600, -112.710],
+      [40.700, -112.670],
+      [40.700, -112.650],
     ],
   },
   {
