@@ -383,16 +383,15 @@ export default function Home() {
 
       // Peak name label
       const peakLabelEl = document.createElement("div");
-      // Layout: peak name ABOVE pin, range name BELOW pin — both centered on the pin.
-      // The pin SVG is 18×26px, anchored at its tip (bottom-center of the 26px height).
-      // We build a vertical stack: [peak name] [26px pin space] [range name]
-      // The whole container is centered horizontally on the pin coordinate.
+      // Layout: two-line label to the RIGHT of the pin.
+      // Line 1: peak name (bold)
+      // Line 2: range name (colored)
+      // The container sits to the right of the pin tip, vertically centered on the pin.
       peakLabelEl.style.cssText = `
-        display:flex;flex-direction:column;align-items:center;gap:2px;
+        display:flex;flex-direction:column;align-items:flex-start;gap:1px;
         pointer-events:none;
-        transform:translate(-50%, -100%);
+        transform:translate(22px, -26px);
       `;
-      // Peak name (above the pin)
       const textSpan = document.createElement("span");
       textSpan.style.cssText = `
         font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:800;letter-spacing:0.01em;
@@ -407,11 +406,7 @@ export default function Home() {
       `;
       textSpan.textContent = r.peak;
       peakLabelEl.appendChild(textSpan);
-      // Spacer for the pin itself (26px tall)
-      const pinSpacer = document.createElement("span");
-      pinSpacer.style.cssText = "display:block;height:28px;";
-      peakLabelEl.appendChild(pinSpacer);
-      // Range name (below the pin)
+      // Range name on the line directly below the peak name
       const rangeSpan = document.createElement("span");
       rangeSpan.style.cssText = `
         font-family:'Source Sans 3',sans-serif;font-size:10.5px;font-weight:700;
@@ -422,9 +417,6 @@ export default function Home() {
       rangeSpan.textContent = r.range;
       peakLabelEl.appendChild(rangeSpan);
       new google.maps.marker.AdvancedMarkerElement({ map, position: { lat: r.lat, lng: r.lon }, content: peakLabelEl, zIndex: 9 });
-
-      // Remove the separate centroid range label since range name is now under the pin
-      // (keep it for ranges where the pin is far from center — but suppress it here)
     });
   }, []);
 
