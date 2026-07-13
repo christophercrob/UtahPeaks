@@ -98,30 +98,24 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~1,625–1,700 ft",
     color: "#16A085",
     polygon: [
-      // Trimmed to match the bright red region on the reference map
-      // The Tushars proper: compact high range east of Beaver, UT
-      // Delano Peak: 38.369°N, 112.371°W
-      // Excludes the Fish Lake/Sevier Plateau area to the east
-      // Northern edge: ~38.65°N (near I-70/Clear Creek Canyon)
-      // Eastern edge: ~112.10°W (excludes Marysvale/Monroe Peak area)
-      // Southern edge: ~38.20°N
-      // Western edge: ~112.55°W
-      [38.650, -112.100],
-      [38.650, -112.200],
-      [38.700, -112.250],
-      [38.700, -112.400],
-      [38.650, -112.450],
-      [38.600, -112.520],
-      [38.500, -112.540],
-      [38.400, -112.530],
-      [38.300, -112.490],
-      [38.200, -112.400],
-      [38.200, -112.250],
-      [38.250, -112.130],
-      [38.350, -112.080],
-      [38.500, -112.080],
-      [38.600, -112.090],
-      [38.650, -112.100],
+      // Shifted west ~0.12° so US-89 (~112.22°W) defines eastern edge
+      // and Beaver/Cove Fort/Sulphurdale (~112.64-112.66°W) define western edge
+      [38.650, -112.220],
+      [38.650, -112.320],
+      [38.700, -112.370],
+      [38.700, -112.520],
+      [38.650, -112.570],
+      [38.600, -112.640],
+      [38.500, -112.660],
+      [38.400, -112.650],
+      [38.300, -112.610],
+      [38.200, -112.520],
+      [38.200, -112.370],
+      [38.250, -112.250],
+      [38.350, -112.200],
+      [38.500, -112.200],
+      [38.600, -112.210],
+      [38.650, -112.220],
     ],
   },
   {
@@ -181,8 +175,6 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
       [41.5902, -112.0466],
       [41.4745, -112.1807],
       [41.3709, -111.9431],
-      [41.0052, -111.9086],
-      [41.0113, -112.0696],
       [40.9534, -111.8741],
       [40.5451, -111.855],
       [40.341, -111.6749],
