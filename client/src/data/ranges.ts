@@ -31,14 +31,14 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~4,600–5,310 ft",
     color: "#C0392B",
     polygon: [
-      // Western edge starts at the Utah-Wyoming border (41.0°N, 111.05°W)
-      // then drops into the distinctive western notch/lobe
-      [41.000, -111.050],
-      [40.920, -111.050],
-      [40.885, -111.130],
-      [40.773, -111.130],
-      [40.729, -111.050],
-      [40.640, -111.050],
+      // Western edge extended to meet the Wasatch Range eastern edge
+      // Wasatch eastern edge runs at ~111.37-111.44°W at these latitudes
+      [41.000, -111.373],   // meets Wasatch at 41.0°N
+      [40.920, -111.388],   // meets Wasatch at 40.92°N
+      [40.885, -111.395],   // western notch
+      [40.773, -111.415],   // meets Wasatch at 40.77°N
+      [40.729, -111.422],
+      [40.640, -111.439],   // meets Wasatch at 40.64°N
       // Southern edge
       [40.560, -110.870],
       [40.530, -110.580],
@@ -53,7 +53,7 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
       [41.090, -110.240],
       [41.060, -110.580],
       [41.010, -110.780],
-      [41.000, -111.050],
+      [41.000, -111.373],   // close back at Wasatch junction
     ],
   },
   {
@@ -69,12 +69,22 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~2,580–2,661 ft",
     color: "#D35400",
     polygon: [
-      [38.2667, -109.5308],
-      [38.2667, -109.0374],
-      [38.7082, -109.0682],
-      [38.9501, -109.2753],
-      [38.9501, -109.5265],
-      [38.2667, -109.5308],
+      // Compact laccolith range: ~15 mi long x 6 mi wide (Utah Canyon Country)
+      // Three peak clusters: Mt Waas (N), Mt Peale/Mellenthin (C), Mt Tukuhnikivatz (S)
+      // Bounds: lat 38.27-38.54°N, lon 109.11-109.36°W
+      [38.540, -109.240],
+      [38.530, -109.195],
+      [38.510, -109.140],
+      [38.450, -109.115],
+      [38.380, -109.125],
+      [38.310, -109.155],
+      [38.270, -109.225],
+      [38.280, -109.305],
+      [38.330, -109.350],
+      [38.400, -109.355],
+      [38.460, -109.345],
+      [38.510, -109.320],
+      [38.540, -109.240],
     ],
   },
   {
@@ -245,15 +255,20 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~1,600 ft",
     color: "#BA4A00",
     polygon: [
-      [38.103, -110.0156],
-      [37.7617, -110.0156],
-      [37.7556, -109.9313],
-      [37.7008, -109.9351],
-      [37.6977, -110.0156],
-      [37.6033, -110.0156],
-      [37.6033, -109.3221],
-      [38.103, -109.3221],
-      [38.103, -110.0156],
+      // Compact laccolith range: ~16 mi long x 10 mi wide (PeakVisor)
+      // West of Monticello (37.87°N, 109.34°W); two sections N and S
+      // Bounds: lat 37.71-37.96°N, lon 109.34-109.60°W
+      [37.960, -109.380],
+      [37.950, -109.340],
+      [37.870, -109.345],
+      [37.780, -109.360],
+      [37.720, -109.390],
+      [37.710, -109.470],
+      [37.720, -109.560],
+      [37.790, -109.600],
+      [37.870, -109.590],
+      [37.950, -109.560],
+      [37.960, -109.380],
     ],
   },
   {
