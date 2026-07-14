@@ -123,6 +123,33 @@ function loadMapScript() {
     document.head.appendChild(script);
   });
 }
+// In production the Forge proxy requires the correct Referer header.
+// A <script> tag doesn't send Referer reliably on custom domains, so we
+// fetch the Maps JS as text (with explicit headers) and inject it inline.
+function loadMapScriptProd(): Promise<void> {
+  return new Promise((resolve) => {
+    if (window.google?.maps) { resolve(); return; }
+    const url = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
+    fetch(url, {
+      headers: {
+        Referer: window.location.origin + "/",
+        Origin: window.location.origin,
+      },
+    })
+      .then((r) => r.text())
+      .then((code) => {
+        const s = document.createElement("script");
+        s.textContent = code;
+        document.head.appendChild(s);
+        // Give Maps a tick to initialise
+        setTimeout(() => resolve(), 100);
+      })
+      .catch(() => {
+        console.error("Failed to fetch Google Maps script");
+        resolve();
+      });
+  });
+}
 
 interface MapViewProps {
   className?: string;
@@ -141,7 +168,11 @@ export function MapView({
   const map = useRef<google.maps.Map | null>(null);
 
   const init = usePersistFn(async () => {
-    await loadMapScript();
+    if (IS_DEV) {
+      await loadMapScript();
+    } else {
+      await loadMapScriptProd();
+    }
     if (!mapContainer.current) {
       console.error("Map container not found");
       return;
