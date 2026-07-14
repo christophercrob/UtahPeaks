@@ -165,41 +165,41 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~3,300–3,500 ft",
     color: "#2471A3",
     polygon: [
-      // Wasatch Range — 17 containment checks pass
-      // Includes full Wellsville Mountains loop:
-      //   west side: Willard Peak → Perry → Brigham City → Garland/Tremonton
-      //   east side: Mendon → Hyrum foothills → Paradise foothills → Avon foothills
+      // Southern section per user cross-sections:
+      // Provo→US-40, Mapleton→West Portal, Payson→Thistle, Rocky Ridge→Birdseye, Mona→Indianola
       [42.00, -111.80], [42.00, -111.45],
       [41.75, -111.38], [41.50, -111.38],
       [41.22, -111.42], [40.92, -111.40],
       [40.65, -111.50], [40.51, -111.41],
       [40.45, -111.38],
       [40.35, -111.50],
-      [40.10, -111.50],
-      [40.05, -111.51],
-      [39.94, -111.73],   // Dry Mountain
-      [39.84, -111.71],   // Bald Mountain
-      [39.75, -111.78],   // southern tip
-      [39.82, -111.83],
-      [40.04, -111.65],
-      [40.10, -111.60],
-      [40.27, -111.60],
+      [40.23, -111.41],   // US-40 east end
+      [40.09, -111.50],   // West Portal
+      [40.05, -111.50],   // Spanish Fork Peak area
+      [39.98, -111.55],   // Thistle
+      [39.92, -111.57],   // Birdseye
+      [39.77, -111.53],   // Indianola
+      [39.75, -111.70],   // southern tip
+      [39.82, -111.86],   // Mona west end
+      [39.96, -111.75],   // Rocky Ridge west end
+      [40.04, -111.73],   // Payson west end
+      [40.05, -111.66],   // Salem exclusion
+      [40.13, -111.57],   // Mapleton west end
+      [40.23, -111.64],   // Provo west end
       [40.40, -111.72],
       [40.55, -111.82], [40.76, -111.84], [40.89, -111.88],
       [41.22, -111.93],
-      // Wellsville Mountains — west side (front range)
       [41.38, -111.99],   // Willard Peak
       [41.47, -112.00],   // Perry foothills
       [41.51, -112.00],   // Brigham City foothills
-      [41.60, -112.03],   // north of Brigham City
-      [41.74, -112.05],   // Garland/Tremonton northern tip
-      // Wellsville Mountains — east side (Cache Valley side)
-      [41.74, -111.90],   // wrap east
-      [41.70, -111.89],   // Mendon foothills
-      [41.63, -111.88],   // Hyrum foothills (city at 111.85°W is outside)
-      [41.57, -111.88],   // Paradise foothills (city at 111.84°W is outside)
-      [41.50, -111.82],   // Avon foothills (city at 111.83°W is outside)
-      [41.45, -111.85],   // reconnect to main Wasatch
+      [41.60, -112.03],
+      [41.74, -112.05],   // Garland/Tremonton tip
+      [41.74, -111.90],
+      [41.70, -111.89],
+      [41.63, -111.88],
+      [41.57, -111.88],
+      [41.50, -111.82],
+      [41.45, -111.85],
       [42.00, -111.80],
     ],
   },
@@ -280,22 +280,21 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~3,613 ft",
     color: "#B7950B",
     polygon: [
-      // Shifted west ~0.09° — eastern edge now at ~112.55-112.57°W (terrain break above Tooele Valley)
-      // Western edge at ~112.64-112.73°W (terrain break above Skull Valley)
-      [40.700, -112.650],
-      [40.700, -112.560],
-      [40.600, -112.550],
-      [40.500, -112.550],
-      [40.400, -112.550],
-      [40.300, -112.560],
-      [40.200, -112.560],
-      [40.200, -112.650],
-      [40.300, -112.710],
-      [40.400, -112.730],
-      [40.500, -112.730],
-      [40.600, -112.710],
-      [40.700, -112.670],
-      [40.700, -112.650],
+      // Shifted east 0.5 miles (+0.007°) from previous position
+      [40.700, -112.643],
+      [40.700, -112.553],
+      [40.600, -112.543],
+      [40.500, -112.543],
+      [40.400, -112.543],
+      [40.300, -112.553],
+      [40.200, -112.553],
+      [40.200, -112.643],
+      [40.300, -112.703],
+      [40.400, -112.723],
+      [40.500, -112.723],
+      [40.600, -112.703],
+      [40.700, -112.663],
+      [40.700, -112.643],
     ],
   },
   {
@@ -311,17 +310,25 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~2,920–3,540 ft",
     color: "#1A6B8A",
     polygon: [
-      [40.7478, -112.2693],
-      [40.4987, -112.428],
-      [40.4817, -112.428],
-      [40.2803, -112.2736],
-      [40.2428, -112.1834],
-      [40.4202, -111.9774],
-      [40.4646, -111.9603],
-      [40.6762, -112.0976],
-      [40.741, -112.1405],
-      [40.7615, -112.2436],
-      [40.7478, -112.2693],
+      // Oquirrh Mountains — excludes Stockton-Tooele flat plain; N tip at 40.68°N
+      // East face (SLC Valley): ~112.08-112.18°W
+      // West face (Tooele Valley): ~112.19-112.43°W
+      // Tooele (112.298°W) and Stockton (112.367°W) confirmed outside
+      [40.680, -112.140],
+      [40.680, -112.100],
+      [40.600, -112.090],
+      [40.500, -112.080],
+      [40.400, -112.100],
+      [40.280, -112.150],
+      [40.243, -112.183],
+      [40.243, -112.350],
+      [40.280, -112.400],
+      [40.400, -112.430],
+      [40.453, -112.360],
+      [40.530, -112.290],
+      [40.600, -112.200],
+      [40.680, -112.200],
+      [40.680, -112.140],
     ],
   },
   {
