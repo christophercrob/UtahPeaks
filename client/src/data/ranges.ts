@@ -275,8 +275,8 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     lat: 40.4594,
     lon: -112.6264,
     trailhead: "Loop Campground (Mill Fork)",
-    trailheadLat: 40.4583,
-    trailheadLon: -112.5967,
+    trailheadLat: 40.483044,
+    trailheadLon: -112.606392,
     gain: "~3,613 ft",
     color: "#B7950B",
     polygon: [
