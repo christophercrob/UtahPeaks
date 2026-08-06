@@ -428,11 +428,11 @@ export default function Home() {
 
         const polygon = new google.maps.Polygon({
           paths,
-          strokeColor: "#1A5C2A",
+          strokeColor: "#CC0000",
           strokeOpacity: 0.9,
           strokeWeight: 2,
-          fillColor: "#2D7A3A",
-          fillOpacity: 0.18,
+          fillColor: "#FF0000",
+          fillOpacity: 0.15,
           map,
           zIndex: 4,
         });
@@ -457,7 +457,7 @@ export default function Home() {
         const nameSpan = document.createElement("span");
         nameSpan.style.cssText = `
           font-family:'Source Sans 3',sans-serif;font-size:11px;font-weight:800;
-          color:#0D3D1A;white-space:nowrap;line-height:1.2;
+          color:#8B0000;white-space:nowrap;line-height:1.2;
           text-shadow:0 0 3px #fff,0 0 6px #fff,0 0 10px #fff,
             1px 1px 0 #fff,-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff;
           background:none;padding:0;
@@ -469,7 +469,7 @@ export default function Home() {
           const acresSpan = document.createElement("span");
           acresSpan.style.cssText = `
             font-family:'Source Sans 3',sans-serif;font-size:9px;font-weight:600;
-            color:#1A5C2A;white-space:nowrap;line-height:1.2;
+            color:#CC0000;white-space:nowrap;line-height:1.2;
             text-shadow:0 0 3px #fff,0 0 6px #fff,1px 1px 0 #fff,-1px -1px 0 #fff;
           `;
           acresSpan.textContent = acresStr;
@@ -809,9 +809,9 @@ export default function Home() {
             onClick={() => setParksLayerOn((v) => !v)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
             style={{
-              background: parksLayerOn ? "rgba(29,92,42,0.92)" : "rgba(255,255,255,0.10)",
+              background: parksLayerOn ? "rgba(200,20,20,0.92)" : "rgba(255,255,255,0.10)",
               color: "#fff",
-              border: parksLayerOn ? "1px solid rgba(80,180,100,0.5)" : "1px solid rgba(255,255,255,0.15)",
+              border: parksLayerOn ? "1px solid rgba(255,80,80,0.5)" : "1px solid rgba(255,255,255,0.15)",
             }}
             title="Toggle Utah National Park boundaries (Zion, Bryce Canyon, Canyonlands, Arches, Capitol Reef)"
           >
@@ -830,31 +830,6 @@ export default function Home() {
             {parksLoading ? "Loading…" : parksLayerOn ? "Parks: On" : "Parks"}
           </button>
 
-          {/* Fire footprint toggle */}
-          <button
-            onClick={() => setFireLayerOn((v) => !v)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
-            style={{
-              background: fireLayerOn ? "rgba(200,60,20,0.92)" : "rgba(255,255,255,0.10)",
-              color: "#fff",
-              border: fireLayerOn ? "1px solid rgba(255,120,80,0.5)" : "1px solid rgba(255,255,255,0.15)",
-            }}
-            title="Toggle recent Utah wildfire perimeters (past 3 years, NIFC/WFIGS data)"
-          >
-            {fireLoading ? (
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-                style={{ animation: "spin 1s linear infinite" }}>
-                <circle cx="12" cy="12" r="10" strokeOpacity="0.3"/>
-                <path d="M12 2a10 10 0 0 1 10 10"/>
-              </svg>
-            ) : (
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 2c0 0-5.5 5-5.5 10.5a5.5 5.5 0 0 0 11 0C17.5 7 12 2 12 2z"/>
-                <path d="M12 13c0 0-2.5 2-2.5 4a2.5 2.5 0 0 0 5 0C14.5 15 12 13 12 13z" fill="currentColor" strokeWidth="0"/>
-              </svg>
-            )}
-            {fireLoading ? "Loading…" : fireLayerOn ? "Fires: On" : "Fires"}
-          </button>
           <div className="flex rounded-lg overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.15)" }}>
             {(["terrain", "satellite", "roadmap"] as const).map((t) => (
               <button
