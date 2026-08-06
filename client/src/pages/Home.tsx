@@ -56,31 +56,28 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             not from a car window, but from the top of it.
           </p>
           {/* Photo */}
-          <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
-            <div style={{ flexShrink: 0 }}>
-              <img
-                src="/manus-storage/chris_roberts_profile_468e3b53.jpg"
-                alt="Chris Roberts at Cedar Breaks"
-                style={{
-                  width: 110,
-                  height: 110,
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  border: "3px solid #C0522A",
-                  display: "block",
-                }}
-              />
-              <div style={{ fontSize: 10, color: "#aaa", textAlign: "center", marginTop: 4, maxWidth: 110 }}>
-                Cedar Breaks, 2026
-              </div>
+          <div>
+            <img
+              src="/manus-storage/markagunt_zion_27b24df0.jpg"
+              alt="Chris Roberts on the Markagunt Plateau with Zion NP in the distance"
+              style={{
+                width: "100%",
+                borderRadius: 10,
+                objectFit: "cover",
+                border: "2px solid rgba(192,82,42,0.3)",
+                display: "block",
+              }}
+            />
+            <div style={{ fontSize: 11, color: "#aaa", textAlign: "center", marginTop: 5 }}>
+              Zion NP from the Markagunt Plateau
             </div>
-            <p style={{ color: "#888", fontSize: 13, fontStyle: "italic", margin: 0, paddingTop: 4 }}>
-              The goal is simple: hike to the highest point of each of Utah's major mountain ranges.
-              Some are long days. Some are scrambles. All of them are worth it.
-              <br /><br />
-              This is a work in progress. New summits added as they happen.
-            </p>
           </div>
+          <p style={{ color: "#888", fontSize: 13, fontStyle: "italic", margin: 0 }}>
+            The goal is simple: hike to the highest point of each of Utah's major mountain ranges.
+            Some are long days. Some are scrambles. All of them are worth it.
+            <br /><br />
+            This is a work in progress. New summits added as they happen.
+          </p>
 
           {/* Progress bar */}
           <div style={{ background: "rgba(0,0,0,0.06)", borderRadius: 10, padding: "12px 14px" }}>

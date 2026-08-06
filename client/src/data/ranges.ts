@@ -107,7 +107,7 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     trailheadLat: 38.3983,
     trailheadLon: -112.3317,
     gain: "~1,625–1,700 ft",
-    color: "#E91E8C",
+    color: "#9B6B8A",
     summited: true,
     summitDate: "June 13, 2026",
     hikeNote: "A beautiful high-altitude drive to Big John Flat puts you within striking distance of the summit. The Tushars are one of Utah's hidden gems — dramatic volcanic terrain, lush forests, and sweeping views of Eagle Point ski resort and the Sevier Plateau. The forest below the summit was still pristine on this June day, before the Cottonwood Fire swept through later that summer.",
