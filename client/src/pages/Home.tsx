@@ -1,12 +1,26 @@
-/**
+/*
  * Utah Mountain Ranges & Highest Peaks — Home Page
  * Design: Utah Topo Field Guide
  * Full-viewport Google Map with floating header, legend, detail sidebar,
  * full-screen data table drawer, and Google Maps directions links.
  */
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { MapView } from "@/components/Map";
 import { MOUNTAIN_RANGES, type MountainRange } from "@/data/ranges";
+
+// ── Fire Perimeter Types ───────────────────────────────────────────────────
+interface FireFeature {
+  attributes: {
+    poly_IncidentName: string;
+    attr_FireDiscoveryDateTime: number | null;
+    poly_GISAcres: number | null;
+    attr_POOState: string | null;
+    attr_IncidentTypeCategory: string | null;
+  };
+  geometry: {
+    rings: number[][][];
+  };
+}
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 function googleMapsDirectionsUrl(r: MountainRange) {
@@ -336,10 +350,144 @@ export default function Home() {
   const polygonsRef = useRef<google.maps.Polygon[]>([]);
   const labelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
 
+  // ── Fire layer state ──
+  const [fireLayerOn, setFireLayerOn] = useState(false);
+  const [fireLoading, setFireLoading] = useState(false);
+  const [fireError, setFireError] = useState<string | null>(null);
+  const firePolygonsRef = useRef<google.maps.Polygon[]>([]);
+  const fireLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const fireDataRef = useRef<FireFeature[] | null>(null);
+
   const handleSelect = useCallback((r: MountainRange) => {
     setSelected(r);
     mapRef.current?.panTo({ lat: r.lat, lng: r.lon });
   }, []);
+
+  // Fetch fire perimeters once (lazy, on first toggle-on)
+  const fetchFireData = useCallback(async (): Promise<FireFeature[]> => {
+    if (fireDataRef.current) return fireDataRef.current;
+    setFireLoading(true);
+    setFireError(null);
+    try {
+      // NIFC WFIGS Interagency Perimeters — Utah wildfires from the past 3 years
+      const threeYearsAgo = Date.now() - 3 * 365.25 * 24 * 60 * 60 * 1000;
+      const where = encodeURIComponent(
+        `attr_POOState='US-UT' AND attr_FireDiscoveryDateTime >= ${threeYearsAgo} AND attr_IncidentTypeCategory='WF'`
+      );
+      const url =
+        `https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Interagency_Perimeters/FeatureServer/0/query` +
+        `?where=${where}` +
+        `&outFields=poly_IncidentName,attr_FireDiscoveryDateTime,poly_GISAcres,attr_POOState,attr_IncidentTypeCategory` +
+        `&returnGeometry=true&outSR=4326&f=json&resultRecordCount=300`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      if (json.error) throw new Error(json.error.message ?? "API error");
+      const features: FireFeature[] = json.features ?? [];
+      fireDataRef.current = features;
+      return features;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Unknown error";
+      setFireError(`Could not load fire data: ${msg}`);
+      return [];
+    } finally {
+      setFireLoading(false);
+    }
+  }, []);
+
+  // Draw / clear fire polygons whenever toggle changes
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    if (!fireLayerOn) {
+      firePolygonsRef.current.forEach((p) => p.setMap(null));
+      firePolygonsRef.current = [];
+      fireLabelsRef.current.forEach((m) => { m.map = null; });
+      fireLabelsRef.current = [];
+      return;
+    }
+
+    (async () => {
+      const features = await fetchFireData();
+      if (!features.length) return;
+
+      features.forEach((feat) => {
+        const { poly_IncidentName, attr_FireDiscoveryDateTime, poly_GISAcres } = feat.attributes;
+        const rings = feat.geometry?.rings;
+        if (!rings?.length) return;
+
+        // Convert ArcGIS [lng, lat] rings to Google Maps paths
+        const paths = rings.map((ring) =>
+          ring.map(([lng, lat]) => ({ lat, lng }))
+        );
+
+        const polygon = new google.maps.Polygon({
+          paths,
+          strokeColor: "#3a3a3a",
+          strokeOpacity: 0.9,
+          strokeWeight: 1.5,
+          fillColor: "#555555",
+          fillOpacity: 0.38,
+          map,
+          zIndex: 5,
+        });
+        firePolygonsRef.current.push(polygon);
+
+        // Label at centroid of first ring
+        const ring0 = rings[0];
+        const centLng = ring0.reduce((s, p) => s + p[0], 0) / ring0.length;
+        const centLat = ring0.reduce((s, p) => s + p[1], 0) / ring0.length;
+
+        const dateStr = attr_FireDiscoveryDateTime
+          ? new Date(attr_FireDiscoveryDateTime).toLocaleDateString("en-US", {
+              year: "numeric", month: "short", day: "numeric",
+            })
+          : "Date unknown";
+        const acresStr = poly_GISAcres
+          ? `${Math.round(poly_GISAcres).toLocaleString()} ac`
+          : "";
+
+        const labelEl = document.createElement("div");
+        labelEl.style.cssText = `
+          display:flex;flex-direction:column;align-items:center;gap:1px;
+          pointer-events:none;
+          transform:translate(-50%,-50%);
+        `;
+
+        const nameSpan = document.createElement("span");
+        nameSpan.style.cssText = `
+          font-family:'Source Sans 3',sans-serif;font-size:10px;font-weight:800;
+          color:#1a1a1a;white-space:nowrap;line-height:1.2;
+          text-shadow:0 0 3px #fff,0 0 6px #fff,0 0 10px #fff,
+            1px 1px 0 #fff,-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff;
+          background:none;padding:0;
+        `;
+        nameSpan.textContent =
+          poly_IncidentName
+            ? poly_IncidentName.replace(/\b\w/g, (c) => c.toUpperCase())
+            : "Unknown Fire";
+        labelEl.appendChild(nameSpan);
+
+        const dateSpan = document.createElement("span");
+        dateSpan.style.cssText = `
+          font-family:'Source Sans 3',sans-serif;font-size:9px;font-weight:600;
+          color:#444;white-space:nowrap;line-height:1.2;
+          text-shadow:0 0 3px #fff,0 0 6px #fff,1px 1px 0 #fff,-1px -1px 0 #fff;
+        `;
+        dateSpan.textContent = acresStr ? `${dateStr} · ${acresStr}` : dateStr;
+        labelEl.appendChild(dateSpan);
+
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+          map,
+          position: { lat: centLat, lng: centLng },
+          content: labelEl,
+          zIndex: 6,
+        });
+        fireLabelsRef.current.push(marker);
+      });
+    })();
+  }, [fireLayerOn, fetchFireData]);
 
   const handleMapReady = useCallback((map: google.maps.Map) => {
     mapRef.current = map;
@@ -367,10 +515,9 @@ export default function Home() {
       polygon.addListener("click", () => setSelected(r));
       polygonsRef.current.push(polygon);
 
-      // Range label at centroid
+      // Range label at centroid (unused — range name shown below peak pin)
       const centLat = r.polygon.reduce((s, p) => s + p[0], 0) / r.polygon.length;
       const centLng = r.polygon.reduce((s, p) => s + p[1], 0) / r.polygon.length;
-      // Range name is now shown directly below the peak pin — no separate centroid label needed
       void centLat; void centLng;
 
       // Peak pin
@@ -381,12 +528,8 @@ export default function Home() {
       });
       peakMarker.addListener("click", () => setSelected(r));
 
-      // Peak name label
+      // Peak name + range name label (two lines, to the right of pin)
       const peakLabelEl = document.createElement("div");
-      // Layout: two-line label to the RIGHT of the pin.
-      // Line 1: peak name (bold)
-      // Line 2: range name (colored)
-      // The container sits to the right of the pin tip, vertically centered on the pin.
       peakLabelEl.style.cssText = `
         display:flex;flex-direction:column;align-items:flex-start;gap:1px;
         pointer-events:none;
@@ -406,7 +549,7 @@ export default function Home() {
       `;
       textSpan.textContent = r.peak;
       peakLabelEl.appendChild(textSpan);
-      // Range name on the line directly below the peak name
+
       const rangeSpan = document.createElement("span");
       rangeSpan.style.cssText = `
         font-family:'Source Sans 3',sans-serif;font-size:10.5px;font-weight:700;
@@ -418,6 +561,9 @@ export default function Home() {
       peakLabelEl.appendChild(rangeSpan);
       new google.maps.marker.AdvancedMarkerElement({ map, position: { lat: r.lat, lng: r.lon }, content: peakLabelEl, zIndex: 9 });
     });
+
+    // If fire layer was already on when map became ready, trigger render
+    // (handled by the useEffect dependency on fireLayerOn + mapRef)
   }, []);
 
   const switchMapType = (type: "terrain" | "satellite" | "roadmap") => {
@@ -449,8 +595,8 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          {/* View Data Table button */}
+        <div className="flex items-center gap-2">
+          {/* Peak List button */}
           <button
             onClick={() => setTableOpen(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
@@ -467,6 +613,32 @@ export default function Home() {
               <path d="M3 9h18M3 15h18M9 3v18"/>
             </svg>
             Peak List
+          </button>
+
+          {/* Fire footprint toggle */}
+          <button
+            onClick={() => setFireLayerOn((v) => !v)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+            style={{
+              background: fireLayerOn ? "rgba(200,60,20,0.92)" : "rgba(255,255,255,0.10)",
+              color: "#fff",
+              border: fireLayerOn ? "1px solid rgba(255,120,80,0.5)" : "1px solid rgba(255,255,255,0.15)",
+            }}
+            title="Toggle recent Utah wildfire perimeters (past 3 years, NIFC/WFIGS data)"
+          >
+            {fireLoading ? (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+                style={{ animation: "spin 1s linear infinite" }}>
+                <circle cx="12" cy="12" r="10" strokeOpacity="0.3"/>
+                <path d="M12 2a10 10 0 0 1 10 10"/>
+              </svg>
+            ) : (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 2c0 0-5.5 5-5.5 10.5a5.5 5.5 0 0 0 11 0C17.5 7 12 2 12 2z"/>
+                <path d="M12 13c0 0-2.5 2-2.5 4a2.5 2.5 0 0 0 5 0C14.5 15 12 13 12 13z" fill="currentColor" strokeWidth="0"/>
+              </svg>
+            )}
+            {fireLoading ? "Loading…" : fireLayerOn ? "Fires: On" : "Fires"}
           </button>
 
           {/* Map type toggle */}
@@ -488,6 +660,26 @@ export default function Home() {
           </div>
         </div>
       </header>
+
+      {/* ── Fire error toast ── */}
+      {fireError && (
+        <div
+          className="absolute top-16 left-1/2 z-50 px-4 py-2 rounded-lg text-sm font-medium shadow-lg"
+          style={{
+            transform: "translateX(-50%)",
+            background: "rgba(180,30,10,0.95)",
+            color: "#fff",
+            border: "1px solid rgba(255,255,255,0.2)",
+            marginTop: 8,
+          }}
+        >
+          {fireError}
+          <button
+            className="ml-3 text-white/70 hover:text-white"
+            onClick={() => setFireError(null)}
+          >×</button>
+        </div>
+      )}
 
       {/* ── Map ── */}
       <MapView
@@ -514,6 +706,10 @@ export default function Home() {
         @keyframes slideIn {
           from { opacity: 0; transform: translateX(16px); }
           to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
         }
       `}</style>
     </div>
