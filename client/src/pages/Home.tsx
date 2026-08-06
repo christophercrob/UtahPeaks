@@ -8,6 +8,245 @@ import { useRef, useState, useCallback, useEffect } from "react";
 import { MapView } from "@/components/Map";
 import { MOUNTAIN_RANGES, type MountainRange } from "@/data/ranges";
 
+// ── About Modal ───────────────────────────────────────────────────────────
+function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  if (!open) return null;
+  return (
+    <div
+      className="absolute inset-0 z-[60] flex items-center justify-center"
+      style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}
+      onClick={onClose}
+    >
+      <div
+        className="relative rounded-2xl shadow-2xl overflow-hidden"
+        style={{
+          background: "#F5F0E8",
+          maxWidth: 520,
+          width: "calc(100% - 32px)",
+          fontFamily: "var(--font-body)",
+          animation: "modalIn 0.22s cubic-bezier(0.23,1,0.32,1)",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="px-6 py-5" style={{ background: "#1C2333", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+          <div className="flex items-center gap-3 mb-1">
+            <svg width="28" height="22" viewBox="0 0 28 22" fill="none">
+              <path d="M10 18L17 4L24 18H10Z" fill="#C0522A" />
+              <path d="M2 18L9 8L16 18H2Z" fill="#A04020" />
+            </svg>
+            <div>
+              <div style={{ color: "#EEE8DC", fontSize: 18, fontWeight: 700, fontFamily: "var(--font-display)" }}>
+                Utah Mountain Ranges
+              </div>
+              <div style={{ color: "rgba(238,232,220,0.5)", fontSize: 11 }}>
+                A project by Chris Roberts
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className="px-6 py-5 space-y-4" style={{ color: "#3D3D3D", fontSize: 14, lineHeight: 1.7 }}>
+          <p>
+            I grew up in Utah — the red rock, the basin ranges, the sky above the Uintas — and after years away,
+            I moved back full time in the fall of 2025. This map is my attempt to truly know the state again,
+            not from a car window, but from the top of it.
+          </p>
+          <p>
+            The goal is simple: hike to the highest point of each of Utah's major mountain ranges. Some are long days.
+            Some are scrambles. All of them are worth it.
+          </p>
+          <p style={{ color: "#888", fontSize: 13, fontStyle: "italic" }}>
+            This is a work in progress. New summits added as they happen.
+          </p>
+
+          {/* Progress bar */}
+          <div style={{ background: "rgba(0,0,0,0.06)", borderRadius: 10, padding: "12px 14px" }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>
+              Progress
+            </div>
+            {(() => {
+              const summited = MOUNTAIN_RANGES.filter(r => r.summited).length;
+              const attempted = MOUNTAIN_RANGES.filter(r => r.attempted && !r.summited).length;
+              const total = MOUNTAIN_RANGES.length;
+              const pct = Math.round((summited / total) * 100);
+              return (
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#666", marginBottom: 6 }}>
+                    <span>{summited} of {total} summited</span>
+                    <span>{pct}%</span>
+                  </div>
+                  <div style={{ height: 8, background: "rgba(0,0,0,0.1)", borderRadius: 4, overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${pct}%`, background: "#1A6B3A", borderRadius: 4, transition: "width 0.6s ease" }} />
+                  </div>
+                  {attempted > 0 && (
+                    <div style={{ fontSize: 11, color: "#B7950B", marginTop: 6 }}>
+                      + {attempted} attempted (not yet summited)
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 pb-5 flex justify-end">
+          <button
+            onClick={onClose}
+            className="px-5 py-2 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90"
+            style={{ background: "#C0522A" }}
+          >
+            Close
+          </button>
+        </div>
+
+        {/* Close X */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors text-xl leading-none"
+          aria-label="Close"
+        >×</button>
+      </div>
+    </div>
+  );
+}
+
+// ── Peak Journal Modal ────────────────────────────────────────────────────
+function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onClose: () => void }) {
+  if (!range) return null;
+  const isSummited = range.summited === true;
+  const isAttempted = range.attempted === true && !isSummited;
+  const hasPhotos = !!(range.trailheadPhoto || range.summitPhoto);
+
+  return (
+    <div
+      className="absolute inset-0 z-[60] flex items-center justify-center"
+      style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}
+      onClick={onClose}
+    >
+      <div
+        className="relative rounded-2xl shadow-2xl overflow-hidden"
+        style={{
+          background: "#F5F0E8",
+          maxWidth: 560,
+          width: "calc(100% - 32px)",
+          maxHeight: "88vh",
+          overflowY: "auto",
+          fontFamily: "var(--font-body)",
+          animation: "modalIn 0.22s cubic-bezier(0.23,1,0.32,1)",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="px-5 py-4 flex items-start justify-between gap-2" style={{ background: range.color }}>
+          <div>
+            <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>
+              {range.range}
+            </div>
+            <div style={{ color: "#fff", fontSize: 20, fontWeight: 700, fontFamily: "var(--font-display)", lineHeight: 1.2 }}>
+              {range.peak}
+            </div>
+            <div style={{ color: "rgba(255,255,255,0.8)", fontSize: 13, marginTop: 2 }}>
+              {range.elevation}
+            </div>
+          </div>
+          {/* Status badge */}
+          <div style={{
+            background: isSummited ? "rgba(255,255,255,0.25)" : isAttempted ? "rgba(255,200,0,0.3)" : "rgba(0,0,0,0.2)",
+            borderRadius: 20,
+            padding: "4px 10px",
+            fontSize: 11,
+            fontWeight: 700,
+            color: "#fff",
+            whiteSpace: "nowrap",
+            flexShrink: 0,
+          }}>
+            {isSummited ? "✓ Summited" : isAttempted ? "⚡ Attempted" : "○ Not yet hiked"}
+          </div>
+        </div>
+
+        {/* Date & note */}
+        {(isSummited || isAttempted) && (
+          <div className="px-5 py-4" style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+            {isSummited && range.summitDate && (
+              <div style={{ fontSize: 13, color: "#1A6B3A", fontWeight: 700, marginBottom: 8 }}>
+                📅 Summited {range.summitDate}
+              </div>
+            )}
+            {isAttempted && range.attemptDate && (
+              <div style={{ fontSize: 13, color: "#B7950B", fontWeight: 700, marginBottom: 8 }}>
+                📅 Attempted {range.attemptDate}
+              </div>
+            )}
+            {(range.hikeNote || range.attemptNote) && (
+              <p style={{ fontSize: 13, color: "#555", lineHeight: 1.65, margin: 0 }}>
+                {range.hikeNote ?? range.attemptNote}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Photos */}
+        {hasPhotos && (
+          <div className="px-5 py-4 grid gap-4" style={{ gridTemplateColumns: range.trailheadPhoto && range.summitPhoto ? "1fr 1fr" : "1fr", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+            {range.trailheadPhoto && (
+              <div>
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#888", marginBottom: 6 }}>Trailhead</div>
+                <img
+                  src={range.trailheadPhoto.url}
+                  alt={`${range.peak} trailhead`}
+                  style={{ width: "100%", borderRadius: 8, objectFit: "cover", aspectRatio: "4/3" }}
+                />
+                {range.trailheadPhoto.caption && (
+                  <div style={{ fontSize: 11, color: "#888", marginTop: 4 }}>{range.trailheadPhoto.caption}</div>
+                )}
+              </div>
+            )}
+            {range.summitPhoto && (
+              <div>
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#888", marginBottom: 6 }}>Summit</div>
+                <img
+                  src={range.summitPhoto.url}
+                  alt={`${range.peak} summit`}
+                  style={{ width: "100%", borderRadius: 8, objectFit: "cover", aspectRatio: "4/3" }}
+                />
+                {range.summitPhoto.caption && (
+                  <div style={{ fontSize: 11, color: "#888", marginTop: 4 }}>{range.summitPhoto.caption}</div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Not yet hiked placeholder */}
+        {!isSummited && !isAttempted && (
+          <div className="px-5 py-8 text-center" style={{ color: "#aaa", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+            <div style={{ fontSize: 32, marginBottom: 8 }}>🏔</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: "#888" }}>Not yet attempted</div>
+            <div style={{ fontSize: 12, color: "#aaa", marginTop: 4 }}>Photos and notes will appear here after the hike.</div>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="px-5 py-4 flex items-center justify-between" style={{ background: "rgba(0,0,0,0.04)" }}>
+          <div style={{ fontSize: 11, color: "#aaa" }}>
+            {range.trailhead} · {range.gain} gain
+          </div>
+          <button
+            onClick={onClose}
+            className="px-4 py-1.5 rounded-lg text-xs font-semibold text-white transition-opacity hover:opacity-90"
+            style={{ background: range.color }}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Fire Perimeter Types ───────────────────────────────────────────────────
 interface FireFeature {
   attributes: {
@@ -30,15 +269,18 @@ function googleMapsDirectionsUrl(r: MountainRange) {
   return `https://www.google.com/maps/dir/?api=1&destination=${r.trailheadLat},${r.trailheadLon}&destination_place_id=&travelmode=driving`;
 }
 
-function createPinElement(color = "#CC0000"): HTMLElement {
+function createPinElement(color = "#CC0000", badge?: "summited" | "attempted"): HTMLElement {
   const div = document.createElement("div");
-  div.style.cssText = "width:18px;height:26px;cursor:pointer;";
+  div.style.cssText = "position:relative;width:18px;height:26px;cursor:pointer;";
   div.innerHTML = `
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="26" viewBox="0 0 18 26">
       <path d="M9 0 C4.03 0 0 4.03 0 9 C0 15.75 9 26 9 26 C9 26 18 15.75 18 9 C18 4.03 13.97 0 9 0 Z"
             fill="${color}" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/>
       <circle cx="9" cy="9" r="3.2" fill="white" opacity="0.9"/>
-    </svg>`;
+    </svg>
+    ${badge === "summited" ? `<div style="position:absolute;top:-7px;right:-7px;width:14px;height:14px;border-radius:50%;background:#1A6B3A;border:1.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;font-weight:700;line-height:1;">✓</div>` : ""}
+    ${badge === "attempted" ? `<div style="position:absolute;top:-7px;right:-7px;width:14px;height:14px;border-radius:50%;background:#B7950B;border:1.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;font-weight:700;line-height:1;">!</div>` : ""}
+  `;
   return div;
 }
 
@@ -308,7 +550,7 @@ function DetailSidebar({
 }
 
 // ── Legend ────────────────────────────────────────────────────────────────
-function Legend({ selected, onSelect }: { selected: MountainRange | null; onSelect: (r: MountainRange) => void }) {
+function Legend({ selected, onSelect, onOpenJournal }: { selected: MountainRange | null; onSelect: (r: MountainRange) => void; onOpenJournal: (r: MountainRange) => void }) {
   return (
     <div
       className="absolute bottom-8 left-3 z-20 rounded-xl shadow-xl overflow-hidden"
@@ -333,7 +575,23 @@ function Legend({ selected, onSelect }: { selected: MountainRange | null; onSele
             style={{ background: selected?.range === r.range ? `${r.color}18` : undefined }}
           >
             <span className="flex-shrink-0 rounded-sm" style={{ width: 12, height: 12, background: r.color }} />
-            <span className="text-xs text-gray-700 leading-tight">{r.range}</span>
+            <span className="text-xs text-gray-700 leading-tight flex-1">{r.range}</span>
+            {r.summited && (
+              <span title={`Summited ${r.summitDate ?? ""}`} style={{ fontSize: 10, color: "#1A6B3A", fontWeight: 700, flexShrink: 0 }}>✓</span>
+            )}
+            {r.attempted && !r.summited && (
+              <span title={`Attempted ${r.attemptDate ?? ""}`} style={{ fontSize: 10, color: "#B7950B", fontWeight: 700, flexShrink: 0 }}>⚡</span>
+            )}
+            <button
+              onClick={(e) => { e.stopPropagation(); onOpenJournal(r); }}
+              title="View hike journal"
+              style={{ flexShrink: 0, padding: "1px 3px", borderRadius: 4, background: "rgba(0,0,0,0.06)", border: "none", cursor: "pointer", lineHeight: 1 }}
+            >
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M8 12h8M8 8h8M8 16h5"/>
+              </svg>
+            </button>
           </button>
         ))}
       </div>
@@ -350,6 +608,8 @@ export default function Home() {
   const [selected, setSelected] = useState<MountainRange | null>(null);
   const [mapType, setMapType] = useState<"terrain" | "satellite" | "roadmap">("terrain");
   const [tableOpen, setTableOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [journalRange, setJournalRange] = useState<MountainRange | null>(null);
   const polygonsRef = useRef<google.maps.Polygon[]>([]);
   const labelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
 
@@ -490,6 +750,10 @@ export default function Home() {
   const handleSelect = useCallback((r: MountainRange) => {
     setSelected(r);
     mapRef.current?.panTo({ lat: r.lat, lng: r.lon });
+  }, []);
+
+  const handleOpenJournal = useCallback((r: MountainRange) => {
+    setJournalRange(r);
   }, []);
 
   // Fetch fire perimeters once (lazy, on first toggle-on)
@@ -684,7 +948,8 @@ export default function Home() {
       void centLat; void centLng;
 
       // Peak pin
-      const pinEl = createPinElement("#CC0000");
+      const badge = r.summited ? "summited" : r.attempted ? "attempted" : undefined;
+      const pinEl = createPinElement("#CC0000", badge);
       const peakMarker = new google.maps.marker.AdvancedMarkerElement({
         map, position: { lat: r.lat, lng: r.lon }, content: pinEl,
         title: `${r.peak} — ${r.elevation}`, zIndex: 10,
@@ -776,6 +1041,26 @@ export default function Home() {
               <path d="M3 9h18M3 15h18M9 3v18"/>
             </svg>
             Peak List
+          </button>
+
+          {/* About button */}
+          <button
+            onClick={() => setAboutOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+            style={{
+              background: "rgba(255,255,255,0.10)",
+              color: "rgba(238,232,220,0.8)",
+              border: "1px solid rgba(255,255,255,0.15)",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.18)")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.10)")}
+            title="About this project"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 16v-4M12 8h.01"/>
+            </svg>
+            About
           </button>
 
           {/* Fire footprint toggle */}
@@ -900,7 +1185,7 @@ export default function Home() {
       />
 
       {/* ── Legend ── */}
-      <Legend selected={selected} onSelect={handleSelect} />
+      <Legend selected={selected} onSelect={handleSelect} onOpenJournal={handleOpenJournal} />
 
       {/* ── Detail Sidebar ── */}
       <DetailSidebar range={selected} onClose={() => setSelected(null)} />
@@ -912,6 +1197,12 @@ export default function Home() {
         onSelectRange={(r) => { handleSelect(r); setTableOpen(false); }}
       />
 
+      {/* ── About Modal ── */}
+      <AboutModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
+
+      {/* ── Peak Journal Modal ── */}
+      <PeakJournalModal range={journalRange} onClose={() => setJournalRange(null)} />
+
       <style>{`
         @keyframes slideIn {
           from { opacity: 0; transform: translateX(16px); }
@@ -920,6 +1211,10 @@ export default function Home() {
         @keyframes spin {
           from { transform: rotate(0deg); }
           to   { transform: rotate(360deg); }
+        }
+        @keyframes modalIn {
+          from { opacity: 0; transform: scale(0.95) translateY(8px); }
+          to   { opacity: 1; transform: scale(1) translateY(0); }
         }
       `}</style>
     </div>

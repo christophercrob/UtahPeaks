@@ -15,6 +15,15 @@ export interface MountainRange {
   gain: string;
   color: string;
   polygon: Array<[number, number]>; // [lat, lon] pairs
+  // Personal hiking journal fields
+  summited?: boolean;
+  summitDate?: string;           // e.g. "July 11, 2026"
+  hikeNote?: string;             // short personal note about the hike
+  trailheadPhoto?: { url: string; caption?: string };
+  summitPhoto?: { url: string; caption?: string };
+  attempted?: boolean;           // true if attempted but not yet summited
+  attemptDate?: string;          // date of the attempt
+  attemptNote?: string;          // note about the attempt
 }
 
 export const MOUNTAIN_RANGES: MountainRange[] = [
@@ -97,6 +106,9 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     trailheadLon: -112.3317,
     gain: "~1,625–1,700 ft",
     color: "#E91E8C",
+    summited: true,
+    summitDate: "June 13, 2026",
+    hikeNote: "A beautiful high-altitude drive to Big John Flat puts you within striking distance of the summit. The Tushars are one of Utah's hidden gems — dramatic volcanic terrain with sweeping views of the Sevier Plateau.",
     polygon: [
       // From user-provided KML (Google Earth), Aug 2026
       [38.338381, -112.551621],
@@ -182,6 +194,9 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     trailheadLon: -111.7617,
     gain: "~3,300–3,500 ft",
     color: "#2471A3",
+    summited: true,
+    summitDate: "July 11, 2026",
+    hikeNote: "Mount Nebo is the southern sentinel of the Wasatch — a long, exposed ridge walk with three distinct summits. The north peak is the true high point. Views stretch from the Uintas to the Tushar Mountains on a clear day.",
     polygon: [
       // Southern section per user cross-sections:
       // Provo→US-40, Mapleton→West Portal, Payson→Thistle, Rocky Ridge→Birdseye, Mona→Indianola
@@ -233,6 +248,9 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     trailheadLon: -110.7283,
     gain: "~1,024 ft",
     color: "#6C3483",
+    summited: true,
+    summitDate: "July 5, 2026",
+    hikeNote: "The Henry Mountains are the last range in the contiguous US to be named and mapped. Mount Ellen's summit ridge is a short hike from Bull Creek Pass — but the remoteness and the views over Capitol Reef and Canyonlands make it feel like the edge of the world.",
     polygon: [
       [38.1915, -110.8326],
       [38.1763, -110.8518],
@@ -297,6 +315,9 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     trailheadLon: -112.606392,
     gain: "~3,613 ft",
     color: "#B7950B",
+    attempted: true,
+    attemptDate: "July 25, 2026",
+    attemptNote: "Attempted Deseret Peak on July 25, 2026. Will return to finish the job.",
     polygon: [
       // Shifted east 0.5 miles (+0.007°) from previous position
       [40.700, -112.643],
@@ -361,6 +382,9 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     trailheadLon: -113.5050,
     gain: "~4,480–4,630 ft",
     color: "#1E8449",
+    summited: true,
+    summitDate: "May 25, 2025",
+    hikeNote: "Signal Peak is a long, forested climb through pine and aspen above the town of Pine Valley. The summit offers a surprising 360° panorama — Zion to the east, the Nevada desert to the west, and the red cliffs of the Arizona Strip to the south.",
     polygon: [
       // From user-provided KML (Google Earth), Aug 2026
       [37.296377, -113.311317],
