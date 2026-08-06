@@ -98,24 +98,17 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~1,625–1,700 ft",
     color: "#E91E8C",
     polygon: [
-      // Shifted west ~0.12° so US-89 (~112.22°W) defines eastern edge
-      // and Beaver/Cove Fort/Sulphurdale (~112.64-112.66°W) define western edge
-      [38.650, -112.220],
-      [38.650, -112.320],
-      [38.700, -112.370],
-      [38.700, -112.520],
-      [38.650, -112.570],
-      [38.600, -112.640],
-      [38.500, -112.660],
-      [38.400, -112.650],
-      [38.300, -112.610],
-      [38.200, -112.520],
-      [38.200, -112.370],
-      [38.250, -112.250],
-      [38.350, -112.200],
-      [38.500, -112.200],
-      [38.600, -112.210],
-      [38.650, -112.220],
+      // Updated per user-provided GeoJSON: I-15×I-70 (NW) → I-70×US-89 (NE) →
+      // US-89 near Marysvale (mid-east) → US-89×UT-20 (SE) → UT-20×I-15 (S) →
+      // I-15 east of Beaver (mid-west) → I-15 near Cove Fort (NW-mid)
+      [38.78, -112.58],   // I-15 × I-70 area (NW)
+      [38.80, -112.12],   // I-70 × US-89 (NE)
+      [38.45, -112.22],   // US-89 near Marysvale (mid-east)
+      [38.35, -112.25],   // US-89 × UT-20 area (SE)
+      [38.30, -112.85],   // UT-20 × I-15 area (S)
+      [38.25, -112.65],   // I-15 east of Beaver (mid-west)
+      [38.62, -112.60],   // I-15 near Cove Fort (NW-mid)
+      [38.78, -112.58],   // back to start
     ],
   },
   {
@@ -351,6 +344,33 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
       [37.6738, -113.2235],
       [37.491, -113.7254],
       [37.4423, -113.7867],
+    ],
+  },
+  {
+    range: "Pahvant Range",
+    peak: "Pioneer Peak",
+    elevation: "10,466 ft",
+    elevationFt: 10466,
+    lat: 38.994,
+    lon: -112.173,
+    trailhead: "Paiute ATV Trail (Fillmore Canyon Rd)",
+    trailheadLat: 38.9600,
+    trailheadLon: -112.2100,
+    gain: "~500 ft (from ridge road)",
+    color: "#7D6608",
+    polygon: [
+      // Per user-provided GeoJSON: NW front above Sevier Desert → NE near Canyon Mtns →
+      // Central east near Richfield → SE Clear Creek Canyon east portal (I-70) →
+      // South-central west Clear Creek west portal → Mid-west above Fillmore/Meadow →
+      // NW-mid above Kanosh area
+      [39.10, -112.80],   // NW: west front above Sevier Desert (north end)
+      [39.10, -112.30],   // NE: east side near Canyon Mountains transition
+      [38.80, -112.15],   // Central east: Sevier Valley near Richfield
+      [38.60, -112.18],   // SE: Clear Creek Canyon east portal (I-70)
+      [38.60, -112.40],   // South-central west: Clear Creek west portal
+      [38.80, -112.55],   // Mid-west: west front above Fillmore/Meadow
+      [39.00, -112.65],   // NW-mid: west front above Kanosh area
+      [39.10, -112.80],   // back to start
     ],
   },
 ];
