@@ -5,6 +5,7 @@
  * full-screen data table drawer, and Google Maps directions links.
  */
 import { useRef, useState, useCallback, useEffect } from "react";
+import React from "react";
 import { MapView } from "@/components/Map";
 import { MOUNTAIN_RANGES, type MountainRange } from "@/data/ranges";
 
@@ -140,8 +141,10 @@ function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onC
   const isAttempted = range.attempted === true && !isSummited;
   const hasPhotos = !!(range.trailheadPhoto || range.summitPhoto);
   const hasExtra = !!(range.extraPhotos?.length || range.videoUrl);
+  const [lightbox, setLightbox] = useState<{ url: string; caption?: string } | null>(null);
 
   return (
+    <>
     <div
       className="absolute inset-0 z-[60] flex items-center justify-center"
       style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}
@@ -218,7 +221,8 @@ function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onC
                 <img
                   src={range.trailheadPhoto.url}
                   alt={`${range.peak} trailhead`}
-                  style={{ width: "100%", borderRadius: 8, objectFit: "cover", aspectRatio: "4/3" }}
+                  style={{ width: "100%", borderRadius: 8, objectFit: "cover", aspectRatio: "4/3", cursor: "zoom-in" }}
+                  onClick={() => setLightbox(range.trailheadPhoto!)}
                 />
                 {range.trailheadPhoto.caption && (
                   <div style={{ fontSize: 11, color: "#888", marginTop: 4 }}>{range.trailheadPhoto.caption}</div>
@@ -231,22 +235,14 @@ function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onC
                 <img
                   src={range.summitPhoto.url}
                   alt={`${range.peak} summit`}
-                  style={{ width: "100%", borderRadius: 8, objectFit: "cover", aspectRatio: "4/3" }}
+                  style={{ width: "100%", borderRadius: 8, objectFit: "cover", aspectRatio: "4/3", cursor: "zoom-in" }}
+                  onClick={() => setLightbox(range.summitPhoto!)}
                 />
                 {range.summitPhoto.caption && (
                   <div style={{ fontSize: 11, color: "#888", marginTop: 4 }}>{range.summitPhoto.caption}</div>
                 )}
               </div>
             )}
-          </div>
-        )}
-
-        {/* Not yet hiked placeholder */}
-        {!isSummited && !isAttempted && (
-          <div className="px-5 py-8 text-center" style={{ color: "#aaa", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}>🏔</div>
-            <div style={{ fontSize: 14, fontWeight: 600, color: "#888" }}>Not yet attempted</div>
-            <div style={{ fontSize: 12, color: "#aaa", marginTop: 4 }}>Photos and notes will appear here after the hike.</div>
           </div>
         )}
 
@@ -264,8 +260,9 @@ function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onC
                       <img
                         src={photo.url}
                         alt={photo.caption ?? `Photo ${i + 1}`}
-                        style={{ width: "100%", borderRadius: 6, objectFit: "cover", aspectRatio: "4/3", display: "block" }}
+                        style={{ width: "100%", borderRadius: 6, objectFit: "cover", aspectRatio: "4/3", display: "block", cursor: "zoom-in" }}
                         title={photo.caption}
+                        onClick={() => setLightbox(photo)}
                       />
                     </div>
                   ))}
@@ -324,6 +321,31 @@ function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onC
         </div>
       </div>
     </div>
+
+    {/* Lightbox overlay — rendered outside the modal card so it covers the full screen */}
+    {lightbox && (
+      <div
+        style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(0,0,0,0.93)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 16 }}
+        onClick={() => setLightbox(null)}
+      >
+        <img
+          src={lightbox.url}
+          alt={lightbox.caption ?? "Photo"}
+          style={{ maxWidth: "min(92vw, 1000px)", maxHeight: "82vh", borderRadius: 10, objectFit: "contain", boxShadow: "0 8px 60px rgba(0,0,0,0.6)" }}
+          onClick={(e) => e.stopPropagation()}
+        />
+        {lightbox.caption && (
+          <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, marginTop: 12, textAlign: "center", maxWidth: 600 }}>
+            {lightbox.caption}
+          </div>
+        )}
+        <button
+          onClick={() => setLightbox(null)}
+          style={{ position: "absolute", top: 16, right: 20, background: "rgba(255,255,255,0.15)", border: "none", borderRadius: "50%", width: 36, height: 36, color: "#fff", fontSize: 20, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+        >×</button>
+      </div>
+    )}
+    </>
   );
 }
 

@@ -111,11 +111,11 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     summited: true,
     summitDate: "June 13, 2026",
     hikeNote: "A beautiful high-altitude drive to Big John Flat puts you within striking distance of the summit. The Tushars are one of Utah's hidden gems — dramatic volcanic terrain, lush forests, and sweeping views of Eagle Point ski resort and the Sevier Plateau. The forest below the summit was still pristine on this June day, before the Cottonwood Fire swept through later that summer.",
-    trailheadPhoto: { url: "/manus-storage/delano_trailhead_910cbb39.jpg", caption: "Delano Peak Trailhead #224 — June 13, 2026" },
-    summitPhoto: { url: "/manus-storage/delano_summit_22a604b0.jpg", caption: "Summit of Delano Peak, 12,169 ft — June 13, 2026" },
+    trailheadPhoto: { url: "/manus-storage/delano_trailhead_46c9d901.jpg", caption: "Delano Peak Trailhead #224 — June 13, 2026" },
+    summitPhoto: { url: "/manus-storage/delano_summit_cc63fe5e.jpg", caption: "Summit of Delano Peak, 12,169 ft — June 13, 2026" },
     extraPhotos: [
-      { url: "/manus-storage/delano_forest_4922d685.jpg", caption: "The lush Tushar forest looking west toward Beaver Valley — before the Cottonwood Fire" },
-      { url: "/manus-storage/delano_eaglepoint_ac820c6a.jpg", caption: "Eagle Point ski resort visible from the summit ridge" },
+      { url: "/manus-storage/delano_forest_35dd78a9.jpg", caption: "The lush Tushar forest looking west toward Beaver Valley — before the Cottonwood Fire" },
+      { url: "/manus-storage/delano_eaglepoint_e2e04fb5.jpg", caption: "Eagle Point ski resort visible from the summit ridge" },
     ],
     polygon: [
       // From user-provided KML (Google Earth), Aug 2026
@@ -205,8 +205,8 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     summited: true,
     summitDate: "July 11, 2026",
     hikeNote: "Mount Nebo is the southern sentinel of the Wasatch — a long, exposed ridge walk with three distinct summits. The north peak is the true high point. Views stretch from the Uintas to the Tushar Mountains on a clear day.",
-    trailheadPhoto: { url: "/manus-storage/nebo_trailhead_ce8a5841.jpg", caption: "North Nebo Trailhead — July 11, 2026" },
-    summitPhoto: { url: "/manus-storage/nebo_summit_a1c5d6b3.jpg", caption: "Summit of Mount Nebo looking north toward Utah Lake — July 11, 2026" },
+    trailheadPhoto: { url: "/manus-storage/nebo_trailhead_5b821db1.jpg", caption: "North Nebo Trailhead — July 11, 2026" },
+    summitPhoto: { url: "/manus-storage/nebo_summit_1eaf7d79.jpg", caption: "Summit of Mount Nebo looking north toward Utah Lake — July 11, 2026" },
     polygon: [
       // Southern section per user cross-sections:
       // Provo→US-40, Mapleton→West Portal, Payson→Thistle, Rocky Ridge→Birdseye, Mona→Indianola
@@ -261,12 +261,12 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     summited: true,
     summitDate: "July 5, 2026",
     hikeNote: "The Henry Mountains are the last range in the contiguous US to be named and mapped. Mount Ellen's summit ridge is a short hike from Bull Creek Pass — but the remoteness and the views over Capitol Reef and Canyonlands make it feel like the edge of the world.",
-    trailheadPhoto: { url: "/manus-storage/ellen_trailhead_7eb299bb.jpg", caption: "Bull Creek Pass Trailhead at sunrise — July 5, 2026" },
-    summitPhoto: { url: "/manus-storage/ellen_summit_d44eda55.jpg", caption: "Summit of Mount Ellen with Capitol Reef in the distance — July 5, 2026" },
+    trailheadPhoto: { url: "/manus-storage/ellen_trail2_9610ab3f.jpg", caption: "Looking back toward Bull Creek Pass Trailhead from the ridge" },
+    summitPhoto: { url: "/manus-storage/ellen_summit_118ed81e.jpg", caption: "Summit of Mount Ellen with Capitol Reef in the distance — July 5, 2026" },
     extraPhotos: [
-      { url: "/manus-storage/ellen_trailhead2_9272fde4.jpg", caption: "Golden hour approach — Mount Ellen in the background" },
-      { url: "/manus-storage/ellen_trail1_96c33d5e.jpg", caption: "On the ridge with canyon country stretching to the horizon" },
-      { url: "/manus-storage/ellen_trail2_e0748b5a.jpg", caption: "The ridge walk toward the summit" },
+      { url: "/manus-storage/ellen_trailhead2_85a487fd.jpg", caption: "Morning approach — Mount Ellen glowing in the distance" },
+      { url: "/manus-storage/ellen_trail1_c6df66f4.jpg", caption: "On the ridge with canyon country stretching to the horizon" },
+      { url: "/manus-storage/ellen_trailhead_412fbfe4.jpg", caption: "Morning approach to the Henry Mountains — July 5, 2026" },
     ],
     videoUrl: "https://photos.app.goo.gl/M7ukkBM9tKKmd8o99",
     polygon: [
@@ -335,7 +335,12 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     color: "#B7950B",
     attempted: true,
     attemptDate: "July 25, 2026",
-    attemptNote: "Attempted Deseret Peak on July 25, 2026. Will return to finish the job.",
+    attemptNote: "Got some bad directions from Google and ended up miles from the correct trailhead. By the time I sorted it out, afternoon thunderstorms were already building over the summit — too risky to start that late. Still got in a good hike on the lower slopes and got a great look at Deseret Peak. I\'ll be back.",
+    summitPhoto: { url: "/manus-storage/stansbury_selfie_3fe9b2bf.jpg", caption: "Deseret Peak summit ridge from the lower slopes — July 25, 2026" },
+    extraPhotos: [
+      { url: "/manus-storage/stansbury_valley_3968e881.jpg", caption: "Looking west over Tooele Valley and the salt flats toward the Oquirrh Mountains" },
+      { url: "/manus-storage/stansbury_trail_b9543410.jpg", caption: "The trail through aspens and firs on the way up" },
+    ],
     polygon: [
       // Shifted east 0.5 miles (+0.007°) from previous position
       [40.700, -112.643],
