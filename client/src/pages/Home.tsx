@@ -375,7 +375,7 @@ export default function Home() {
       cutoff.setFullYear(cutoff.getFullYear() - 3);
       const dateStr = cutoff.toISOString().slice(0, 10); // e.g. "2023-08-06"
       const where = encodeURIComponent(
-        `attr_POOState='US-UT' AND attr_FireDiscoveryDateTime >= DATE '${dateStr}'`
+        `attr_POOState='US-UT' AND attr_FireDiscoveryDateTime >= DATE '${dateStr}' AND poly_GISAcres >= 5000 AND poly_FeatureCategory='Wildfire Final Fire Perimeter'`
       );
       const url =
         `https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Interagency_Perimeters/FeatureServer/0/query` +
