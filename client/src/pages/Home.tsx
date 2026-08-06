@@ -50,7 +50,7 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
         <div className="px-6 py-5 space-y-4" style={{ color: "#3D3D3D", fontSize: 14, lineHeight: 1.7 }}>
           <p>
             I was born and raised at the base of the Wasatch Mountains and found myself in the canyons and
-            climbing peaks, like Timpanogos, on a regular basis. After almost 3 decades away, I moved back
+            climbing peaks on a regular basis. After almost 3 decades away, I moved back
             full time in the fall of 2025. This map is my attempt to explore the entire state again —
             not from a car window, but from the top of it.
           </p>
@@ -139,6 +139,7 @@ function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onC
   const isSummited = range.summited === true;
   const isAttempted = range.attempted === true && !isSummited;
   const hasPhotos = !!(range.trailheadPhoto || range.summitPhoto);
+  const hasExtra = !!(range.extraPhotos?.length || range.videoUrl);
 
   return (
     <div
@@ -236,6 +237,65 @@ function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onC
                   <div style={{ fontSize: 11, color: "#888", marginTop: 4 }}>{range.summitPhoto.caption}</div>
                 )}
               </div>
+            )}
+          </div>
+        )}
+
+        {/* Not yet hiked placeholder */}
+        {!isSummited && !isAttempted && (
+          <div className="px-5 py-8 text-center" style={{ color: "#aaa", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+            <div style={{ fontSize: 32, marginBottom: 8 }}>🏔</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: "#888" }}>Not yet attempted</div>
+            <div style={{ fontSize: 12, color: "#aaa", marginTop: 4 }}>Photos and notes will appear here after the hike.</div>
+          </div>
+        )}
+
+        {/* Extra gallery photos + video */}
+        {hasExtra && (
+          <div className="px-5 py-4" style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+            {range.extraPhotos && range.extraPhotos.length > 0 && (
+              <>
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#888", marginBottom: 8 }}>
+                  More from this hike
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
+                  {range.extraPhotos.map((photo, i) => (
+                    <div key={i}>
+                      <img
+                        src={photo.url}
+                        alt={photo.caption ?? `Photo ${i + 1}`}
+                        style={{ width: "100%", borderRadius: 6, objectFit: "cover", aspectRatio: "4/3", display: "block" }}
+                        title={photo.caption}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+            {range.videoUrl && (
+              <a
+                href={range.videoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 7,
+                  marginTop: range.extraPhotos?.length ? 12 : 0,
+                  background: "#1C2333",
+                  color: "#fff",
+                  borderRadius: 8,
+                  padding: "8px 14px",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  textDecoration: "none",
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                Watch Video
+              </a>
             )}
           </div>
         )}
