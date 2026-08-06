@@ -16,6 +16,9 @@ interface FireFeature {
     poly_GISAcres: number | null;
     attr_POOState: string | null;
     attr_IncidentTypeCategory: string | null;
+    poly_FeatureCategory: string | null;
+    attr_FireOutDateTime: number | null;
+    poly_DateCurrent: number | null;
   };
   geometry: {
     rings: number[][][];
@@ -369,26 +372,52 @@ export default function Home() {
     setFireLoading(true);
     setFireError(null);
     try {
-      // NIFC WFIGS Interagency Perimeters — Utah wildfires from the past 3 years
-      // ArcGIS requires DATE 'YYYY-MM-DD' literal syntax for date comparisons (not epoch ms)
+      // NIFC WFIGS Interagency Perimeters — Utah wildfires ≥ 5,000 acres, past 3 years.
+      // Strategy: fetch ALL perimeters (Final + Daily) for Utah fires ≥ 5,000 ac,
+      // then deduplicate per incident keeping: Final perimeter if available, else
+      // the most recent Daily perimeter (for active/ongoing fires).
       const cutoff = new Date();
       cutoff.setFullYear(cutoff.getFullYear() - 3);
-      const dateStr = cutoff.toISOString().slice(0, 10); // e.g. "2023-08-06"
+      const dateStr = cutoff.toISOString().slice(0, 10);
       const where = encodeURIComponent(
-        `attr_POOState='US-UT' AND attr_FireDiscoveryDateTime >= DATE '${dateStr}' AND poly_GISAcres >= 5000 AND poly_FeatureCategory='Wildfire Final Fire Perimeter'`
+        `attr_POOState='US-UT' AND attr_FireDiscoveryDateTime >= DATE '${dateStr}' AND poly_GISAcres >= 5000`
       );
       const url =
         `https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Interagency_Perimeters/FeatureServer/0/query` +
         `?where=${where}` +
-        `&outFields=poly_IncidentName,attr_FireDiscoveryDateTime,poly_GISAcres,attr_POOState,attr_IncidentTypeCategory` +
-        `&returnGeometry=true&outSR=4326&f=json&resultRecordCount=300`;
+        `&outFields=poly_IncidentName,attr_FireDiscoveryDateTime,poly_GISAcres,attr_POOState,attr_IncidentTypeCategory,poly_FeatureCategory,attr_FireOutDateTime,poly_DateCurrent` +
+        `&returnGeometry=true&outSR=4326&f=json&resultRecordCount=500&orderByFields=poly_DateCurrent+DESC`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
       if (json.error) throw new Error(json.error.message ?? "API error");
-      const features: FireFeature[] = json.features ?? [];
-      fireDataRef.current = features;
-      return features;
+      const allFeatures: FireFeature[] = json.features ?? [];
+
+      // Deduplicate: one polygon per incident name.
+      // Priority: "Wildfire Final Fire Perimeter" > most-recent daily perimeter.
+      const byName = new Map<string, FireFeature>();
+      for (const feat of allFeatures) {
+        const name = (feat.attributes.poly_IncidentName ?? "").trim().toLowerCase();
+        if (!name) continue;
+        const existing = byName.get(name);
+        if (!existing) {
+          byName.set(name, feat);
+          continue;
+        }
+        const isFinal = feat.attributes.poly_FeatureCategory === "Wildfire Final Fire Perimeter";
+        const existingIsFinal = existing.attributes.poly_FeatureCategory === "Wildfire Final Fire Perimeter";
+        // Prefer Final over Daily; among same category prefer newer poly_DateCurrent
+        if (isFinal && !existingIsFinal) {
+          byName.set(name, feat);
+        } else if (isFinal === existingIsFinal) {
+          const newDate = feat.attributes.poly_DateCurrent ?? 0;
+          const oldDate = existing.attributes.poly_DateCurrent ?? 0;
+          if (newDate > oldDate) byName.set(name, feat);
+        }
+      }
+      const deduped = Array.from(byName.values());
+      fireDataRef.current = deduped;
+      return deduped;
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Unknown error";
       setFireError(`Could not load fire data: ${msg}`);
@@ -425,12 +454,15 @@ export default function Home() {
           ring.map(([lng, lat]) => ({ lat, lng }))
         );
 
+        const isActive = feat.attributes.attr_FireOutDateTime === null &&
+          feat.attributes.poly_FeatureCategory !== "Wildfire Final Fire Perimeter";
+
         const polygon = new google.maps.Polygon({
           paths,
-          strokeColor: "#3a3a3a",
+          strokeColor: isActive ? "#8B2500" : "#3a3a3a",
           strokeOpacity: 0.9,
-          strokeWeight: 1.5,
-          fillColor: "#555555",
+          strokeWeight: isActive ? 2 : 1.5,
+          fillColor: isActive ? "#6B3020" : "#555555",
           fillOpacity: 0.38,
           map,
           zIndex: 5,
@@ -450,7 +482,6 @@ export default function Home() {
         const acresStr = poly_GISAcres
           ? `${Math.round(poly_GISAcres).toLocaleString()} ac`
           : "";
-
         const labelEl = document.createElement("div");
         labelEl.style.cssText = `
           display:flex;flex-direction:column;align-items:center;gap:1px;
@@ -461,7 +492,7 @@ export default function Home() {
         const nameSpan = document.createElement("span");
         nameSpan.style.cssText = `
           font-family:'Source Sans 3',sans-serif;font-size:10px;font-weight:800;
-          color:#1a1a1a;white-space:nowrap;line-height:1.2;
+          color:${isActive ? "#8B1A00" : "#1a1a1a"};white-space:nowrap;line-height:1.2;
           text-shadow:0 0 3px #fff,0 0 6px #fff,0 0 10px #fff,
             1px 1px 0 #fff,-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff;
           background:none;padding:0;
@@ -470,6 +501,7 @@ export default function Home() {
           poly_IncidentName
             ? poly_IncidentName.replace(/\b\w/g, (c) => c.toUpperCase())
             : "Unknown Fire";
+        if (isActive) nameSpan.textContent = "🔥 " + nameSpan.textContent;
         labelEl.appendChild(nameSpan);
 
         const dateSpan = document.createElement("span");
@@ -478,7 +510,9 @@ export default function Home() {
           color:#444;white-space:nowrap;line-height:1.2;
           text-shadow:0 0 3px #fff,0 0 6px #fff,1px 1px 0 #fff,-1px -1px 0 #fff;
         `;
-        dateSpan.textContent = acresStr ? `${dateStr} · ${acresStr}` : dateStr;
+        dateSpan.textContent = acresStr
+          ? `${dateStr} · ${acresStr}${isActive ? " · ACTIVE" : ""}`
+          : `${dateStr}${isActive ? " · ACTIVE" : ""}`;
         labelEl.appendChild(dateSpan);
 
         const marker = new google.maps.marker.AdvancedMarkerElement({
