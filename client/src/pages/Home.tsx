@@ -370,9 +370,12 @@ export default function Home() {
     setFireError(null);
     try {
       // NIFC WFIGS Interagency Perimeters — Utah wildfires from the past 3 years
-      const threeYearsAgo = Date.now() - 3 * 365.25 * 24 * 60 * 60 * 1000;
+      // ArcGIS requires DATE 'YYYY-MM-DD' literal syntax for date comparisons (not epoch ms)
+      const cutoff = new Date();
+      cutoff.setFullYear(cutoff.getFullYear() - 3);
+      const dateStr = cutoff.toISOString().slice(0, 10); // e.g. "2023-08-06"
       const where = encodeURIComponent(
-        `attr_POOState='US-UT' AND attr_FireDiscoveryDateTime >= ${threeYearsAgo} AND attr_IncidentTypeCategory='WF'`
+        `attr_POOState='US-UT' AND attr_FireDiscoveryDateTime >= DATE '${dateStr}'`
       );
       const url =
         `https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Interagency_Perimeters/FeatureServer/0/query` +
