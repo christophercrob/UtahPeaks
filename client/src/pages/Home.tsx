@@ -49,17 +49,37 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
         {/* Body */}
         <div className="px-6 py-5 space-y-4" style={{ color: "#3D3D3D", fontSize: 14, lineHeight: 1.7 }}>
           <p>
-            I grew up in Utah — the red rock, the basin ranges, the sky above the Uintas — and after years away,
-            I moved back full time in the fall of 2025. This map is my attempt to truly know the state again,
+            I was born and raised at the base of the Wasatch Mountains and found myself in the canyons and
+            climbing peaks, like Timpanogos, on a regular basis. After almost 3 decades away, I moved back
+            full time in the fall of 2025. This map is my attempt to explore the entire state again —
             not from a car window, but from the top of it.
           </p>
-          <p>
-            The goal is simple: hike to the highest point of each of Utah's major mountain ranges. Some are long days.
-            Some are scrambles. All of them are worth it.
-          </p>
-          <p style={{ color: "#888", fontSize: 13, fontStyle: "italic" }}>
-            This is a work in progress. New summits added as they happen.
-          </p>
+          {/* Photo */}
+          <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+            <div style={{ flexShrink: 0 }}>
+              <img
+                src="/manus-storage/chris_roberts_profile_468e3b53.jpg"
+                alt="Chris Roberts at Cedar Breaks"
+                style={{
+                  width: 110,
+                  height: 110,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  border: "3px solid #C0522A",
+                  display: "block",
+                }}
+              />
+              <div style={{ fontSize: 10, color: "#aaa", textAlign: "center", marginTop: 4, maxWidth: 110 }}>
+                Cedar Breaks, 2026
+              </div>
+            </div>
+            <p style={{ color: "#888", fontSize: 13, fontStyle: "italic", margin: 0, paddingTop: 4 }}>
+              The goal is simple: hike to the highest point of each of Utah's major mountain ranges.
+              Some are long days. Some are scrambles. All of them are worth it.
+              <br /><br />
+              This is a work in progress. New summits added as they happen.
+            </p>
+          </div>
 
           {/* Progress bar */}
           <div style={{ background: "rgba(0,0,0,0.06)", borderRadius: 10, padding: "12px 14px" }}>
