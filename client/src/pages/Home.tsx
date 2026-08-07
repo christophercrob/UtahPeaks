@@ -687,8 +687,8 @@ function Legend({ selected, onSelect, onOpenJournal }: { selected: MountainRange
               style={{ flexShrink: 0, padding: "1px 3px", borderRadius: 4, background: "rgba(0,0,0,0.06)", border: "none", cursor: "pointer", lineHeight: 1 }}
             >
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5">
-                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                <path d="M8 12h8M8 8h8M8 16h5"/>
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
               </svg>
             </button>
           </button>
@@ -1103,30 +1103,30 @@ export default function Home() {
 
       {/* ── Header ── */}
       <header
-        className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4"
+        className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-2 sm:px-4"
         style={{ height: 56, background: "rgba(28,35,51,0.96)", backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
           <svg width="28" height="22" viewBox="0 0 28 22" fill="none">
             <path d="M10 18L17 4L24 18H10Z" fill="#C0522A" />
             <path d="M2 18L9 8L16 18H2Z" fill="#A04020" />
             <path d="M14 6L17 4L20 9" stroke="white" strokeWidth="1" strokeOpacity="0.4" fill="none" />
           </svg>
           <div>
-            <div className="text-base font-bold leading-tight" style={{ color: "#EEE8DC", fontFamily: "var(--font-body)" }}>
+            <div className="text-sm sm:text-base font-bold leading-tight" style={{ color: "#EEE8DC", fontFamily: "var(--font-body)" }}>
               Utah Mountain Ranges
             </div>
-            <div className="text-xs" style={{ color: "rgba(238,232,220,0.55)" }}>
+            <div className="hidden sm:block text-xs" style={{ color: "rgba(238,232,220,0.55)" }}>
               Highest Peaks &amp; Range Locations
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           {/* Peak List button */}
           <button
             onClick={() => setTableOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+            className="flex items-center gap-1 px-2 py-1.5 sm:px-3 sm:gap-1.5 rounded-lg text-xs font-semibold transition-colors"
             style={{
               background: "rgba(192,82,42,0.85)",
               color: "#fff",
@@ -1139,13 +1139,14 @@ export default function Home() {
               <rect x="3" y="3" width="18" height="18" rx="2"/>
               <path d="M3 9h18M3 15h18M9 3v18"/>
             </svg>
-            Peak List
+            <span className="hidden xs:inline sm:inline">Peak List</span>
+            <span className="xs:hidden sm:hidden">Peaks</span>
           </button>
 
           {/* About button */}
           <button
             onClick={() => setAboutOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+            className="flex items-center gap-1 px-2 py-1.5 sm:px-3 sm:gap-1.5 rounded-lg text-xs font-semibold transition-colors"
             style={{
               background: "rgba(255,255,255,0.10)",
               color: "rgba(238,232,220,0.8)",
@@ -1159,13 +1160,13 @@ export default function Home() {
               <circle cx="12" cy="12" r="10"/>
               <path d="M12 16v-4M12 8h.01"/>
             </svg>
-            About
+            <span className="hidden sm:inline">About</span>
           </button>
 
           {/* Fire footprint toggle */}
           <button
             onClick={() => setFireLayerOn((v) => !v)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+            className="flex items-center gap-1 px-2 py-1.5 sm:px-3 sm:gap-1.5 rounded-lg text-xs font-semibold transition-all"
             style={{
               background: fireLayerOn ? "rgba(200,60,20,0.92)" : "rgba(255,255,255,0.10)",
               color: "#fff",
@@ -1185,13 +1186,13 @@ export default function Home() {
                 <path d="M12 13c0 0-2.5 2-2.5 4a2.5 2.5 0 0 0 5 0C14.5 15 12 13 12 13z" fill="currentColor" strokeWidth="0"/>
               </svg>
             )}
-            {fireLoading ? "Loading…" : fireLayerOn ? "Fires: On" : "Fires"}
+            {fireLoading ? "…" : <><span className="hidden sm:inline">Fires</span><span className="sm:hidden">🔥</span></>}
           </button>
 
           {/* National Parks toggle */}
           <button
             onClick={() => setParksLayerOn((v) => !v)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+            className="flex items-center gap-1 px-2 py-1.5 sm:px-3 sm:gap-1.5 rounded-lg text-xs font-semibold transition-all"
             style={{
               background: parksLayerOn ? "rgba(200,20,20,0.92)" : "rgba(255,255,255,0.10)",
               color: "#fff",
@@ -1211,22 +1212,23 @@ export default function Home() {
                 <circle cx="17" cy="7" r="2" fill="currentColor" strokeWidth="0"/>
               </svg>
             )}
-            {parksLoading ? "Loading…" : parksLayerOn ? "Parks: On" : "Parks"}
+            {parksLoading ? "…" : <><span className="hidden sm:inline">Parks</span><span className="sm:hidden">🏔</span></>}
           </button>
 
-          <div className="flex rounded-lg overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.15)" }}>
+          <div className="flex rounded-lg overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.15)", flexShrink: 0 }}>
             {(["terrain", "satellite", "roadmap"] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => switchMapType(t)}
-                className="px-3 py-1.5 text-xs font-medium capitalize transition-colors"
+                className="px-2 py-1.5 sm:px-3 text-xs font-medium capitalize transition-colors"
                 style={{
                   background: mapType === t ? "#C0522A" : "rgba(255,255,255,0.07)",
                   color: mapType === t ? "#fff" : "rgba(238,232,220,0.7)",
                   borderRight: t !== "roadmap" ? "1px solid rgba(255,255,255,0.1)" : undefined,
                 }}
               >
-                {t === "terrain" ? "Topo" : t === "satellite" ? "Satellite" : "Street"}
+                {t === "terrain" ? "Topo" : t === "satellite" ? "Sat" : <span className="hidden sm:inline">Street</span>}
+                {t === "roadmap" && <span className="sm:hidden">St</span>}
               </button>
             ))}
           </div>
