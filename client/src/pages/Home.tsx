@@ -5,6 +5,7 @@
  * full-screen data table drawer, and Google Maps directions links.
  */
 import { useRef, useState, useCallback, useEffect } from "react";
+import { useIsMobile } from "@/hooks/useMobile";
 import React from "react";
 import { MapView } from "@/components/Map";
 import { MOUNTAIN_RANGES, type MountainRange } from "@/data/ranges";
@@ -19,11 +20,12 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
       onClick={onClose}
     >
       <div
-        className="relative rounded-2xl shadow-2xl overflow-hidden"
+        className="relative rounded-2xl shadow-2xl overflow-hidden overflow-y-auto"
         style={{
           background: "#F5F0E8",
           maxWidth: 520,
           width: "calc(100% - 32px)",
+          maxHeight: "90vh",
           fontFamily: "var(--font-body)",
           animation: "modalIn 0.22s cubic-bezier(0.23,1,0.32,1)",
         }}
@@ -152,8 +154,8 @@ function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onC
         style={{
           background: "#F5F0E8",
           maxWidth: 560,
-          width: "calc(100% - 32px)",
-          maxHeight: "88vh",
+          width: "calc(100% - 16px)",
+          maxHeight: "92vh",
           overflowY: "auto",
           fontFamily: "var(--font-body)",
           animation: "modalIn 0.22s cubic-bezier(0.23,1,0.32,1)",
@@ -659,7 +661,8 @@ function DetailSidebar({
 
 // ── Legend ────────────────────────────────────────────────────────────────
 function Legend({ selected, onSelect, onOpenJournal }: { selected: MountainRange | null; onSelect: (r: MountainRange) => void; onOpenJournal: (r: MountainRange) => void }) {
-  const [collapsed, setCollapsed] = useState(false);
+  const isMobile = useIsMobile();
+  const [collapsed, setCollapsed] = useState(() => window.innerWidth < 768);
 
   return (
     <div
