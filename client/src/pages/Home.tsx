@@ -724,6 +724,7 @@ export default function Home() {
   const [parksLayerOn, setParksLayerOn] = useState(false);
   const [parksLoading, setParksLoading] = useState(false);
   const [parksError, setParksError] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const parksPolygonsRef = useRef<google.maps.Polygon[]>([]);
   const parksLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const parksDataRef = useRef<NpsParkFeature[] | null>(null);
@@ -1102,137 +1103,176 @@ export default function Home() {
     <div className="relative w-screen h-screen overflow-hidden" style={{ fontFamily: "var(--font-body)" }}>
 
       {/* ── Header ── */}
+      {/* ── Header ── */}
       <header
-        className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-2 sm:px-4"
+        className="absolute top-0 left-0 right-0 z-30"
         style={{ height: 56, background: "rgba(28,35,51,0.96)", backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}
       >
-        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-          <svg width="28" height="22" viewBox="0 0 28 22" fill="none">
-            <path d="M10 18L17 4L24 18H10Z" fill="#C0522A" />
-            <path d="M2 18L9 8L16 18H2Z" fill="#A04020" />
-            <path d="M14 6L17 4L20 9" stroke="white" strokeWidth="1" strokeOpacity="0.4" fill="none" />
-          </svg>
-          <div>
-            <div className="text-sm sm:text-base font-bold leading-tight" style={{ color: "#EEE8DC", fontFamily: "var(--font-body)" }}>
-              Utah Mountain Ranges
-            </div>
-            <div className="hidden sm:block text-xs" style={{ color: "rgba(238,232,220,0.55)" }}>
-              Highest Peaks &amp; Range Locations
+        <div className="flex items-center justify-between h-full px-3 sm:px-4">
+          {/* Brand */}
+          <div className="flex items-center gap-2 shrink-0">
+            <svg width="28" height="22" viewBox="0 0 28 22" fill="none">
+              <path d="M10 18L17 4L24 18H10Z" fill="#C0522A" />
+              <path d="M2 18L9 8L16 18H2Z" fill="#A04020" />
+              <path d="M14 6L17 4L20 9" stroke="white" strokeWidth="1" strokeOpacity="0.4" fill="none" />
+            </svg>
+            <div>
+              <div className="text-sm sm:text-base font-bold leading-tight" style={{ color: "#EEE8DC", fontFamily: "var(--font-body)" }}>
+                Utah Mountain Ranges
+              </div>
+              <div className="hidden sm:block text-xs" style={{ color: "rgba(238,232,220,0.55)" }}>
+                Highest Peaks &amp; Range Locations
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex items-center gap-1 sm:gap-2">
-          {/* Peak List button */}
-          <button
-            onClick={() => setTableOpen(true)}
-            className="flex items-center gap-1 px-2 py-1.5 sm:px-3 sm:gap-1.5 rounded-lg text-xs font-semibold transition-colors"
-            style={{
-              background: "rgba(192,82,42,0.85)",
-              color: "#fff",
-              border: "1px solid rgba(255,255,255,0.15)",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#C0522A")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(192,82,42,0.85)")}
-          >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <rect x="3" y="3" width="18" height="18" rx="2"/>
-              <path d="M3 9h18M3 15h18M9 3v18"/>
-            </svg>
-            <span className="hidden xs:inline sm:inline">Peak List</span>
-            <span className="xs:hidden sm:hidden">Peaks</span>
-          </button>
+          {/* Desktop buttons */}
+          <div className="hidden sm:flex items-center gap-2">
+            <button
+              onClick={() => setTableOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+              style={{ background: "rgba(192,82,42,0.85)", color: "#fff", border: "1px solid rgba(255,255,255,0.15)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "#C0522A")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(192,82,42,0.85)")}
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>
+              </svg>
+              Peak List
+            </button>
+            <button
+              onClick={() => setAboutOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+              style={{ background: "rgba(255,255,255,0.10)", color: "rgba(238,232,220,0.8)", border: "1px solid rgba(255,255,255,0.15)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.18)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.10)")}
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+              </svg>
+              About
+            </button>
+            <button
+              onClick={() => setFireLayerOn((v) => !v)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+              style={{ background: fireLayerOn ? "rgba(200,60,20,0.92)" : "rgba(255,255,255,0.10)", color: "#fff", border: fireLayerOn ? "1px solid rgba(255,120,80,0.5)" : "1px solid rgba(255,255,255,0.15)" }}
+            >
+              {fireLoading
+                ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ animation: "spin 1s linear infinite" }}><circle cx="12" cy="12" r="10" strokeOpacity="0.3"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+                : <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2c0 0-5.5 5-5.5 10.5a5.5 5.5 0 0 0 11 0C17.5 7 12 2 12 2z"/><path d="M12 13c0 0-2.5 2-2.5 4a2.5 2.5 0 0 0 5 0C14.5 15 12 13 12 13z" fill="currentColor" strokeWidth="0"/></svg>
+              }
+              {fireLoading ? "Loading…" : fireLayerOn ? "Fires: On" : "Fires"}
+            </button>
+            <button
+              onClick={() => setParksLayerOn((v) => !v)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+              style={{ background: parksLayerOn ? "rgba(200,20,20,0.92)" : "rgba(255,255,255,0.10)", color: "#fff", border: parksLayerOn ? "1px solid rgba(255,80,80,0.5)" : "1px solid rgba(255,255,255,0.15)" }}
+            >
+              {parksLoading
+                ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ animation: "spin 1s linear infinite" }}><circle cx="12" cy="12" r="10" strokeOpacity="0.3"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+                : <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 17l4-8 4 5 3-4 4 7H3z"/><circle cx="17" cy="7" r="2" fill="currentColor" strokeWidth="0"/></svg>
+              }
+              {parksLoading ? "Loading…" : parksLayerOn ? "Parks: On" : "Parks"}
+            </button>
+            <div className="flex rounded-lg overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.15)" }}>
+              {(["terrain", "satellite", "roadmap"] as const).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => switchMapType(t)}
+                  className="px-3 py-1.5 text-xs font-medium capitalize transition-colors"
+                  style={{ background: mapType === t ? "#C0522A" : "rgba(255,255,255,0.07)", color: mapType === t ? "#fff" : "rgba(238,232,220,0.7)", borderRight: t !== "roadmap" ? "1px solid rgba(255,255,255,0.1)" : undefined }}
+                >
+                  {t === "terrain" ? "Topo" : t === "satellite" ? "Satellite" : "Street"}
+                </button>
+              ))}
+            </div>
+          </div>
 
-          {/* About button */}
+          {/* Mobile hamburger */}
           <button
-            onClick={() => setAboutOpen(true)}
-            className="flex items-center gap-1 px-2 py-1.5 sm:px-3 sm:gap-1.5 rounded-lg text-xs font-semibold transition-colors"
-            style={{
-              background: "rgba(255,255,255,0.10)",
-              color: "rgba(238,232,220,0.8)",
-              border: "1px solid rgba(255,255,255,0.15)",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.18)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.10)")}
-            title="About this project"
+            className="sm:hidden flex flex-col justify-center items-center gap-1.5 w-9 h-9 rounded-lg transition-colors"
+            style={{ background: menuOpen ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label="Menu"
           >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M12 16v-4M12 8h.01"/>
-            </svg>
-            <span className="hidden sm:inline">About</span>
-          </button>
-
-          {/* Fire footprint toggle */}
-          <button
-            onClick={() => setFireLayerOn((v) => !v)}
-            className="flex items-center gap-1 px-2 py-1.5 sm:px-3 sm:gap-1.5 rounded-lg text-xs font-semibold transition-all"
-            style={{
-              background: fireLayerOn ? "rgba(200,60,20,0.92)" : "rgba(255,255,255,0.10)",
-              color: "#fff",
-              border: fireLayerOn ? "1px solid rgba(255,120,80,0.5)" : "1px solid rgba(255,255,255,0.15)",
-            }}
-            title="Toggle recent Utah wildfire perimeters (past 3 years, NIFC/WFIGS data)"
-          >
-            {fireLoading ? (
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-                style={{ animation: "spin 1s linear infinite" }}>
-                <circle cx="12" cy="12" r="10" strokeOpacity="0.3"/>
-                <path d="M12 2a10 10 0 0 1 10 10"/>
+            {menuOpen ? (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(238,232,220,0.9)" strokeWidth="2.5">
+                <path d="M18 6L6 18M6 6l12 12"/>
               </svg>
             ) : (
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <>
+                <span style={{ display: "block", width: 18, height: 2, background: "rgba(238,232,220,0.85)", borderRadius: 2 }} />
+                <span style={{ display: "block", width: 18, height: 2, background: "rgba(238,232,220,0.85)", borderRadius: 2 }} />
+                <span style={{ display: "block", width: 18, height: 2, background: "rgba(238,232,220,0.85)", borderRadius: 2 }} />
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Mobile dropdown menu */}
+        {menuOpen && (
+          <div
+            className="sm:hidden absolute left-0 right-0 z-40 px-3 py-3 flex flex-col gap-2"
+            style={{ top: 56, background: "rgba(22,28,42,0.98)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(255,255,255,0.1)" }}
+          >
+            <button
+              onClick={() => { setTableOpen(true); setMenuOpen(false); }}
+              className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
+              style={{ background: "rgba(192,82,42,0.85)", color: "#fff" }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>
+              </svg>
+              Peak List
+            </button>
+            <button
+              onClick={() => { setAboutOpen(true); setMenuOpen(false); }}
+              className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
+              style={{ background: "rgba(255,255,255,0.08)", color: "rgba(238,232,220,0.9)", border: "1px solid rgba(255,255,255,0.12)" }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+              </svg>
+              About This Project
+            </button>
+            <button
+              onClick={() => { setFireLayerOn((v) => !v); setMenuOpen(false); }}
+              className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
+              style={{ background: fireLayerOn ? "rgba(200,60,20,0.92)" : "rgba(255,255,255,0.08)", color: "#fff", border: fireLayerOn ? "1px solid rgba(255,120,80,0.4)" : "1px solid rgba(255,255,255,0.12)" }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M12 2c0 0-5.5 5-5.5 10.5a5.5 5.5 0 0 0 11 0C17.5 7 12 2 12 2z"/>
                 <path d="M12 13c0 0-2.5 2-2.5 4a2.5 2.5 0 0 0 5 0C14.5 15 12 13 12 13z" fill="currentColor" strokeWidth="0"/>
               </svg>
-            )}
-            {fireLoading ? "…" : <><span className="hidden sm:inline">Fires</span><span className="sm:hidden">🔥</span></>}
-          </button>
-
-          {/* National Parks toggle */}
-          <button
-            onClick={() => setParksLayerOn((v) => !v)}
-            className="flex items-center gap-1 px-2 py-1.5 sm:px-3 sm:gap-1.5 rounded-lg text-xs font-semibold transition-all"
-            style={{
-              background: parksLayerOn ? "rgba(200,20,20,0.92)" : "rgba(255,255,255,0.10)",
-              color: "#fff",
-              border: parksLayerOn ? "1px solid rgba(255,80,80,0.5)" : "1px solid rgba(255,255,255,0.15)",
-            }}
-            title="Toggle Utah National Park boundaries (Zion, Bryce Canyon, Canyonlands, Arches, Capitol Reef)"
-          >
-            {parksLoading ? (
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-                style={{ animation: "spin 1s linear infinite" }}>
-                <circle cx="12" cy="12" r="10" strokeOpacity="0.3"/>
-                <path d="M12 2a10 10 0 0 1 10 10"/>
+              {fireLayerOn ? "Fires: On (tap to hide)" : "Show Recent Fires"}
+            </button>
+            <button
+              onClick={() => { setParksLayerOn((v) => !v); setMenuOpen(false); }}
+              className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
+              style={{ background: parksLayerOn ? "rgba(200,20,20,0.92)" : "rgba(255,255,255,0.08)", color: "#fff", border: parksLayerOn ? "1px solid rgba(255,80,80,0.4)" : "1px solid rgba(255,255,255,0.12)" }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 17l4-8 4 5 3-4 4 7H3z"/><circle cx="17" cy="7" r="2" fill="currentColor" strokeWidth="0"/>
               </svg>
-            ) : (
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M3 17l4-8 4 5 3-4 4 7H3z"/>
-                <circle cx="17" cy="7" r="2" fill="currentColor" strokeWidth="0"/>
-              </svg>
-            )}
-            {parksLoading ? "…" : <><span className="hidden sm:inline">Parks</span><span className="sm:hidden">🏔</span></>}
-          </button>
-
-          <div className="flex rounded-lg overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.15)", flexShrink: 0 }}>
-            {(["terrain", "satellite", "roadmap"] as const).map((t) => (
-              <button
-                key={t}
-                onClick={() => switchMapType(t)}
-                className="px-2 py-1.5 sm:px-3 text-xs font-medium capitalize transition-colors"
-                style={{
-                  background: mapType === t ? "#C0522A" : "rgba(255,255,255,0.07)",
-                  color: mapType === t ? "#fff" : "rgba(238,232,220,0.7)",
-                  borderRight: t !== "roadmap" ? "1px solid rgba(255,255,255,0.1)" : undefined,
-                }}
-              >
-                {t === "terrain" ? "Topo" : t === "satellite" ? "Sat" : <span className="hidden sm:inline">Street</span>}
-                {t === "roadmap" && <span className="sm:hidden">St</span>}
-              </button>
-            ))}
+              {parksLayerOn ? "National Parks: On (tap to hide)" : "Show National Parks"}
+            </button>
+            <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: 8, marginTop: 2 }}>
+              <div style={{ fontSize: 10, color: "rgba(238,232,220,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Map Style</div>
+              <div className="flex gap-2">
+                {(["terrain", "satellite", "roadmap"] as const).map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => { switchMapType(t); setMenuOpen(false); }}
+                    className="flex-1 py-2 rounded-lg text-xs font-semibold transition-colors"
+                    style={{ background: mapType === t ? "#C0522A" : "rgba(255,255,255,0.08)", color: mapType === t ? "#fff" : "rgba(238,232,220,0.7)", border: mapType === t ? "1px solid rgba(255,120,80,0.4)" : "1px solid rgba(255,255,255,0.12)" }}
+                  >
+                    {t === "terrain" ? "Topo" : t === "satellite" ? "Satellite" : "Street"}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </header>
 
       {/* ── Fire error toast ── */}
