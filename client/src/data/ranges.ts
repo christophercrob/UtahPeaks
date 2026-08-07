@@ -408,6 +408,16 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     summited: true,
     summitDate: "May 25, 2025",
     hikeNote: "Signal Peak is a long, forested climb through pine and aspen above the town of Pine Valley. The summit offers a surprising 360° panorama — Zion to the east, the Nevada desert to the west, and the red cliffs of the Arizona Strip to the south.",
+    trailheadPhoto: { url: "/manus-storage/signal_trailhead_cceb968f.jpg", caption: "Pine Valley Mountains Wilderness / Dixie National Forest — the trail begins here" },
+    summitPhoto: { url: "/manus-storage/signal_summit_ad132126.jpg", caption: "Summit of Signal Peak — St. George valley, Quail Creek Reservoir, and red rock mesas below" },
+    extraPhotos: [
+      { url: "/manus-storage/signal_view1_a684b5fe.jpg", caption: "Looking east from the summit ridge — St. George and Quail Creek Reservoir" },
+      { url: "/manus-storage/signal_sign_6df7889f.jpg", caption: "Whipple Valley / Further Water trail junction — still plenty of snow in late May" },
+      { url: "/manus-storage/signal_meadow_8f187816.jpg", caption: "High alpine meadow with lingering snow patches near the summit" },
+      { url: "/manus-storage/signal_trees_34c72bdb.jpg", caption: "View through the pines looking down toward Pine Valley" },
+      { url: "/manus-storage/signal_view2_e9221050.jpg", caption: "Looking south from the rocky summit edge — Arizona Strip and Lake Powell area in the distance" },
+    ],
+    videoUrl: "https://photos.app.goo.gl/8rm5s3KfetCBDb386",
     polygon: [
       // From user-provided KML (Google Earth), Aug 2026
       [37.296377, -113.311317],
@@ -489,3 +499,35 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     ],
   },
 ];
+
+// ── Markagunt Plateau ─────────────────────────────────────────────────────────
+// Highest peak: Brian Head, 11,307 ft (37.6946°N, 112.8483°W)
+// Trailhead: Brian Head Peak Trail (off UT-143)
+MOUNTAIN_RANGES.push({
+  range: "Markagunt Plateau",
+  peak: "Brian Head Peak",
+  elevation: "11,307 ft",
+  elevationFt: 11307,
+  lat: 37.6946,
+  lon: -112.8483,
+  trailhead: "Brian Head Peak Trailhead (UT-143)",
+  trailheadLat: 37.6980,
+  trailheadLon: -112.8520,
+  gain: "~700 ft (from ski resort base road)",
+  color: "#5D6D7E",
+  polygon: [
+    // Approximate boundary: Markagunt Plateau between Cedar City (NW), Panguitch (NE),
+    // Long Valley (E), Zion NP (S), and Cedar Valley (W)
+    [37.950, -112.650],  // NE corner near Panguitch
+    [37.900, -112.500],  // East edge near Long Valley Junction
+    [37.750, -112.500],  // SE edge
+    [37.600, -112.600],  // South edge near Zion NP boundary
+    [37.500, -112.750],  // SW edge
+    [37.550, -112.950],  // West edge near Cedar City
+    [37.700, -113.000],  // NW edge
+    [37.850, -112.900],  // North edge
+    [37.950, -112.650],  // back to start
+  ],
+  hikeNote: "The Markagunt Plateau sits above Cedar City at over 10,000 feet, offering sweeping views of Zion Canyon to the south and the Cedar Valley to the west. Brian Head Peak is the highest point in the region and one of Utah's most accessible high summits — the ski resort road brings you within a short hike of the top.",
+  summitPhoto: { url: "/manus-storage/markagunt_zion_27b24df0.jpg", caption: "Looking south from the Markagunt Plateau — Zion NP visible on the horizon" },
+});

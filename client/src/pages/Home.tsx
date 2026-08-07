@@ -436,7 +436,7 @@ function DataTableDrawer({
                 Utah Mountain Ranges
               </div>
               <div style={{ color: "rgba(238,232,220,0.5)", fontSize: 11 }}>
-                11 ranges · highest peaks &amp; trailheads
+                {MOUNTAIN_RANGES.length} ranges · highest peaks &amp; trailheads
               </div>
             </div>
           </div>
