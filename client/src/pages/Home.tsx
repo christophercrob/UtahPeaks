@@ -454,9 +454,18 @@ function DataTableDrawer({
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
             <thead>
               <tr style={{ background: "#2D2D2D", color: "#EEE8DC", position: "sticky", top: 0, zIndex: 1 }}>
-                {["Range", "Highest Peak", "Elevation", "Coordinates", "Primary Trailhead", "Elev. Gain", "Directions"].map((h) => (
+                {[
+                  { label: "Range", mobile: true },
+                  { label: "Highest Peak", mobile: true },
+                  { label: "Elevation", mobile: true },
+                  { label: "Coordinates", mobile: false },
+                  { label: "Primary Trailhead", mobile: false },
+                  { label: "Elev. Gain", mobile: false },
+                  { label: "Directions", mobile: true },
+                ].map(({ label, mobile }) => (
                   <th
-                    key={h}
+                    key={label}
+                    className={mobile ? "" : "hidden sm:table-cell"}
                     style={{
                       padding: "10px 14px",
                       textAlign: "left",
@@ -469,7 +478,7 @@ function DataTableDrawer({
                       borderRight: "1px solid rgba(255,255,255,0.06)",
                     }}
                   >
-                    {h}
+                    {label}
                   </th>
                 ))}
               </tr>
@@ -503,15 +512,15 @@ function DataTableDrawer({
                     {r.elevation}
                   </td>
                   {/* Coordinates */}
-                  <td style={{ padding: "10px 14px", borderBottom: "1px solid rgba(0,0,0,0.06)", color: "#555", fontFamily: "monospace", fontSize: 12, whiteSpace: "nowrap" }}>
+                  <td className="hidden sm:table-cell" style={{ padding: "10px 14px", borderBottom: "1px solid rgba(0,0,0,0.06)", color: "#555", fontFamily: "monospace", fontSize: 12, whiteSpace: "nowrap" }}>
                     {r.lat}° N, {Math.abs(r.lon)}° W
                   </td>
                   {/* Trailhead */}
-                  <td style={{ padding: "10px 14px", borderBottom: "1px solid rgba(0,0,0,0.06)", color: "#3D3D3D" }}>
+                  <td className="hidden sm:table-cell" style={{ padding: "10px 14px", borderBottom: "1px solid rgba(0,0,0,0.06)", color: "#3D3D3D" }}>
                     {r.trailhead}
                   </td>
                   {/* Elevation gain */}
-                  <td style={{ padding: "10px 14px", borderBottom: "1px solid rgba(0,0,0,0.06)", color: "#555", whiteSpace: "nowrap" }}>
+                  <td className="hidden sm:table-cell" style={{ padding: "10px 14px", borderBottom: "1px solid rgba(0,0,0,0.06)", color: "#555", whiteSpace: "nowrap" }}>
                     {r.gain}
                   </td>
                   {/* Directions button */}
@@ -650,6 +659,8 @@ function DetailSidebar({
 
 // ── Legend ────────────────────────────────────────────────────────────────
 function Legend({ selected, onSelect, onOpenJournal }: { selected: MountainRange | null; onSelect: (r: MountainRange) => void; onOpenJournal: (r: MountainRange) => void }) {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
     <div
       className="absolute bottom-8 left-3 z-20 rounded-xl shadow-xl overflow-hidden"
@@ -661,42 +672,57 @@ function Legend({ selected, onSelect, onOpenJournal }: { selected: MountainRange
         maxWidth: "220px",
       }}
     >
-      <div className="px-3 py-2 text-xs font-bold uppercase tracking-widest"
-        style={{ background: "#2D2D2D", color: "#EEE8DC", letterSpacing: "0.12em" }}>
-        Mountain Ranges
-      </div>
-      <div className="py-1.5 px-2">
-        {MOUNTAIN_RANGES.map((r) => (
-          <button
-            key={r.range}
-            onClick={() => onSelect(r)}
-            className="w-full flex items-center gap-2 px-1.5 py-1 rounded-md text-left transition-colors hover:bg-black/5"
-            style={{ background: selected?.range === r.range ? `${r.color}18` : undefined }}
-          >
-            <span className="flex-shrink-0 rounded-sm" style={{ width: 12, height: 12, background: r.color }} />
-            <span className="text-xs text-gray-700 leading-tight flex-1">{r.range}</span>
-            {r.summited && (
-              <span title={`Summited ${r.summitDate ?? ""}`} style={{ fontSize: 10, color: "#1A6B3A", fontWeight: 700, flexShrink: 0 }}>✓</span>
-            )}
-            {r.attempted && !r.summited && (
-              <span title={`Attempted ${r.attemptDate ?? ""}`} style={{ fontSize: 10, color: "#B7950B", fontWeight: 700, flexShrink: 0 }}>⚡</span>
-            )}
-            <button
-              onClick={(e) => { e.stopPropagation(); onOpenJournal(r); }}
-              title="View hike journal"
-              style={{ flexShrink: 0, padding: "1px 3px", borderRadius: 4, background: "rgba(0,0,0,0.06)", border: "none", cursor: "pointer", lineHeight: 1 }}
-            >
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                <circle cx="12" cy="13" r="4"/>
-              </svg>
-            </button>
-          </button>
-        ))}
-      </div>
-      <div className="px-3 py-1.5 text-xs text-gray-400 border-t" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
-        Click a pin or range for details
-      </div>
+      {/* Header — click to collapse/expand */}
+      <button
+        className="w-full flex items-center justify-between px-3 py-2"
+        style={{ background: "#2D2D2D", color: "#EEE8DC" }}
+        onClick={() => setCollapsed((v) => !v)}
+        title={collapsed ? "Expand range list" : "Collapse range list"}
+      >
+        <span className="text-xs font-bold uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>Mountain Ranges</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+          style={{ transition: "transform 0.2s", transform: collapsed ? "rotate(-90deg)" : "rotate(0deg)", flexShrink: 0 }}>
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      </button>
+
+      {/* Collapsible body */}
+      {!collapsed && (
+        <>
+          <div className="py-1.5 px-2">
+            {MOUNTAIN_RANGES.map((r) => (
+              <button
+                key={r.range}
+                onClick={() => onSelect(r)}
+                className="w-full flex items-center gap-2 px-1.5 py-1 rounded-md text-left transition-colors hover:bg-black/5"
+                style={{ background: selected?.range === r.range ? `${r.color}18` : undefined }}
+              >
+                <span className="flex-shrink-0 rounded-sm" style={{ width: 12, height: 12, background: r.color }} />
+                <span className="text-xs text-gray-700 leading-tight flex-1">{r.range}</span>
+                {r.summited && (
+                  <span title={`Summited ${r.summitDate ?? ""}`} style={{ fontSize: 10, color: "#1A6B3A", fontWeight: 700, flexShrink: 0 }}>✓</span>
+                )}
+                {r.attempted && !r.summited && (
+                  <span title={`Attempted ${r.attemptDate ?? ""}`} style={{ fontSize: 10, color: "#B7950B", fontWeight: 700, flexShrink: 0 }}>⚡</span>
+                )}
+                <button
+                  onClick={(e) => { e.stopPropagation(); onOpenJournal(r); }}
+                  title="View hike journal"
+                  style={{ flexShrink: 0, padding: "1px 3px", borderRadius: 4, background: "rgba(0,0,0,0.06)", border: "none", cursor: "pointer", lineHeight: 1 }}
+                >
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                  </svg>
+                </button>
+              </button>
+            ))}
+          </div>
+          <div className="px-3 py-1.5 text-xs text-gray-400 border-t" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
+            Click a pin or range for details
+          </div>
+        </>
+      )}
     </div>
   );
 }
