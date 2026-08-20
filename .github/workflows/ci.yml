@@ -1,0 +1,103 @@
+name: CI
+
+
+
+on:
+
+  push:
+  
+
+
+permissions:
+
+  contents: read
+  
+
+
+jobs:
+
+  test-and-build:
+  
+    name: Test and build
+    
+    runs-on: ubuntu-latest
+    
+
+
+    steps:
+    
+      - name: Check out source
+      
+        uses: actions/checkout@v6
+        
+
+
+      - name: Set up pnpm
+      
+        uses: pnpm/action-setup@v6
+        
+        with:
+        
+          version: 10.4.1
+          
+
+
+      - name: Set up Node.js
+      
+        uses: actions/setup-node@v7
+        
+        with:
+        
+          node-version: 24
+          
+          cache: pnpm
+          
+
+
+      - name: Install dependencies
+      
+        run: pnpm install --frozen-lockfile
+        
+
+
+      - name: Type-check application
+      
+        run: pnpm run check
+        
+
+
+      - name: Run tests
+      
+        run: pnpm exec vitest run --passWithNoTests
+        
+
+
+      - name: Build application
+      
+        run: pnpm run build
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
