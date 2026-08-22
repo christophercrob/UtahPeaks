@@ -86,68 +86,38 @@ declare global {
   }
 }
 
-const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
-const FORGE_BASE_URL =
-  import.meta.env.VITE_FRONTEND_FORGE_API_URL ||
-  "https://forge.butterfly-effect.dev";
-// In dev, use the Vite server proxy to avoid CORS/auth issues with the dev preview URL.
-// In production, use the Forge proxy directly.
-const IS_DEV = import.meta.env.DEV;
-const MAPS_PROXY_URL = IS_DEV
-  ? `${window.location.origin}/__maps_proxy`
-  : `${FORGE_BASE_URL}/v1/maps/proxy`;
+const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const MAPS_SCRIPT_URL = "https://maps.googleapis.com/maps/api/js";
 
-function loadMapScript() {
-  return new Promise(resolve => {
-    // If Google Maps is already loaded, resolve immediately
+function loadMapScript(): Promise<void> {
+  return new Promise((resolve) => {
     if (window.google?.maps) {
-      resolve(null);
+      resolve();
       return;
     }
-    // If a script with the same src is already in the DOM, wait for it
-    const existingScript = document.querySelector(`script[src*="maps/api/js"]`);
+
+    if (!API_KEY) {
+      console.error("Google Maps API key is not configured");
+      resolve();
+      return;
+    }
+
+    const existingScript = document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]');
     if (existingScript) {
-      existingScript.addEventListener('load', () => resolve(null));
+      existingScript.addEventListener("load", () => resolve(), { once: true });
+      existingScript.addEventListener("error", () => resolve(), { once: true });
       return;
     }
+
     const script = document.createElement("script");
-    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
+    script.src = `${MAPS_SCRIPT_URL}?key=${encodeURIComponent(API_KEY)}&v=weekly&libraries=marker,places,geocoding,geometry`;
     script.async = true;
-    script.onload = () => {
-      resolve(null);
-    };
+    script.onload = () => resolve();
     script.onerror = () => {
       console.error("Failed to load Google Maps script");
-      resolve(null); // resolve anyway so UI doesn't hang
+      resolve();
     };
     document.head.appendChild(script);
-  });
-}
-// In production the Forge proxy requires the correct Referer header.
-// A <script> tag doesn't send Referer reliably on custom domains, so we
-// fetch the Maps JS as text (with explicit headers) and inject it inline.
-function loadMapScriptProd(): Promise<void> {
-  return new Promise((resolve) => {
-    if (window.google?.maps) { resolve(); return; }
-    const url = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
-    fetch(url, {
-      headers: {
-        Referer: window.location.origin + "/",
-        Origin: window.location.origin,
-      },
-    })
-      .then((r) => r.text())
-      .then((code) => {
-        const s = document.createElement("script");
-        s.textContent = code;
-        document.head.appendChild(s);
-        // Give Maps a tick to initialise
-        setTimeout(() => resolve(), 100);
-      })
-      .catch(() => {
-        console.error("Failed to fetch Google Maps script");
-        resolve();
-      });
   });
 }
 
@@ -168,11 +138,7 @@ export function MapView({
   const map = useRef<google.maps.Map | null>(null);
 
   const init = usePersistFn(async () => {
-    if (IS_DEV) {
-      await loadMapScript();
-    } else {
-      await loadMapScriptProd();
-    }
+    await loadMapScript();
     if (!mapContainer.current) {
       console.error("Map container not found");
       return;
@@ -190,17 +156,6 @@ export function MapView({
       streetViewControl: true,
       mapId: "DEMO_MAP_ID",
     });
-    // Dismiss the "This page can't load Google Maps correctly" dialog
-    // that appears in dev when the domain isn't registered
-    if (IS_DEV) {
-      setTimeout(() => {
-        const dialogs = document.querySelectorAll('[role="dialog"], .dismissButton, .gm-err-container');
-        dialogs.forEach(el => (el as HTMLElement).style.display = 'none');
-        // Also try clicking any close/dismiss button
-        const closeBtn = document.querySelector('.gm-err-container button, [aria-label="Close"]') as HTMLElement;
-        if (closeBtn) closeBtn.click();
-      }, 500);
-    }
     if (onMapReady) {
       onMapReady(map.current);
     }

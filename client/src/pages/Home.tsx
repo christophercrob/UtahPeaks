@@ -60,7 +60,7 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
           {/* Photo */}
           <div>
             <img
-              src="/manus-storage/markagunt_zion_27b24df0.jpg"
+              src="/images/markagunt_zion_27b24df0.jpg"
               alt="Chris Roberts on the Markagunt Plateau with Zion NP in the distance"
               style={{
                 width: "100%",
