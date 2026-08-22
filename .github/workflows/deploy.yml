@@ -1,0 +1,175 @@
+name: Deploy to Cloud Run
+
+
+
+on:
+
+  push:
+  
+    branches:
+    
+      - main
+      
+  workflow_dispatch:
+  
+
+
+permissions:
+
+  contents: read
+  
+  id-token: write
+  
+
+
+concurrency:
+
+  group: production-deployment
+  
+  cancel-in-progress: false
+  
+
+
+env:
+
+  PROJECT_ID: utahpeaks
+  
+  REGION: us-central1
+  
+  SERVICE: utah-peaks
+  
+  AR_REPOSITORY: utah-peaks
+  
+  IMAGE: us-central1-docker.pkg.dev/utahpeaks/utah-peaks/utah-peaks
+  
+  RUNTIME_SERVICE_ACCOUNT: utahpeaks-runtime@utahpeaks.iam.gserviceaccount.com
+  
+
+
+jobs:
+
+  deploy:
+  
+    name: Build and deploy
+    
+    runs-on: ubuntu-latest
+    
+    environment: production
+    
+
+
+    steps:
+    
+      - name: Check out source
+      
+        uses: actions/checkout@v4
+        
+
+
+      - name: Authenticate to Google Cloud
+      
+        id: auth
+        
+        uses: google-github-actions/auth@v3
+        
+        with:
+        
+          workload_identity_provider: projects/419826993873/locations/global/workloadIdentityPools/github-actions/providers/github-actions
+          
+          service_account: utahpeaks-github-deploy@utahpeaks.iam.gserviceaccount.com
+          
+
+
+      - name: Set up Google Cloud CLI
+      
+        uses: google-github-actions/setup-gcloud@v3
+        
+
+
+      - name: Authenticate Docker to Artifact Registry
+      
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+        
+
+
+      - name: Build and push production image
+      
+        run: |
+        
+          docker build --tag "${IMAGE}:${GITHUB_SHA}" --tag "${IMAGE}:latest" .
+          
+          docker push "${IMAGE}:${GITHUB_SHA}"
+          
+          docker push "${IMAGE}:latest"
+          
+
+
+      - name: Deploy image to Cloud Run
+      
+        run: |
+        
+          gcloud run deploy "${SERVICE}" \
+          
+            --image "${IMAGE}:${GITHUB_SHA}" \
+            
+            --project "${PROJECT_ID}" \
+            
+            --region "${REGION}" \
+            
+            --platform managed \
+            
+            --service-account "${RUNTIME_SERVICE_ACCOUNT}" \
+            
+            --port 8080 \
+            
+            --allow-unauthenticated \
+            
+            --quiet
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
