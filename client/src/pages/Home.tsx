@@ -34,10 +34,11 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
         {/* Header */}
         <div className="px-6 py-5" style={{ background: "#1C2333", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
           <div className="flex items-center gap-3 mb-1">
-            <svg width="28" height="22" viewBox="0 0 28 22" fill="none">
-              <path d="M10 18L17 4L24 18H10Z" fill="#C0522A" />
-              <path d="M2 18L9 8L16 18H2Z" fill="#A04020" />
-            </svg>
+            <img
+              src="/manus-storage/utah-mountain-ranges-mark_598dc4cb.png"
+              alt="Utah mountain emblem"
+              style={{ width: 32, height: 32, objectFit: "contain", flexShrink: 0 }}
+            />
             <div>
               <div style={{ color: "#EEE8DC", fontSize: 18, fontWeight: 700, fontFamily: "var(--font-display)" }}>
                 Utah Mountain Ranges
@@ -429,10 +430,11 @@ function DataTableDrawer({
           }}
         >
           <div className="flex items-center gap-3">
-            <svg width="22" height="18" viewBox="0 0 28 22" fill="none">
-              <path d="M10 18L17 4L24 18H10Z" fill="#C0522A" />
-              <path d="M2 18L9 8L16 18H2Z" fill="#A04020" />
-            </svg>
+            <img
+              src="/manus-storage/utah-mountain-ranges-mark_598dc4cb.png"
+              alt="Utah mountain emblem"
+              style={{ width: 28, height: 28, objectFit: "contain", flexShrink: 0 }}
+            />
             <div>
               <div style={{ color: "#EEE8DC", fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 700 }}>
                 Utah Mountain Ranges
@@ -1140,11 +1142,11 @@ export default function Home() {
         <div className="flex items-center justify-between h-full px-3 sm:px-4">
           {/* Brand */}
           <div className="flex items-center gap-2 shrink-0">
-            <svg width="28" height="22" viewBox="0 0 28 22" fill="none">
-              <path d="M10 18L17 4L24 18H10Z" fill="#C0522A" />
-              <path d="M2 18L9 8L16 18H2Z" fill="#A04020" />
-              <path d="M14 6L17 4L20 9" stroke="white" strokeWidth="1" strokeOpacity="0.4" fill="none" />
-            </svg>
+            <img
+              src="/manus-storage/utah-mountain-ranges-mark_598dc4cb.png"
+              alt="Utah Mountain Ranges"
+              style={{ width: 34, height: 34, objectFit: "contain", flexShrink: 0 }}
+            />
             <div>
               <div className="text-sm sm:text-base font-bold leading-tight" style={{ color: "#EEE8DC", fontFamily: "var(--font-body)" }}>
                 Utah Mountain Ranges
