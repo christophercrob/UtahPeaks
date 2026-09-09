@@ -35,7 +35,7 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
         <div className="px-6 py-5" style={{ background: "#1C2333", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
           <div className="flex items-center gap-3 mb-1">
             <img
-              src="/manus-storage/utah-mountain-ranges-mark_598dc4cb.png"
+              src="/manus-storage/utah-mountain-ranges-round-mark-final_c659a74c.png"
               alt="Utah mountain emblem"
               style={{ width: 32, height: 32, objectFit: "contain", flexShrink: 0 }}
             />
@@ -431,7 +431,7 @@ function DataTableDrawer({
         >
           <div className="flex items-center gap-3">
             <img
-              src="/manus-storage/utah-mountain-ranges-mark_598dc4cb.png"
+              src="/manus-storage/utah-mountain-ranges-round-mark-final_c659a74c.png"
               alt="Utah mountain emblem"
               style={{ width: 28, height: 28, objectFit: "contain", flexShrink: 0 }}
             />
@@ -1143,7 +1143,7 @@ export default function Home() {
           {/* Brand */}
           <div className="flex items-center gap-2 shrink-0">
             <img
-              src="/manus-storage/utah-mountain-ranges-mark_598dc4cb.png"
+              src="/manus-storage/utah-mountain-ranges-round-mark-final_c659a74c.png"
               alt="Utah Mountain Ranges"
               style={{ width: 34, height: 34, objectFit: "contain", flexShrink: 0 }}
             />
