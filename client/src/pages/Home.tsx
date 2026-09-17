@@ -909,7 +909,7 @@ export default function Home() {
   const [wurlVisible, setWurlVisible] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [journalRange, setJournalRange] = useState<MountainRange | null>(null);
-  const polygonsRef = useRef<google.maps.Polygon[]>([]);
+  const polygonsRef = useRef<Array<google.maps.Polygon | google.maps.Polyline>>([]);
   const labelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const wurlMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const wurlLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
@@ -1303,14 +1303,26 @@ export default function Home() {
     });
 
     MOUNTAIN_RANGES.forEach((r) => {
-      // Range polygon
-      const polygon = new google.maps.Polygon({
-        paths: r.polygon.map(([lat, lng]) => ({ lat, lng })),
-        strokeColor: r.color, strokeOpacity: 0.85, strokeWeight: 2,
-        fillColor: r.color, fillOpacity: 0.18, map,
-      });
-      polygon.addListener("click", () => setSelected(r));
-      polygonsRef.current.push(polygon);
+      const rangePath = r.polygon.map(([lat, lng]) => ({ lat, lng }));
+      const boundary = r.boundaryType === "line"
+        ? new google.maps.Polyline({
+            path: rangePath,
+            strokeColor: r.color,
+            strokeOpacity: 0.9,
+            strokeWeight: 3,
+            map,
+          })
+        : new google.maps.Polygon({
+            paths: rangePath,
+            strokeColor: r.color,
+            strokeOpacity: 0.85,
+            strokeWeight: 2,
+            fillColor: r.color,
+            fillOpacity: 0.18,
+            map,
+          });
+      boundary.addListener("click", () => setSelected(r));
+      polygonsRef.current.push(boundary);
 
       // Range label at centroid (unused — range name shown below peak pin)
       const centLat = r.polygon.reduce((s, p) => s + p[0], 0) / r.polygon.length;
@@ -1413,9 +1425,13 @@ export default function Home() {
             <button
               onClick={toggleWurl}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
-              style={{ background: wurlVisible ? "#6B3FA0" : "rgba(107,63,160,0.78)", color: "#fff", border: "1px solid rgba(218,194,245,0.36)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#6B3FA0")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = wurlVisible ? "#6B3FA0" : "rgba(107,63,160,0.78)")}
+              style={{
+                background: wurlVisible ? "#6B3FA0" : "rgba(255,255,255,0.10)",
+                color: wurlVisible ? "#fff" : "rgba(238,232,220,0.8)",
+                border: wurlVisible ? "1px solid rgba(218,194,245,0.36)" : "1px solid rgba(255,255,255,0.15)",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = wurlVisible ? "#6B3FA0" : "rgba(255,255,255,0.18)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = wurlVisible ? "#6B3FA0" : "rgba(255,255,255,0.10)")}
               title={wurlVisible ? "Hide WURL major peaks" : "Show WURL major peaks in Little Cottonwood Canyon"}
               aria-pressed={wurlVisible}
             >
@@ -1512,7 +1528,11 @@ export default function Home() {
             <button
               onClick={() => { toggleWurl(); setMenuOpen(false); }}
               className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
-              style={{ background: "#6B3FA0", color: "#fff", border: "1px solid rgba(218,194,245,0.36)" }}
+              style={{
+                background: wurlVisible ? "#6B3FA0" : "rgba(255,255,255,0.08)",
+                color: wurlVisible ? "#fff" : "rgba(238,232,220,0.9)",
+                border: wurlVisible ? "1px solid rgba(218,194,245,0.36)" : "1px solid rgba(255,255,255,0.12)",
+              }}
               aria-pressed={wurlVisible}
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
