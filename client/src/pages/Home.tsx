@@ -36,7 +36,7 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
         <div className="px-6 py-5" style={{ background: "#1C2333", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
           <div className="flex items-center gap-3 mb-1">
             <img
-              src="/manus-storage/utah-mountain-ranges-round-mark-final_c659a74c.png"
+              src="/images/utah-peaks-logo.png"
               alt="Utah mountain emblem"
               style={{ width: 32, height: 32, objectFit: "contain", flexShrink: 0 }}
             />
@@ -62,7 +62,7 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
           {/* Photo */}
           <div>
             <img
-              src="/manus-storage/markagunt_zion_27b24df0.jpg"
+              src="/images/markagunt_zion_27b24df0.jpg"
               alt="Chris Roberts on the Markagunt Plateau with Zion NP in the distance"
               style={{
                 width: "100%",
@@ -444,7 +444,7 @@ function DataTableDrawer({
         >
           <div className="flex items-center gap-3">
             <img
-              src="/manus-storage/utah-mountain-ranges-round-mark-final_c659a74c.png"
+              src="/images/utah-peaks-logo.png"
               alt="Utah mountain emblem"
               style={{ width: 28, height: 28, objectFit: "contain", flexShrink: 0 }}
             />
@@ -1394,7 +1394,7 @@ export default function Home() {
           {/* Brand */}
           <div className="flex items-center gap-2 shrink-0">
             <img
-              src="/manus-storage/utah-mountain-ranges-round-mark-final_c659a74c.png"
+              src="/images/utah-peaks-logo.png"
               alt="Utah Peaks"
               style={{ width: 34, height: 34, objectFit: "contain", flexShrink: 0 }}
             />

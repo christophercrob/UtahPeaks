@@ -86,12 +86,14 @@ declare global {
   }
 }
 
-const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
+const FORGE_API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 const FORGE_BASE_URL =
   import.meta.env.VITE_FRONTEND_FORGE_API_URL ||
   "https://forge.butterfly-effect.dev";
+const GOOGLE_MAPS_SCRIPT_URL = "https://maps.googleapis.com/maps/api/js";
 // In dev, use the Vite server proxy to avoid CORS/auth issues with the dev preview URL.
-// In production, use the Forge proxy directly.
+// Cloud Run builds receive a browser-restricted Maps key through VITE_GOOGLE_MAPS_API_KEY.
 const IS_DEV = import.meta.env.DEV;
 const MAPS_PROXY_URL = IS_DEV
   ? `${window.location.origin}/__maps_proxy`
@@ -111,7 +113,7 @@ function loadMapScript() {
       return;
     }
     const script = document.createElement("script");
-    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
+    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${FORGE_API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
     script.async = true;
     script.onload = () => {
       resolve(null);
@@ -123,31 +125,31 @@ function loadMapScript() {
     document.head.appendChild(script);
   });
 }
-// In production the Forge proxy requires the correct Referer header.
-// A <script> tag doesn't send Referer reliably on custom domains, so we
-// fetch the Maps JS as text (with explicit headers) and inject it inline.
+// Production runs in Cloud Run and uses the repository's browser-restricted
+// Google Maps key, injected at build time by the deployment workflow.
 function loadMapScriptProd(): Promise<void> {
   return new Promise((resolve) => {
     if (window.google?.maps) { resolve(); return; }
-    const url = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
-    fetch(url, {
-      headers: {
-        Referer: window.location.origin + "/",
-        Origin: window.location.origin,
-      },
-    })
-      .then((r) => r.text())
-      .then((code) => {
-        const s = document.createElement("script");
-        s.textContent = code;
-        document.head.appendChild(s);
-        // Give Maps a tick to initialise
-        setTimeout(() => resolve(), 100);
-      })
-      .catch(() => {
-        console.error("Failed to fetch Google Maps script");
-        resolve();
-      });
+    if (!GOOGLE_MAPS_API_KEY) {
+      console.error("Google Maps API key is not configured for production");
+      resolve();
+      return;
+    }
+    const existingScript = document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]');
+    if (existingScript) {
+      existingScript.addEventListener("load", () => resolve(), { once: true });
+      existingScript.addEventListener("error", () => resolve(), { once: true });
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = `${GOOGLE_MAPS_SCRIPT_URL}?key=${encodeURIComponent(GOOGLE_MAPS_API_KEY)}&v=weekly&libraries=marker,places,geocoding,geometry`;
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => {
+      console.error("Failed to load Google Maps script");
+      resolve();
+    };
+    document.head.appendChild(script);
   });
 }
 
