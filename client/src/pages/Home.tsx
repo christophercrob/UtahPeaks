@@ -42,7 +42,7 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             />
             <div>
               <div style={{ color: "#EEE8DC", fontSize: 18, fontWeight: 700, fontFamily: "var(--font-display)" }}>
-                Utah Mountain Ranges
+                Utah Peaks
               </div>
               <div style={{ color: "rgba(238,232,220,0.5)", fontSize: 11 }}>
                 A project by Chris Roberts
@@ -450,7 +450,7 @@ function DataTableDrawer({
             />
             <div>
               <div style={{ color: "#EEE8DC", fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 700 }}>
-                Utah Mountain Ranges
+                Utah Peaks
               </div>
               <div style={{ color: "rgba(238,232,220,0.5)", fontSize: 11 }}>
                 {MOUNTAIN_RANGES.length} ranges · highest peaks &amp; trailheads
@@ -1383,12 +1383,12 @@ export default function Home() {
           <div className="flex items-center gap-2 shrink-0">
             <img
               src="/manus-storage/utah-mountain-ranges-round-mark-final_c659a74c.png"
-              alt="Utah Mountain Ranges"
+              alt="Utah Peaks"
               style={{ width: 34, height: 34, objectFit: "contain", flexShrink: 0 }}
             />
             <div>
               <div className="text-sm sm:text-base font-bold leading-tight" style={{ color: "#EEE8DC", fontFamily: "var(--font-body)" }}>
-                Utah Mountain Ranges
+                Utah Peaks
               </div>
               <div className="hidden sm:block text-xs" style={{ color: "rgba(238,232,220,0.55)" }}>
                 Highest Peaks &amp; Range Locations

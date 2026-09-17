@@ -468,20 +468,19 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     gain: "~1,600 ft",
     color: "#8E5A2B",
     polygon: [
-      // Approximate House Range outline in Utah's West Desert.
-      // Swasey Peak is the range high point; Notch Peak sits in the southern section.
-      [39.530, -113.300],
-      [39.480, -113.265],
-      [39.400, -113.255],
-      [39.300, -113.225],
-      [39.160, -113.180],
-      [39.030, -113.205],
-      [39.000, -113.275],
-      [39.110, -113.345],
-      [39.240, -113.390],
-      [39.370, -113.390],
-      [39.470, -113.350],
-      [39.530, -113.300],
+      // Detailed boundary from user-supplied house_range_detailed_boundary.kml.
+      // KML coordinates are converted from longitude, latitude to [latitude, longitude].
+      [39.540, -113.432],
+      [39.540, -113.345],
+      [39.420, -113.295],
+      [39.260, -113.230],
+      [39.110, -113.220],
+      [38.930, -113.310],
+      [39.030, -113.440],
+      [39.140, -113.480],
+      [39.310, -113.465],
+      [39.440, -113.475],
+      [39.540, -113.432],
     ],
   },
   {
