@@ -1058,14 +1058,20 @@ export default function Home() {
     setJournalRange(r);
   }, []);
 
-  const focusWurl = useCallback(() => {
+  const toggleWurl = useCallback(() => {
+    if (wurlVisible) {
+      setWurlVisible(false);
+      setWurlTableOpen(false);
+      return;
+    }
+
     setSelected(null);
     setWurlVisible(true);
     setTableOpen(false);
     setWurlTableOpen(true);
     mapRef.current?.panTo(WURL_CENTER);
     mapRef.current?.setZoom(WURL_ZOOM);
-  }, []);
+  }, [wurlVisible]);
 
   const handleSelectWurlPeak = useCallback((peak: WurlPeak) => {
     mapRef.current?.panTo({ lat: peak.lat, lng: peak.lon });
@@ -1075,7 +1081,16 @@ export default function Home() {
   // Render the curated WURL major peaks only after the WURL control is activated.
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !wurlVisible) return;
+    if (!map) return;
+
+    if (!wurlVisible) {
+      wurlMarkersRef.current.forEach((marker) => { marker.map = null; });
+      wurlMarkersRef.current = [];
+      wurlLabelsRef.current.forEach((label) => { label.map = null; });
+      wurlLabelsRef.current = [];
+      return;
+    }
+
     if (wurlMarkersRef.current.length > 0) return;
 
     WURL_PEAKS.forEach((peak) => {
@@ -1360,7 +1375,7 @@ export default function Home() {
       {/* ── Header ── */}
       {/* ── Header ── */}
       <header
-        className="absolute top-0 left-0 right-0 z-30"
+        className="absolute top-0 left-0 right-0 z-[55]"
         style={{ height: 56, background: "rgba(28,35,51,0.96)", backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}
       >
         <div className="flex items-center justify-between h-full px-3 sm:px-4">
@@ -1396,12 +1411,13 @@ export default function Home() {
               Peak List
             </button>
             <button
-              onClick={focusWurl}
+              onClick={toggleWurl}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
               style={{ background: wurlVisible ? "#6B3FA0" : "rgba(107,63,160,0.78)", color: "#fff", border: "1px solid rgba(218,194,245,0.36)" }}
               onMouseEnter={(e) => (e.currentTarget.style.background = "#6B3FA0")}
               onMouseLeave={(e) => (e.currentTarget.style.background = wurlVisible ? "#6B3FA0" : "rgba(107,63,160,0.78)")}
-              title="Show WURL major peaks in Little Cottonwood Canyon"
+              title={wurlVisible ? "Hide WURL major peaks" : "Show WURL major peaks in Little Cottonwood Canyon"}
+              aria-pressed={wurlVisible}
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                 <path d="M3 18l5-9 4 5 3-4 6 8H3z"/><path d="M8 9l2-3 2 3"/>
@@ -1494,14 +1510,15 @@ export default function Home() {
               Peak List
             </button>
             <button
-              onClick={() => { focusWurl(); setMenuOpen(false); }}
+              onClick={() => { toggleWurl(); setMenuOpen(false); }}
               className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
               style={{ background: "#6B3FA0", color: "#fff", border: "1px solid rgba(218,194,245,0.36)" }}
+              aria-pressed={wurlVisible}
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                 <path d="M3 18l5-9 4 5 3-4 6 8H3z"/><path d="M8 9l2-3 2 3"/>
               </svg>
-              WURL Peaks
+              {wurlVisible ? "Hide WURL Peaks" : "WURL Peaks"}
             </button>
             <button
               onClick={() => { setAboutOpen(true); setMenuOpen(false); }}
