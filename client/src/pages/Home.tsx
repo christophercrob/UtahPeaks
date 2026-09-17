@@ -9,6 +9,7 @@ import { useIsMobile } from "@/hooks/useMobile";
 import React from "react";
 import { MapView } from "@/components/Map";
 import { MOUNTAIN_RANGES, type MountainRange } from "@/data/ranges";
+import { WURL_CENTER, WURL_COLOR, WURL_PEAKS, WURL_ZOOM, type WurlPeak } from "@/data/wurl";
 
 // ── About Modal ───────────────────────────────────────────────────────────
 function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -386,6 +387,18 @@ function createPinElement(color = "#CC0000", badge?: "summited" | "attempted"): 
   return div;
 }
 
+function createWurlPinElement(): HTMLElement {
+  const div = document.createElement("div");
+  div.style.cssText = "position:relative;width:20px;height:28px;cursor:pointer;filter:drop-shadow(0 2px 2px rgba(43,18,70,0.35));";
+  div.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="28" viewBox="0 0 20 28">
+      <path d="M10 1 C4.48 1 0 5.48 0 11 C0 18.5 10 27 10 27 C10 27 20 18.5 20 11 C20 5.48 15.52 1 10 1 Z" fill="#6B3FA0" stroke="rgba(255,255,255,0.95)" stroke-width="1.6"/>
+      <path d="M5.1 13.6l3.2-5 2.1 2.8 2.1-3.5 3 5.7H5.1z" fill="white" opacity="0.94"/>
+    </svg>
+  `;
+  return div;
+}
+
 // ── Data Table Drawer ─────────────────────────────────────────────────────
 function DataTableDrawer({
   open,
@@ -579,6 +592,160 @@ function DataTableDrawer({
   );
 }
 
+// ── WURL Peak Table Drawer ─────────────────────────────────────────────────
+function WurlTableDrawer({
+  open,
+  onClose,
+  onSelectPeak,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onSelectPeak: (peak: WurlPeak) => void;
+}) {
+  const directionsUrl = (peak: WurlPeak) =>
+    `https://www.google.com/maps/dir/?api=1&destination=${peak.trailheadLat},${peak.trailheadLon}&travelmode=driving`;
+
+  const formatNumber = (value: number | null) =>
+    value === null ? "—" : Math.round(value).toLocaleString();
+
+  return (
+    <>
+      {open && (
+        <div
+          className="absolute inset-0 z-40"
+          style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(2px)" }}
+          onClick={onClose}
+        />
+      )}
+
+      <div
+        className="absolute inset-x-0 bottom-0 z-50 rounded-t-2xl overflow-hidden"
+        aria-label="WURL major peaks and recommended routes"
+        style={{
+          background: "#F5F0E8",
+          boxShadow: "0 -8px 40px rgba(0,0,0,0.3)",
+          height: "min(82vh, 680px)",
+          maxHeight: "82vh",
+          transform: open ? "translateY(0)" : "translateY(100%)",
+          transition: "transform 0.32s cubic-bezier(0.23,1,0.32,1)",
+          display: "flex",
+          flexDirection: "column",
+          fontFamily: "var(--font-body)",
+        }}
+      >
+        <div
+          className="flex items-center justify-between px-6 py-4 flex-shrink-0"
+          style={{ background: "#34214E", borderBottom: "1px solid rgba(255,255,255,0.1)" }}
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <div
+              aria-hidden="true"
+              className="flex items-center justify-center rounded-lg flex-shrink-0"
+              style={{ width: 30, height: 30, background: "rgba(194,166,233,0.18)", border: "1px solid rgba(214,193,244,0.3)" }}
+            >
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#D9C3F2" strokeWidth="2">
+                <path d="M3 18l5-9 4 5 3-4 6 8H3z"/><path d="M8 9l2-3 2 3"/>
+              </svg>
+            </div>
+            <div className="min-w-0">
+              <div style={{ color: "#F5EFFF", fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 700 }}>
+                WURL Peaks
+              </div>
+              <div style={{ color: "rgba(245,239,255,0.62)", fontSize: 11 }}>
+                {WURL_PEAKS.length} curated major summits · Little Cottonwood Canyon
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-white/60 hover:text-white transition-colors text-2xl leading-none"
+            aria-label="Close WURL peaks table"
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="overflow-auto flex-1">
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+            <thead>
+              <tr style={{ background: "#4A3070", color: "#F7F0FF", position: "sticky", top: 0, zIndex: 1 }}>
+                {[
+                  { label: "WURL Peak", mobile: true },
+                  { label: "Elevation", mobile: true },
+                  { label: "Recommended Route", mobile: false },
+                  { label: "Round Trip", mobile: false },
+                  { label: "Elev. Gain", mobile: false },
+                  { label: "Directions", mobile: true },
+                ].map(({ label, mobile }) => (
+                  <th
+                    key={label}
+                    className={mobile ? "" : "hidden sm:table-cell"}
+                    style={{ padding: "10px 14px", textAlign: "left", fontWeight: 600, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", whiteSpace: "nowrap", borderRight: "1px solid rgba(255,255,255,0.08)" }}
+                  >
+                    {label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {WURL_PEAKS.map((peak, i) => (
+                <tr
+                  key={peak.name}
+                  style={{ background: i % 2 === 0 ? "rgba(245,240,232,1)" : "rgba(235,229,218,0.7)", cursor: "pointer", transition: "background 0.15s" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(107,63,160,0.10)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = i % 2 === 0 ? "rgba(245,240,232,1)" : "rgba(235,229,218,0.7)")}
+                  onClick={() => { onSelectPeak(peak); onClose(); }}
+                >
+                  <td style={{ padding: "10px 14px", borderBottom: "1px solid rgba(0,0,0,0.06)", whiteSpace: "nowrap" }}>
+                    <a
+                      href={peak.peakSource}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(event) => event.stopPropagation()}
+                      style={{ fontWeight: 700, color: "#392258", textDecoration: "none" }}
+                      title="Open Peakbagger peak page"
+                    >
+                      {peak.name}
+                    </a>
+                  </td>
+                  <td style={{ padding: "10px 14px", borderBottom: "1px solid rgba(0,0,0,0.06)", fontWeight: 600, color: WURL_COLOR, whiteSpace: "nowrap" }}>
+                    {Math.round(peak.elevationFt).toLocaleString()} ft
+                  </td>
+                  <td className="hidden sm:table-cell" style={{ padding: "10px 14px", borderBottom: "1px solid rgba(0,0,0,0.06)", color: "#3D3D3D", minWidth: 220 }}>
+                    <div style={{ fontWeight: 600 }}>{peak.recommendedTrailhead}</div>
+                    <div style={{ fontSize: 11, color: "#777", marginTop: 2, maxWidth: 430 }}>{peak.routeNote}</div>
+                  </td>
+                  <td className="hidden sm:table-cell" style={{ padding: "10px 14px", borderBottom: "1px solid rgba(0,0,0,0.06)", color: "#555", whiteSpace: "nowrap" }}>
+                    {peak.distanceRtMi === null ? "—" : `${peak.distanceRtMi} mi`}
+                  </td>
+                  <td className="hidden sm:table-cell" style={{ padding: "10px 14px", borderBottom: "1px solid rgba(0,0,0,0.06)", color: "#555", whiteSpace: "nowrap" }}>
+                    {peak.elevationGainFt === null ? "—" : `${formatNumber(peak.elevationGainFt)} ft`}
+                  </td>
+                  <td style={{ padding: "10px 14px", borderBottom: "1px solid rgba(0,0,0,0.06)" }} onClick={(event) => event.stopPropagation()}>
+                    <a
+                      href={directionsUrl(peak)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "#1A6B3A", color: "#fff", borderRadius: 6, padding: "4px 10px", fontSize: 11, fontWeight: 600, textDecoration: "none", whiteSpace: "nowrap" }}
+                    >
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                      Directions
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="px-6 py-3 text-xs flex-shrink-0" style={{ color: "#74677E", borderTop: "1px solid rgba(0,0,0,0.08)", background: "#EDE8DF" }}>
+          Click a row to locate the summit · Directions open the recommended trailhead in Google Maps · Route figures vary by line and access.
+        </div>
+      </div>
+    </>
+  );
+}
+
 // ── Detail Sidebar ────────────────────────────────────────────────────────
 function DetailSidebar({
   range,
@@ -738,10 +905,14 @@ export default function Home() {
   const [selected, setSelected] = useState<MountainRange | null>(null);
   const [mapType, setMapType] = useState<"terrain" | "satellite" | "roadmap">("terrain");
   const [tableOpen, setTableOpen] = useState(false);
+  const [wurlTableOpen, setWurlTableOpen] = useState(false);
+  const [wurlVisible, setWurlVisible] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [journalRange, setJournalRange] = useState<MountainRange | null>(null);
   const polygonsRef = useRef<google.maps.Polygon[]>([]);
   const labelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const wurlMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const wurlLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
 
   // ── Fire layer state ──
   const [fireLayerOn, setFireLayerOn] = useState(false);
@@ -886,6 +1057,59 @@ export default function Home() {
   const handleOpenJournal = useCallback((r: MountainRange) => {
     setJournalRange(r);
   }, []);
+
+  const focusWurl = useCallback(() => {
+    setSelected(null);
+    setWurlVisible(true);
+    setTableOpen(false);
+    setWurlTableOpen(true);
+    mapRef.current?.panTo(WURL_CENTER);
+    mapRef.current?.setZoom(WURL_ZOOM);
+  }, []);
+
+  const handleSelectWurlPeak = useCallback((peak: WurlPeak) => {
+    mapRef.current?.panTo({ lat: peak.lat, lng: peak.lon });
+    mapRef.current?.setZoom(13);
+  }, []);
+
+  // Render the curated WURL major peaks only after the WURL control is activated.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !wurlVisible) return;
+    if (wurlMarkersRef.current.length > 0) return;
+
+    WURL_PEAKS.forEach((peak) => {
+      const pin = createWurlPinElement();
+      const marker = new google.maps.marker.AdvancedMarkerElement({
+        map,
+        position: { lat: peak.lat, lng: peak.lon },
+        content: pin,
+        title: `${peak.name} — ${Math.round(peak.elevationFt).toLocaleString()} ft (WURL major peak)`,
+        zIndex: 15,
+      });
+      marker.addListener("click", () => {
+        handleSelectWurlPeak(peak);
+        setWurlTableOpen(true);
+      });
+      wurlMarkersRef.current.push(marker);
+
+      const labelEl = document.createElement("div");
+      labelEl.style.cssText = `
+        font-family:'Source Sans 3',sans-serif;font-size:10.5px;font-weight:800;
+        color:#43236B;white-space:nowrap;line-height:1.2;pointer-events:none;
+        transform:translate(24px, -23px);
+        text-shadow:0 0 3px #fff,0 0 6px #fff,0 0 10px #fff,1px 1px 0 #fff,-1px -1px 0 #fff;
+      `;
+      labelEl.textContent = peak.name;
+      const label = new google.maps.marker.AdvancedMarkerElement({
+        map,
+        position: { lat: peak.lat, lng: peak.lon },
+        content: labelEl,
+        zIndex: 14,
+      });
+      wurlLabelsRef.current.push(label);
+    });
+  }, [wurlVisible, handleSelectWurlPeak]);
 
   // Fetch fire perimeters once (lazy, on first toggle-on)
   const fetchFireData = useCallback(async (): Promise<FireFeature[]> => {
@@ -1160,7 +1384,7 @@ export default function Home() {
           {/* Desktop buttons */}
           <div className="hidden sm:flex items-center gap-2">
             <button
-              onClick={() => setTableOpen(true)}
+              onClick={() => { setWurlTableOpen(false); setTableOpen(true); }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
               style={{ background: "rgba(192,82,42,0.85)", color: "#fff", border: "1px solid rgba(255,255,255,0.15)" }}
               onMouseEnter={(e) => (e.currentTarget.style.background = "#C0522A")}
@@ -1170,6 +1394,19 @@ export default function Home() {
                 <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>
               </svg>
               Peak List
+            </button>
+            <button
+              onClick={focusWurl}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+              style={{ background: wurlVisible ? "#6B3FA0" : "rgba(107,63,160,0.78)", color: "#fff", border: "1px solid rgba(218,194,245,0.36)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "#6B3FA0")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = wurlVisible ? "#6B3FA0" : "rgba(107,63,160,0.78)")}
+              title="Show WURL major peaks in Little Cottonwood Canyon"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d="M3 18l5-9 4 5 3-4 6 8H3z"/><path d="M8 9l2-3 2 3"/>
+              </svg>
+              WURL Peaks
             </button>
             <button
               onClick={() => setAboutOpen(true)}
@@ -1247,7 +1484,7 @@ export default function Home() {
             style={{ top: 56, background: "rgba(22,28,42,0.98)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(255,255,255,0.1)" }}
           >
             <button
-              onClick={() => { setTableOpen(true); setMenuOpen(false); }}
+              onClick={() => { setWurlTableOpen(false); setTableOpen(true); setMenuOpen(false); }}
               className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
               style={{ background: "rgba(192,82,42,0.85)", color: "#fff" }}
             >
@@ -1255,6 +1492,16 @@ export default function Home() {
                 <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>
               </svg>
               Peak List
+            </button>
+            <button
+              onClick={() => { focusWurl(); setMenuOpen(false); }}
+              className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
+              style={{ background: "#6B3FA0", color: "#fff", border: "1px solid rgba(218,194,245,0.36)" }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d="M3 18l5-9 4 5 3-4 6 8H3z"/><path d="M8 9l2-3 2 3"/>
+              </svg>
+              WURL Peaks
             </button>
             <button
               onClick={() => { setAboutOpen(true); setMenuOpen(false); }}
@@ -1367,6 +1614,13 @@ export default function Home() {
         open={tableOpen}
         onClose={() => setTableOpen(false)}
         onSelectRange={(r) => { handleSelect(r); setTableOpen(false); }}
+      />
+
+      {/* ── WURL Peaks Table Drawer ── */}
+      <WurlTableDrawer
+        open={wurlTableOpen}
+        onClose={() => setWurlTableOpen(false)}
+        onSelectPeak={(peak) => { handleSelectWurlPeak(peak); setWurlTableOpen(false); }}
       />
 
       {/* ── About Modal ── */}
