@@ -447,7 +447,7 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
   },
   {
     range: "Oquirrh Mountains",
-    peak: "Flat Top Mountain",
+    peak: "Flat Top Peak",
     elevation: "10,620 ft",
     elevationFt: 10620,
     lat: 40.3723,
@@ -457,6 +457,13 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     trailheadLon: -112.2667,
     gain: "~2,920–3,540 ft",
     color: "#1A6B8A",
+    summited: true,
+    summitDate: "September 19, 2026",
+    hikeNote: "Summited Flat Top Peak in the Oquirrh Mountains on September 19, 2026.",
+    summitPhoto: {
+      url: "/manus-storage/20260919_144824_d640fe72.webp",
+      caption: "Flat Top Peak summit — September 19, 2026",
+    },
     polygon: [
       // Oquirrh Mountain Range boundary from user-supplied UtahMountainRanges(3).kml.
       // KML longitude,latitude coordinates are converted to [latitude, longitude].
