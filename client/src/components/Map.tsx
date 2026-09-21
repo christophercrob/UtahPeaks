@@ -125,16 +125,10 @@ function loadMapScript() {
     document.head.appendChild(script);
   });
 }
-// Production runs in Cloud Run and uses the repository's browser-restricted
-// Google Maps key, injected at build time by the deployment workflow.
-function loadMapScriptProd(): Promise<void> {
+
+function loadMapScriptDirectly(): Promise<void> {
   return new Promise((resolve) => {
     if (window.google?.maps) { resolve(); return; }
-    if (!GOOGLE_MAPS_API_KEY) {
-      console.error("Google Maps API key is not configured for production");
-      resolve();
-      return;
-    }
     const existingScript = document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]');
     if (existingScript) {
       existingScript.addEventListener("load", () => resolve(), { once: true });
@@ -150,6 +144,44 @@ function loadMapScriptProd(): Promise<void> {
       resolve();
     };
     document.head.appendChild(script);
+  });
+}
+
+// Manus-hosted production domains receive Maps access through the Forge proxy.
+// Fetching and injecting the script keeps the request's Referer tied to the
+// custom domain, which the proxy requires. Cloud Run builds instead use their
+// browser-restricted Google Maps key via the direct loader above.
+function loadMapScriptThroughForgeProxy(): Promise<void> {
+  return new Promise((resolve) => {
+    if (window.google?.maps) { resolve(); return; }
+    if (!FORGE_API_KEY) {
+      console.error("Google Maps proxy credentials are not configured for production");
+      resolve();
+      return;
+    }
+    const url = `${MAPS_PROXY_URL}/maps/api/js?key=${encodeURIComponent(FORGE_API_KEY)}&v=weekly&libraries=marker,places,geocoding,geometry`;
+    fetch(url, {
+      headers: {
+        Referer: `${window.location.origin}/`,
+        Origin: window.location.origin,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Maps proxy returned ${response.status}`);
+        }
+        return response.text();
+      })
+      .then((code) => {
+        const script = document.createElement("script");
+        script.textContent = code;
+        document.head.appendChild(script);
+        window.setTimeout(resolve, 100);
+      })
+      .catch((error) => {
+        console.error("Failed to load Google Maps through the proxy", error);
+        resolve();
+      });
   });
 }
 
@@ -172,8 +204,10 @@ export function MapView({
   const init = usePersistFn(async () => {
     if (IS_DEV) {
       await loadMapScript();
+    } else if (GOOGLE_MAPS_API_KEY) {
+      await loadMapScriptDirectly();
     } else {
-      await loadMapScriptProd();
+      await loadMapScriptThroughForgeProxy();
     }
     if (!mapContainer.current) {
       console.error("Map container not found");
