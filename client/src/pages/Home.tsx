@@ -404,10 +404,12 @@ function DataTableDrawer({
   open,
   onClose,
   onSelectRange,
+  onOpenJournal,
 }: {
   open: boolean;
   onClose: () => void;
   onSelectRange: (r: MountainRange) => void;
+  onOpenJournal: (r: MountainRange) => void;
 }) {
   return (
     <>
@@ -479,6 +481,7 @@ function DataTableDrawer({
                   { label: "Primary Trailhead", mobile: false },
                   { label: "Elev. Gain", mobile: false },
                   { label: "Directions", mobile: true },
+                  { label: "Photos", mobile: true },
                 ].map(({ label, mobile }) => (
                   <th
                     key={label}
@@ -570,6 +573,36 @@ function DataTableDrawer({
                       Directions
                     </a>
                   </td>
+                  {/* Photo journal button */}
+                  <td style={{ padding: "10px 14px", borderBottom: "1px solid rgba(0,0,0,0.06)" }} onClick={(e) => e.stopPropagation()}>
+                    <button
+                      type="button"
+                      onClick={() => { onOpenJournal(r); onClose(); }}
+                      aria-label={`Open ${r.peak} photos`}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 5,
+                        background: r.color,
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: 6,
+                        padding: "4px 10px",
+                        fontSize: 11,
+                        fontWeight: 600,
+                        whiteSpace: "nowrap",
+                        transition: "filter 0.15s",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.filter = "brightness(0.85)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                        <circle cx="12" cy="13" r="4" />
+                      </svg>
+                      Photos
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -585,7 +618,7 @@ function DataTableDrawer({
             background: "#EDE8DF",
           }}
         >
-          Click any row to jump to that range on the map · Directions open in Google Maps
+          Click any row to jump to that range on the map · Directions open in Google Maps · Photos open the hike journal
         </div>
       </div>
     </>
@@ -1651,6 +1684,7 @@ export default function Home() {
         open={tableOpen}
         onClose={() => setTableOpen(false)}
         onSelectRange={(r) => { handleSelect(r); setTableOpen(false); }}
+        onOpenJournal={handleOpenJournal}
       />
 
       {/* ── WURL Peaks Table Drawer ── */}
