@@ -427,10 +427,10 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     attempted: true,
     attemptDate: "July 25, 2026",
     attemptNote: "Got some bad directions from Google and ended up miles from the correct trailhead. By the time I sorted it out, afternoon thunderstorms were already building over the summit — too risky to start that late. Still got in a good hike on the lower slopes and got a great look at Deseret Peak. I\'ll be back.",
-    summitPhoto: { url: "/images/stansbury_selfie_3fe9b2bf.jpg", caption: "Deseret Peak summit ridge from the lower slopes — July 25, 2026" },
+    summitPhoto: { url: "/manus-storage/deseret-peak-lead_1615af41.jpg", caption: "Deseret Peak summit ridge from the lower slopes — July 25, 2026" },
     extraPhotos: [
-      { url: "/images/stansbury_valley_3968e881.jpg", caption: "Looking west over Tooele Valley — the Great Salt Lake and salt flats visible on the horizon, Oquirrh Mountains beyond" },
-      { url: "/images/stansbury_trail_b9543410.jpg", caption: "The trail through aspens and firs on the way up" },
+      { url: "/manus-storage/deseret-peak-valley_d0de19da.jpg", caption: "Looking west over Tooele Valley — the Great Salt Lake and salt flats visible on the horizon, Oquirrh Mountains beyond" },
+      { url: "/manus-storage/deseret-peak-trail_cc61bbd4.jpg", caption: "The trail through aspens and firs on the way up" },
     ],
     polygon: [
       // Shifted east 0.5 miles (+0.007°) from previous position
