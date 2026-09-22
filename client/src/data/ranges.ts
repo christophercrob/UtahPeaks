@@ -468,6 +468,24 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
       url: "/manus-storage/20260919_144824_d640fe72.webp",
       caption: "Flat Top Peak summit — September 19, 2026",
     },
+    extraPhotos: [
+      {
+        url: "/manus-storage/flat-top-view-valley-20260919_0a2e063e.webp",
+        caption: "Fall color and ridgelines above Ophir Canyon",
+      },
+      {
+        url: "/manus-storage/flat-top-view-ridge-20260919_03c4003e.webp",
+        caption: "Rocky upper slopes below Flat Top Peak",
+      },
+      {
+        url: "/manus-storage/flat-top-trail-20260919_3068bf3e.webp",
+        caption: "Morning trail through Ophir Canyon",
+      },
+      {
+        url: "/manus-storage/flat-top-view-forest-20260919_300362ff.webp",
+        caption: "Forest and autumn color along the high ridge",
+      },
+    ],
     polygon: [
       // Oquirrh Mountain Range boundary from user-supplied UtahMountainRanges(3).kml.
       // KML longitude,latitude coordinates are converted to [latitude, longitude].
