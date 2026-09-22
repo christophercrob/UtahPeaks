@@ -20,6 +20,7 @@ export interface MountainRange {
   summited?: boolean;
   summitDate?: string;           // e.g. "July 11, 2026"
   hikeNote?: string;             // short personal note about the hike
+  accessNotes?: string[];        // route, access, and safety advisories for the hike journal
   trailheadPhoto?: { url: string; caption?: string };
   summitPhoto?: { url: string; caption?: string };
   attempted?: boolean;           // true if attempted but not yet summited
@@ -460,6 +461,13 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     summited: true,
     summitDate: "September 19, 2026",
     hikeNote: "Summited Flat Top Peak in the Oquirrh Mountains on September 19, 2026.",
+    accessNotes: [
+      "Roads above Lion Hill Trailhead are poorly maintained and may be difficult for most 4x4s.",
+      "Parking at Lion Hill Trailhead adds a couple of miles and more than 1,200 feet of elevation gain to routes listed on AllTrails.",
+      "This route is on private land; obtain permission before entering.",
+      "A trail goes up to Halls Basin, but a locked gate makes it impassable, even on a motorbike.",
+      "There are no trails from the peak to Halls Basin. The northwest slope below the peak is densely forested with heavy overgrowth.",
+    ],
     trailheadPhoto: {
       url: "/manus-storage/flat-top-trailhead-20260919_b1474251.webp",
       caption: "Flat Top Peak trailhead in Ophir Canyon — September 19, 2026",

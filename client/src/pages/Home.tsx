@@ -213,6 +213,26 @@ function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onC
           </div>
         )}
 
+        {/* Access and route advisory */}
+        {range.accessNotes && range.accessNotes.length > 0 && (
+          <div className="px-5 py-4" style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+            <div style={{ background: "#EEE4D0", border: "1px solid rgba(133,88,18,0.25)", borderRadius: 9, padding: "12px 13px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 7, color: "#735111", fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
+                  <path d="M12 3 2.8 20h18.4L12 3Z" />
+                  <path d="M12 9v4.5M12 17h.01" />
+                </svg>
+                Access &amp; route advisory
+              </div>
+              <ul style={{ margin: 0, paddingLeft: 17, color: "#51472E", fontSize: 12, lineHeight: 1.55 }}>
+                {range.accessNotes.map((note) => (
+                  <li key={note} style={{ marginBottom: 5 }}>{note}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+
         {/* Photos */}
         {hasPhotos && (
           <div className="px-5 py-4 grid gap-4" style={{ gridTemplateColumns: range.trailheadPhoto && range.summitPhoto ? "1fr 1fr" : "1fr", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
