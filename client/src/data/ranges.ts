@@ -453,7 +453,7 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     elevationFt: 10620,
     lat: 40.3723,
     lon: -112.1890,
-    trailhead: "Ophir Canyon",
+    trailhead: "Lion Hill Trailhead",
     trailheadLat: 40.3733,
     trailheadLon: -112.2667,
     gain: "~2,920–3,540 ft",
