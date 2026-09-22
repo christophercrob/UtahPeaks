@@ -460,6 +460,10 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     summited: true,
     summitDate: "September 19, 2026",
     hikeNote: "Summited Flat Top Peak in the Oquirrh Mountains on September 19, 2026.",
+    trailheadPhoto: {
+      url: "/manus-storage/flat-top-trailhead-20260919_b1474251.webp",
+      caption: "Flat Top Peak trailhead in Ophir Canyon — September 19, 2026",
+    },
     summitPhoto: {
       url: "/manus-storage/20260919_144824_d640fe72.webp",
       caption: "Flat Top Peak summit — September 19, 2026",
