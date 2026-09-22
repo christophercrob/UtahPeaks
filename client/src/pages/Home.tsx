@@ -481,7 +481,7 @@ function DataTableDrawer({
                   { label: "Primary Trailhead", mobile: false },
                   { label: "Elev. Gain", mobile: false },
                   { label: "Directions", mobile: true },
-                  { label: "Photos", mobile: true },
+                  { label: "Hike & Photos", mobile: true },
                 ].map(({ label, mobile }) => (
                   <th
                     key={label}
@@ -504,7 +504,9 @@ function DataTableDrawer({
               </tr>
             </thead>
             <tbody>
-              {MOUNTAIN_RANGES.map((r, i) => (
+              {MOUNTAIN_RANGES.map((r, i) => {
+                const photoCount = (r.trailheadPhoto ? 1 : 0) + (r.summitPhoto ? 1 : 0) + (r.extraPhotos?.length ?? 0);
+                return (
                 <tr
                   key={r.range}
                   style={{
@@ -573,17 +575,30 @@ function DataTableDrawer({
                       Directions
                     </a>
                   </td>
-                  {/* Photo journal button */}
+                  {/* Summit status and photo journal */}
                   <td style={{ padding: "10px 14px", borderBottom: "1px solid rgba(0,0,0,0.06)" }} onClick={(e) => e.stopPropagation()}>
-                    <button
-                      type="button"
-                      onClick={() => { onOpenJournal(r); onClose(); }}
-                      aria-label={`Open ${r.peak} photos`}
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 5 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }} title={r.summited ? `Summited ${r.summitDate ?? ""}` : r.attempted ? `Attempted ${r.attemptDate ?? ""}` : "Not yet hiked"}>
+                        <span
+                          aria-label={r.summited ? "Summited" : "Not summited"}
+                          style={{ width: 15, height: 15, borderRadius: 3, display: "inline-flex", alignItems: "center", justifyContent: "center", background: r.summited ? "#1A6B3A" : "transparent", border: r.summited ? "1px solid #1A6B3A" : "1.5px solid #A6A6A6", color: "#fff", flexShrink: 0 }}
+                        >
+                          {r.summited && <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M2 6.2 4.7 9 10 3" /></svg>}
+                        </span>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: r.summited ? "#1A6B3A" : r.attempted ? "#9A6C00" : "#777" }}>
+                          {r.summited ? "Summited" : r.attempted ? "Attempted" : "Not hiked"}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        disabled={photoCount === 0}
+                        onClick={() => { onOpenJournal(r); onClose(); }}
+                        aria-label={photoCount ? `Open ${r.peak} photos` : `No photos available for ${r.peak}`}
                       style={{
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 5,
-                        background: r.color,
+                        background: photoCount ? r.color : "#B7B2A8",
                         color: "#fff",
                         border: "none",
                         borderRadius: 6,
@@ -591,20 +606,23 @@ function DataTableDrawer({
                         fontSize: 11,
                         fontWeight: 600,
                         whiteSpace: "nowrap",
-                        transition: "filter 0.15s",
+                        transition: "filter 0.15s, opacity 0.15s",
+                        cursor: photoCount ? "pointer" : "not-allowed",
                       }}
-                      onMouseEnter={(e) => (e.currentTarget.style.filter = "brightness(0.85)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
-                    >
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
-                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                        <circle cx="12" cy="13" r="4" />
-                      </svg>
-                      Photos
-                    </button>
+                        onMouseEnter={(e) => { if (photoCount) e.currentTarget.style.filter = "brightness(0.85)"; }}
+                        onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
+                      >
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
+                          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                          <circle cx="12" cy="13" r="4" />
+                        </svg>
+                        {photoCount ? `${photoCount} ${photoCount === 1 ? "photo" : "photos"}` : "No photos"}
+                      </button>
+                    </div>
                   </td>
                 </tr>
-              ))}
+              );
+              })}
             </tbody>
           </table>
         </div>
@@ -783,11 +801,14 @@ function WurlTableDrawer({
 function DetailSidebar({
   range,
   onClose,
+  onOpenJournal,
 }: {
   range: MountainRange | null;
   onClose: () => void;
+  onOpenJournal: (r: MountainRange) => void;
 }) {
   if (!range) return null;
+  const hasPictures = !!(range.trailheadPhoto || range.summitPhoto || range.extraPhotos?.length);
   return (
     <div
       className="absolute top-16 right-3 z-20 w-72 rounded-xl shadow-2xl overflow-hidden"
@@ -836,8 +857,8 @@ function DetailSidebar({
         </div>
       </div>
 
-      {/* Directions button */}
-      <div className="px-4 pb-4">
+      {/* Action buttons */}
+      <div className="px-4 pb-4 space-y-2">
         <a
           href={googleMapsDirectionsUrl(range)}
           target="_blank"
@@ -851,6 +872,20 @@ function DetailSidebar({
           </svg>
           Get Directions to Trailhead
         </a>
+        {hasPictures && (
+          <button
+            type="button"
+            onClick={() => onOpenJournal(range)}
+            className="flex items-center justify-center gap-2 w-full py-2 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90"
+            style={{ background: range.color, border: "none" }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+              <circle cx="12" cy="13" r="4" />
+            </svg>
+            View Pictures
+          </button>
+        )}
       </div>
 
       {/* Footer hint */}
@@ -1252,10 +1287,10 @@ export default function Home() {
 
         const polygon = new google.maps.Polygon({
           paths,
-          strokeColor: isActive ? "#8B2500" : "#3a3a3a",
-          strokeOpacity: 0.9,
+          strokeColor: "#000000",
+          strokeOpacity: 0.92,
           strokeWeight: isActive ? 2 : 1.5,
-          fillColor: isActive ? "#6B3020" : "#555555",
+          fillColor: "#3A3A3A",
           fillOpacity: 0.38,
           map,
           zIndex: 5,
@@ -1285,7 +1320,7 @@ export default function Home() {
         const nameSpan = document.createElement("span");
         nameSpan.style.cssText = `
           font-family:'Source Sans 3',sans-serif;font-size:10px;font-weight:800;
-          color:${isActive ? "#8B1A00" : "#1a1a1a"};white-space:nowrap;line-height:1.2;
+          color:#1a1a1a;white-space:nowrap;line-height:1.2;
           text-shadow:0 0 3px #fff,0 0 6px #fff,0 0 10px #fff,
             1px 1px 0 #fff,-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff;
           background:none;padding:0;
@@ -1444,11 +1479,12 @@ export default function Home() {
           {/* Desktop buttons */}
           <div className="hidden sm:flex items-center gap-2">
             <button
-              onClick={() => { setWurlTableOpen(false); setTableOpen(true); }}
+              onClick={() => { setWurlTableOpen(false); setTableOpen((open) => !open); }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
-              style={{ background: "rgba(192,82,42,0.85)", color: "#fff", border: "1px solid rgba(255,255,255,0.15)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#C0522A")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(192,82,42,0.85)")}
+              style={{ background: tableOpen ? "rgba(192,82,42,0.85)" : "rgba(255,255,255,0.10)", color: tableOpen ? "#fff" : "rgba(238,232,220,0.8)", border: tableOpen ? "1px solid rgba(255,185,145,0.38)" : "1px solid rgba(255,255,255,0.15)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = tableOpen ? "#C0522A" : "rgba(255,255,255,0.18)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = tableOpen ? "rgba(192,82,42,0.85)" : "rgba(255,255,255,0.10)")}
+              aria-pressed={tableOpen}
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>
@@ -1549,9 +1585,10 @@ export default function Home() {
             style={{ top: 56, background: "rgba(22,28,42,0.98)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(255,255,255,0.1)" }}
           >
             <button
-              onClick={() => { setWurlTableOpen(false); setTableOpen(true); setMenuOpen(false); }}
+              onClick={() => { setWurlTableOpen(false); setTableOpen((open) => !open); setMenuOpen(false); }}
               className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
-              style={{ background: "rgba(192,82,42,0.85)", color: "#fff" }}
+              style={{ background: tableOpen ? "rgba(192,82,42,0.85)" : "rgba(255,255,255,0.08)", color: tableOpen ? "#fff" : "rgba(238,232,220,0.9)", border: tableOpen ? "1px solid rgba(255,185,145,0.38)" : "1px solid rgba(255,255,255,0.12)" }}
+              aria-pressed={tableOpen}
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>
@@ -1677,7 +1714,7 @@ export default function Home() {
       <Legend selected={selected} onSelect={handleSelect} onOpenJournal={handleOpenJournal} />
 
       {/* ── Detail Sidebar ── */}
-      <DetailSidebar range={selected} onClose={() => setSelected(null)} />
+      <DetailSidebar range={selected} onClose={() => setSelected(null)} onOpenJournal={handleOpenJournal} />
 
       {/* ── Data Table Drawer ── */}
       <DataTableDrawer
