@@ -136,6 +136,17 @@ export const OTHER_PEAKS: OtherPeak[] = [
     accessNote: "Rock Canyon is steep and water can be scarce. Check current trailhead parking and construction information.",
   },
   {
+    id: "loafer-mountain",
+    name: "Loafer Mountain",
+    elevationFt: 10687,
+    lat: 39.9762,
+    lon: -111.6153,
+    group: "Utah Valley & Southern Wasatch",
+    area: "Payson Canyon · Uinta-Wasatch-Cache National Forest",
+    character: "Prominent Southern Wasatch summit",
+    accessNote: "The signed Loafer Mountain Trail can continue toward nearby Santaquin Peak; carry a map or GPS and watch for the summit use trail. Expect a long, steep outing with limited water on the ridge.",
+  },
+  {
     id: "mount-emmons",
     name: "Mount Emmons",
     elevationFt: 13446,
