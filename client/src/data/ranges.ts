@@ -431,8 +431,8 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     extraPhotos: [
       { url: "/manus-storage/deseret-peak-valley_d0de19da.jpg", caption: "Looking west over Tooele Valley — the Great Salt Lake and salt flats visible on the horizon, Oquirrh Mountains beyond" },
       { url: "/manus-storage/deseret-peak-trail_cc61bbd4.jpg", caption: "The trail through aspens and firs on the way up" },
-      { url: "/manus-storage/20260905_154359_d5540263.jpg", caption: "On the Deseret Peak trail beneath the high Stansbury ridgeline" },
-      { url: "/manus-storage/20260905_142911_3ba4fdb5.webp", caption: "Deseret Peak Loop junction: South Willow Creek and Pockets Fork routes" },
+      { url: "/manus-storage/20260905_154359_d5540263.jpg", caption: "On the Deseret Peak Loop Trail, a few miles from Loop Campground — September 5, 2026" },
+      { url: "/manus-storage/20260905_142911_3ba4fdb5.webp", caption: "Deseret Peak Loop Trail junction for South Willow Creek and Pockets Fork, a few miles from Loop Campground — September 5, 2026" },
     ],
     polygon: [
       // Shifted east 0.5 miles (+0.007°) from previous position
