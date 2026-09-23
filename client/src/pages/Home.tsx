@@ -445,11 +445,13 @@ function DataTableDrawer({
   onClose,
   onSelectRange,
   onOpenJournal,
+  onOpenOtherPeaks,
 }: {
   open: boolean;
   onClose: () => void;
   onSelectRange: (r: MountainRange) => void;
   onOpenJournal: (r: MountainRange) => void;
+  onOpenOtherPeaks: () => void;
 }) {
   return (
     <>
@@ -499,13 +501,28 @@ function DataTableDrawer({
               </div>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="text-white/50 hover:text-white transition-colors text-2xl leading-none"
-            aria-label="Close table"
-          >
-            ×
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onOpenOtherPeaks}
+              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-colors hover:bg-white/20"
+              style={{ color: "#EAF4FC", border: "1px solid rgba(210,232,248,0.34)", background: "rgba(18,59,93,0.58)" }}
+              title="Open the Other Peaks catalog"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d="m3 18 5-9 4 5 3-4 6 8H3Z"/><path d="m8 9 2-3 2 3"/>
+              </svg>
+              <span className="hidden sm:inline">Other Peaks</span>
+              <span className="sm:hidden">Other</span>
+            </button>
+            <button
+              onClick={onClose}
+              className="text-white/50 hover:text-white transition-colors text-2xl leading-none"
+              aria-label="Close highest peaks table"
+            >
+              ×
+            </button>
+          </div>
         </div>
 
         {/* Scrollable table */}
@@ -845,6 +862,7 @@ function OtherPeaksDrawer({
   onSelectWurlPeak,
   wurlVisible,
   onToggleWurl,
+  onOpenPeakList,
 }: {
   open: boolean;
   onClose: () => void;
@@ -852,6 +870,7 @@ function OtherPeaksDrawer({
   onSelectWurlPeak: (peak: WurlPeak) => void;
   wurlVisible: boolean;
   onToggleWurl: () => void;
+  onOpenPeakList: () => void;
 }) {
   const [group, setGroup] = useState<string>("All areas");
   const isWurlGroup = group === WURL_GROUP;
@@ -907,13 +926,28 @@ function OtherPeaksDrawer({
               </div>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="text-white/70 hover:text-white transition-colors text-2xl leading-none"
-            aria-label="Close Other Peaks catalog"
-          >
-            ×
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onOpenPeakList}
+              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-colors hover:bg-white/15"
+              style={{ color: "#F3F8FC", border: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.11)" }}
+              title="Return to highest peaks in every range"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>
+              </svg>
+              <span className="hidden sm:inline">Highest Peaks</span>
+              <span className="sm:hidden">Peaks</span>
+            </button>
+            <button
+              onClick={onClose}
+              className="text-white/70 hover:text-white transition-colors text-2xl leading-none"
+              aria-label="Close Other Peaks catalog"
+            >
+              ×
+            </button>
+          </div>
         </div>
 
         <div className="px-4 sm:px-6 pt-3 pb-2 flex-shrink-0" style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
@@ -1233,16 +1267,10 @@ function Legend({
   selected,
   onSelect,
   onOpenJournal,
-  otherPeaksVisible,
-  onToggleOtherPeaks,
-  onOpenOtherPeaks,
 }: {
   selected: MountainRange | null;
   onSelect: (r: MountainRange) => void;
   onOpenJournal: (r: MountainRange) => void;
-  otherPeaksVisible: boolean;
-  onToggleOtherPeaks: () => void;
-  onOpenOtherPeaks: () => void;
 }) {
   const isMobile = useIsMobile();
   const [collapsed, setCollapsed] = useState(() => window.innerWidth < 768);
@@ -1303,28 +1331,6 @@ function Legend({
                 </button>
               </button>
             ))}
-          </div>
-          <div className="px-2 py-2 border-t space-y-1.5" style={{ borderColor: "rgba(0,0,0,0.08)", background: "rgba(18,59,93,0.035)" }}>
-            <button
-              type="button"
-              onClick={onToggleOtherPeaks}
-              className="w-full flex items-center justify-between gap-2 px-1.5 py-1.5 rounded-md text-left transition-colors hover:bg-black/5"
-              aria-pressed={otherPeaksVisible}
-            >
-              <span className="flex items-center gap-2">
-                <span className="flex-shrink-0 rounded-full" style={{ width: 10, height: 10, background: OTHER_PEAK_COLOR }} />
-                <span className="text-xs font-semibold" style={{ color: OTHER_PEAK_COLOR }}>Other Peaks pins</span>
-              </span>
-              <span className="text-[10px] font-extrabold uppercase tracking-wide" style={{ color: otherPeaksVisible ? "#1A6B3A" : "#777" }}>{otherPeaksVisible ? "On" : "Off"}</span>
-            </button>
-            <button
-              type="button"
-              onClick={onOpenOtherPeaks}
-              className="w-full px-1.5 py-1 text-left text-[11px] font-bold transition-colors hover:opacity-75"
-              style={{ color: OTHER_PEAK_COLOR }}
-            >
-              Browse Other Peaks catalog →
-            </button>
           </div>
           <div className="px-3 py-1.5 text-xs text-gray-400 border-t" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
             Click a pin or range for details
@@ -1923,17 +1929,6 @@ export default function Home() {
               {otherPeaksVisible ? "Other Peaks: On" : "Other Peaks"}
             </button>
             <button
-              onClick={() => { setTableOpen(false); setOtherPeaksOpen(true); }}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors"
-              style={{ background: "rgba(18,59,93,0.16)", color: "#DCEEFF", border: "1px solid rgba(193,220,241,0.22)" }}
-              title="Browse Other Peaks catalog"
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                <rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>
-              </svg>
-              Catalog
-            </button>
-            <button
               onClick={() => setAboutOpen(true)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
               style={{ background: "rgba(255,255,255,0.10)", color: "rgba(238,232,220,0.8)", border: "1px solid rgba(255,255,255,0.15)" }}
@@ -2033,16 +2028,6 @@ export default function Home() {
                 <path d="M3 18l5-9 4 5 3-4 6 8H3z"/><path d="M8 9l2-3 2 3"/>
               </svg>
               {otherPeaksVisible ? "Other Peaks: On (tap to hide)" : "Show Other Peaks"}
-            </button>
-            <button
-              onClick={() => { setTableOpen(false); setOtherPeaksOpen(true); setMenuOpen(false); }}
-              className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
-              style={{ background: "rgba(18,59,93,0.16)", color: "#DCEEFF", border: "1px solid rgba(193,220,241,0.22)" }}
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                <rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>
-              </svg>
-              Browse Other Peaks catalog
             </button>
             <button
               onClick={() => { setAboutOpen(true); setMenuOpen(false); }}
@@ -2149,9 +2134,6 @@ export default function Home() {
         selected={selected}
         onSelect={handleSelect}
         onOpenJournal={handleOpenJournal}
-        otherPeaksVisible={otherPeaksVisible}
-        onToggleOtherPeaks={toggleOtherPeaks}
-        onOpenOtherPeaks={() => { setTableOpen(false); setOtherPeaksOpen(true); }}
       />
 
       {/* ── Detail Sidebar ── */}
@@ -2164,6 +2146,7 @@ export default function Home() {
         onClose={() => setTableOpen(false)}
         onSelectRange={(r) => { handleSelect(r); setTableOpen(false); }}
         onOpenJournal={handleOpenJournal}
+        onOpenOtherPeaks={() => { setTableOpen(false); setOtherPeaksOpen(true); }}
       />
 
       {/* ── Other Peaks Catalog ── */}
@@ -2174,6 +2157,7 @@ export default function Home() {
         onSelectWurlPeak={handleSelectWurlPeak}
         wurlVisible={wurlVisible}
         onToggleWurl={toggleWurl}
+        onOpenPeakList={() => { setOtherPeaksOpen(false); setTableOpen(true); }}
       />
 
       {/* ── WURL Peaks Table Drawer ── */}
