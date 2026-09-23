@@ -2074,6 +2074,13 @@ export default function Home() {
               </svg>
               {parksLayerOn ? "Nat'l Parks: On (tap to hide)" : "Show Nat'l Parks"}
             </button>
+            <button
+              onClick={() => { setAboutOpen(true); setMenuOpen(false); }}
+              className="w-full px-3 py-2.5 rounded-lg text-sm font-bold text-left transition-colors"
+              style={{ background: "#5A3C88", color: "#FFFFFF", border: "1px solid rgba(227,210,250,0.42)" }}
+            >
+              About
+            </button>
             <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: 8, marginTop: 2 }}>
               <div style={{ fontSize: 10, color: "rgba(238,232,220,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Map Style</div>
               <div className="flex gap-2">
@@ -2089,13 +2096,6 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            <button
-              onClick={() => { setAboutOpen(true); setMenuOpen(false); }}
-              className="w-full px-3 py-2.5 rounded-lg text-sm font-bold text-left transition-colors"
-              style={{ background: "#5A3C88", color: "#FFFFFF", border: "1px solid rgba(227,210,250,0.42)" }}
-            >
-              About
-            </button>
           </div>
         )}
       </header>
