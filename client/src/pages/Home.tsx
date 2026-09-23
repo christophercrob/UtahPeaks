@@ -1350,7 +1350,7 @@ export default function Home() {
   const [mapType, setMapType] = useState<"terrain" | "satellite" | "roadmap">("terrain");
   const [tableOpen, setTableOpen] = useState(false);
   const [otherPeaksOpen, setOtherPeaksOpen] = useState(false);
-  const [otherPeaksVisible, setOtherPeaksVisible] = useState(true);
+  const [otherPeaksVisible, setOtherPeaksVisible] = useState(false);
   const [wurlTableOpen, setWurlTableOpen] = useState(false);
   const [wurlVisible, setWurlVisible] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
