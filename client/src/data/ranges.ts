@@ -344,7 +344,7 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     trailheadLat: 38.0817,
     trailheadLon: -110.7283,
     gain: "~1,024 ft",
-    color: "#6C3483",
+    color: "#5B7B68",
     summited: true,
     summitDate: "July 5, 2026",
     hikeNote: "The Henry Mountains are the last range in the contiguous US to be named and mapped. Mount Ellen's summit ridge is a short hike from Bull Creek Pass — but the remoteness and the views over Capitol Reef and Canyonlands make it feel like the edge of the world.",
