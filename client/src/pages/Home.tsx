@@ -11,6 +11,7 @@ import { MapView } from "@/components/Map";
 import { MOUNTAIN_RANGES, type MountainRange } from "@/data/ranges";
 import { WURL_CENTER, WURL_COLOR, WURL_PEAKS, WURL_ZOOM, type WurlPeak } from "@/data/wurl";
 import { OTHER_PEAK_COLOR, OTHER_PEAK_GROUPS, OTHER_PEAKS, type OtherPeak } from "@/data/otherPeaks";
+import { PROTECTED_AREA_COLORS, PROTECTED_AREA_SOURCES, type ProtectedAreaKind } from "@/data/protectedAreas";
 
 const WURL_GROUP = "WURL · Central Wasatch";
 const SORTED_MOUNTAIN_RANGES = [...MOUNTAIN_RANGES].sort((a, b) => b.elevationFt - a.elevationFt);
@@ -1378,6 +1379,14 @@ export default function Home() {
   const parksLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const parksDataRef = useRef<NpsParkFeature[] | null>(null);
 
+  // ── Curated protected areas layer state ──
+  const [protectedAreasOn, setProtectedAreasOn] = useState(false);
+  const [protectedAreasLoading, setProtectedAreasLoading] = useState(false);
+  const [protectedAreasError, setProtectedAreasError] = useState<string | null>(null);
+  const protectedAreaPolygonsRef = useRef<google.maps.Polygon[]>([]);
+  const protectedAreaLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const protectedAreasDataRef = useRef<ProtectedAreaFeature[] | null>(null);
+
   // Fetch all U.S. National Park boundaries once. The seven regional parks stay detailed;
   // the other 56 are intentionally generalized for quick nationwide map rendering.
   const fetchParksData = useCallback(async (): Promise<NpsParkFeature[]> => {
@@ -1524,6 +1533,139 @@ export default function Home() {
       });
     })();
   }, [parksLayerOn, fetchParksData]);
+
+  // Fetch the curated monuments, state parks, and regional-neighbor areas only
+  // when requested. Every configured source returns Esri polygon geometry in WGS84.
+  const fetchProtectedAreasData = useCallback(async (): Promise<ProtectedAreaFeature[]> => {
+    if (protectedAreasDataRef.current) return protectedAreasDataRef.current;
+    setProtectedAreasLoading(true);
+    setProtectedAreasError(null);
+
+    try {
+      const fetchSource = async (source: (typeof PROTECTED_AREA_SOURCES)[number]) => {
+        const params = new URLSearchParams({
+          where: source.where,
+          outFields: "*",
+          returnGeometry: "true",
+          outSR: "4326",
+          geometryPrecision: "5",
+          maxAllowableOffset: "0.001",
+          f: "json",
+        });
+        const response = await fetch(`${source.endpoint}?${params.toString()}`);
+        if (!response.ok) throw new Error(`${source.shortName}: HTTP ${response.status}`);
+        const json = await response.json();
+        if (json.error) throw new Error(`${source.shortName}: ${json.error.message ?? "API error"}`);
+
+        return (json.features ?? []).map((feature: EsriBoundaryFeature) => {
+          const rawName = String(feature.attributes?.[source.nameField] ?? source.name).trim();
+          const name = source.nameOverrides?.[rawName] ?? rawName;
+          return {
+            name,
+            kind: source.kind,
+            jurisdiction: source.jurisdiction,
+            sourceLabel: source.sourceLabel,
+            sourceUrl: source.sourceUrl,
+            geometryNote: source.geometryNote,
+            geometry: feature.geometry,
+          } satisfies ProtectedAreaFeature;
+        });
+      };
+
+      const results = await Promise.all(PROTECTED_AREA_SOURCES.map(fetchSource));
+      const features = results.flat().filter((feature) => feature.geometry?.rings?.length);
+      if (!features.length) throw new Error("No protected-area boundaries returned");
+      protectedAreasDataRef.current = features;
+      return features;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Unknown error";
+      setProtectedAreasError(`Could not load protected areas: ${msg}`);
+      return [];
+    } finally {
+      setProtectedAreasLoading(false);
+    }
+  }, []);
+
+  // Draw the complete research-register layer: federal monuments, Utah state
+  // parks, and the neighboring Nevada/Arizona places all use distinct styling.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    if (!protectedAreasOn) {
+      protectedAreaPolygonsRef.current.forEach((polygon) => polygon.setMap(null));
+      protectedAreaPolygonsRef.current = [];
+      protectedAreaLabelsRef.current.forEach((label) => { label.map = null; });
+      protectedAreaLabelsRef.current = [];
+      return;
+    }
+
+    let cancelled = false;
+    (async () => {
+      const features = await fetchProtectedAreasData();
+      if (cancelled || !features.length) return;
+
+      const labelCandidates = new Map<string, { feature: ProtectedAreaFeature; ring: number[][] }>();
+      features.forEach((feature) => {
+        const rings = feature.geometry?.rings;
+        if (!rings?.length) return;
+        const palette = PROTECTED_AREA_COLORS[feature.kind];
+        const paths = rings.map((ring) => ring.map(([lng, lat]) => ({ lat, lng })));
+        const polygon = new google.maps.Polygon({
+          paths,
+          strokeColor: palette.stroke,
+          strokeOpacity: 0.92,
+          strokeWeight: feature.kind === "regional_neighbor" ? 1.6 : 2,
+          fillColor: palette.fill,
+          fillOpacity: feature.kind === "regional_neighbor" ? 0.105 : 0.14,
+          map,
+          zIndex: 3,
+        });
+        protectedAreaPolygonsRef.current.push(polygon);
+
+        const largestRing = rings.reduce((largest, ring) => (ring.length > largest.length ? ring : largest), rings[0]);
+        const current = labelCandidates.get(feature.name);
+        if (!current || largestRing.length > current.ring.length) {
+          labelCandidates.set(feature.name, { feature, ring: largestRing });
+        }
+      });
+
+      labelCandidates.forEach(({ feature, ring }) => {
+        const palette = PROTECTED_AREA_COLORS[feature.kind];
+        const center = ring.reduce(
+          (total, [lng, lat]) => ({ lat: total.lat + lat, lng: total.lng + lng }),
+          { lat: 0, lng: 0 },
+        );
+        center.lat /= ring.length;
+        center.lng /= ring.length;
+
+        const labelEl = document.createElement("div");
+        labelEl.style.cssText = `
+          max-width:140px;text-align:center;pointer-events:none;transform:translate(-50%,-50%);
+          font-family:'Source Sans 3',sans-serif;font-size:10px;font-weight:800;line-height:1.15;
+          color:${palette.stroke};text-shadow:0 0 3px #fff,0 0 6px #fff,0 0 10px #fff,
+            1px 1px 0 #fff,-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff;
+        `;
+        labelEl.textContent = feature.name;
+        const label = new google.maps.marker.AdvancedMarkerElement({
+          map,
+          position: center,
+          content: labelEl,
+          title: `${feature.name} · ${feature.jurisdiction}`,
+          zIndex: 4,
+        });
+        protectedAreaLabelsRef.current.push(label);
+      });
+    })();
+
+    return () => {
+      cancelled = true;
+      protectedAreaPolygonsRef.current.forEach((polygon) => polygon.setMap(null));
+      protectedAreaPolygonsRef.current = [];
+      protectedAreaLabelsRef.current.forEach((label) => { label.map = null; });
+      protectedAreaLabelsRef.current = [];
+    };
+  }, [protectedAreasOn, fetchProtectedAreasData]);
 
   const handleSelect = useCallback((r: MountainRange) => {
     setSelectedOtherPeak(null);
@@ -1967,6 +2109,19 @@ export default function Home() {
               {fireLoading ? "Loading…" : fireLayerOn ? "Fires: On" : "Fires"}
             </button>
             <button
+              onClick={() => setProtectedAreasOn((v) => !v)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+              style={{ background: protectedAreasOn ? "rgba(90,60,136,0.96)" : "rgba(255,255,255,0.10)", color: "#fff", border: protectedAreasOn ? "1px solid rgba(220,200,255,0.46)" : "1px solid rgba(255,255,255,0.15)" }}
+              title={protectedAreasOn ? "Hide monuments, state parks, and regional neighbors" : "Show monuments, state parks, and regional neighbors"}
+              aria-pressed={protectedAreasOn}
+            >
+              {protectedAreasLoading
+                ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ animation: "spin 1s linear infinite" }}><circle cx="12" cy="12" r="10" strokeOpacity="0.3"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+                : <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3l8 4v5c0 4.4-3.1 7.4-8 9-4.9-1.6-8-4.6-8-9V7l8-4z"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+              }
+              {protectedAreasLoading ? "Loading…" : protectedAreasOn ? "Protected: On" : "Protected Areas"}
+            </button>
+            <button
               onClick={() => setParksLayerOn((v) => !v)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
               style={{ background: parksLayerOn ? "rgba(200,20,20,0.92)" : "rgba(255,255,255,0.10)", color: "#fff", border: parksLayerOn ? "1px solid rgba(255,80,80,0.5)" : "1px solid rgba(255,255,255,0.15)" }}
@@ -2065,6 +2220,18 @@ export default function Home() {
               {fireLayerOn ? "Fires: On (tap to hide)" : "Show Recent Fires"}
             </button>
             <button
+              onClick={() => { setProtectedAreasOn((v) => !v); setMenuOpen(false); }}
+              className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
+              style={{ background: protectedAreasOn ? "rgba(90,60,136,0.96)" : "rgba(255,255,255,0.08)", color: "#fff", border: protectedAreasOn ? "1px solid rgba(220,200,255,0.42)" : "1px solid rgba(255,255,255,0.12)" }}
+              aria-pressed={protectedAreasOn}
+            >
+              {protectedAreasLoading
+                ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ animation: "spin 1s linear infinite" }}><circle cx="12" cy="12" r="10" strokeOpacity="0.3"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+                : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3l8 4v5c0 4.4-3.1 7.4-8 9-4.9-1.6-8-4.6-8-9V7l8-4z"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+              }
+              {protectedAreasLoading ? "Loading Protected Areas…" : protectedAreasOn ? "Protected Areas: On (tap to hide)" : "Show Protected Areas"}
+            </button>
+            <button
               onClick={() => { setParksLayerOn((v) => !v); setMenuOpen(false); }}
               className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
               style={{ background: parksLayerOn ? "rgba(200,20,20,0.92)" : "rgba(255,255,255,0.08)", color: "#fff", border: parksLayerOn ? "1px solid rgba(255,80,80,0.4)" : "1px solid rgba(255,255,255,0.12)" }}
@@ -2138,6 +2305,28 @@ export default function Home() {
           <button
             className="ml-3 text-white/70 hover:text-white"
             onClick={() => setParksError(null)}
+          >×</button>
+        </div>
+      )}
+
+      {/* ── Protected areas error toast ── */}
+      {protectedAreasError && (
+        <div
+          className="absolute z-50 px-4 py-2 rounded-lg text-sm font-medium shadow-lg"
+          style={{
+            top: fireError || parksError ? 128 : 72,
+            left: "50%",
+            transform: "translateX(-50%)",
+            background: "rgba(72,42,112,0.97)",
+            color: "#fff",
+            border: "1px solid rgba(227,210,250,0.35)",
+            marginTop: 8,
+          }}
+        >
+          {protectedAreasError}
+          <button
+            className="ml-3 text-white/70 hover:text-white"
+            onClick={() => setProtectedAreasError(null)}
           >×</button>
         </div>
       )}
@@ -2222,6 +2411,26 @@ interface NpsParkFeature {
     rings: number[][][];
   };
   precision?: "detailed" | "overview";
+}
+
+// ── Curated Protected Area Boundary Types ──────────────────────────────────
+interface EsriBoundaryFeature {
+  attributes: Record<string, string | number | null | undefined>;
+  geometry?: {
+    rings?: number[][][];
+  };
+}
+
+interface ProtectedAreaFeature {
+  name: string;
+  kind: ProtectedAreaKind;
+  jurisdiction: string;
+  sourceLabel: string;
+  sourceUrl: string;
+  geometryNote?: string;
+  geometry?: {
+    rings?: number[][][];
+  };
 }
 
 // ── Fire Perimeter Types ───────────────────────────────────────────────────
