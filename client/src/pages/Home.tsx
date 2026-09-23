@@ -1372,21 +1372,23 @@ export default function Home() {
   const parksLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const parksDataRef = useRef<NpsParkFeature[] | null>(null);
 
-  // Fetch NPS park boundaries (Utah's 5 national parks, lazy-loaded once)
+  // Fetch NPS park boundaries (Utah's 5 parks plus nearby Grand Canyon and Great Basin, lazy-loaded once)
   const fetchParksData = useCallback(async (): Promise<NpsParkFeature[]> => {
     if (parksDataRef.current) return parksDataRef.current;
     setParksLoading(true);
     setParksError(null);
     try {
-      // NPS Land Resources Division Boundary Service — Utah's 5 National Parks
+      // NPS Land Resources Division Boundary Service — Utah's parks plus two regional neighbors
       // Must use outFields=* when returnGeometry=true (service rejects named fields + geometry)
       const where = encodeURIComponent(
-        `UNIT_CODE='ZION' OR UNIT_CODE='BRCA' OR UNIT_CODE='CANY' OR UNIT_CODE='ARCH' OR UNIT_CODE='CARE'`
+        `UNIT_CODE='ZION' OR UNIT_CODE='BRCA' OR UNIT_CODE='CANY' OR UNIT_CODE='ARCH' OR UNIT_CODE='CARE' OR UNIT_CODE='GRCA' OR UNIT_CODE='GRBA'`
       );
       const url =
         `https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/` +
         `NPS_Land_Resources_Division_Boundary_and_Tract_Data_Service/FeatureServer/2/query` +
-        `?where=${where}&outFields=*&returnGeometry=true&outSR=4326&f=json&resultRecordCount=10`;
+        // A roughly 110 m display tolerance retains complete, recognizable park outlines
+        // while keeping the nationwide Grand Canyon geometry fast enough for an interactive map.
+        `?where=${where}&outFields=*&returnGeometry=true&outSR=4326&geometryPrecision=5&maxAllowableOffset=0.001&f=json&resultRecordCount=10`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
