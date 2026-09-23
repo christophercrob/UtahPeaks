@@ -1378,28 +1378,55 @@ export default function Home() {
   const parksLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const parksDataRef = useRef<NpsParkFeature[] | null>(null);
 
-  // Fetch NPS park boundaries (Utah's 5 parks plus nearby Grand Canyon and Great Basin, lazy-loaded once)
+  // Fetch all U.S. National Park boundaries once. The seven regional parks stay detailed;
+  // the other 56 are intentionally generalized for quick nationwide map rendering.
   const fetchParksData = useCallback(async (): Promise<NpsParkFeature[]> => {
     if (parksDataRef.current) return parksDataRef.current;
     setParksLoading(true);
     setParksError(null);
     try {
-      // NPS Land Resources Division Boundary Service — Utah's parks plus two regional neighbors
+      // NPS Land Resources Division Boundary Service.
       // Must use outFields=* when returnGeometry=true (service rejects named fields + geometry)
-      const where = encodeURIComponent(
-        `UNIT_CODE='ZION' OR UNIT_CODE='BRCA' OR UNIT_CODE='CANY' OR UNIT_CODE='ARCH' OR UNIT_CODE='CARE' OR UNIT_CODE='GRCA' OR UNIT_CODE='GRBA'`
-      );
-      const url =
+      const serviceUrl =
         `https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/` +
-        `NPS_Land_Resources_Division_Boundary_and_Tract_Data_Service/FeatureServer/2/query` +
-        // A roughly 110 m display tolerance retains complete, recognizable park outlines
-        // while keeping the nationwide Grand Canyon geometry fast enough for an interactive map.
-        `?where=${where}&outFields=*&returnGeometry=true&outSR=4326&geometryPrecision=5&maxAllowableOffset=0.001&f=json&resultRecordCount=10`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      if (json.error) throw new Error(json.error.message ?? "API error");
-      const features: NpsParkFeature[] = json.features ?? [];
+        `NPS_Land_Resources_Division_Boundary_and_Tract_Data_Service/FeatureServer/2/query`;
+      const detailedCodes = ["ZION", "BRCA", "CANY", "ARCH", "CARE", "GRCA", "GRBA"];
+      const detailedWhere = detailedCodes.map((code) => `UNIT_CODE='${code}'`).join(" OR ");
+      // NERI is the 63rd U.S. National Park, but the NPS source classifies it as a National Preserve.
+      const overviewWhere =
+        `(UNIT_TYPE='National Parks' OR UNIT_CODE='NERI') AND ` +
+        `UNIT_CODE NOT IN (${detailedCodes.map((code) => `'${code}'`).join(",")})`;
+
+      const requestFeatures = async (
+        where: string,
+        geometryPrecision: number,
+        maxAllowableOffset: number,
+        precision: NpsParkFeature["precision"],
+      ): Promise<NpsParkFeature[]> => {
+        const params = new URLSearchParams({
+          where,
+          outFields: "*",
+          returnGeometry: "true",
+          outSR: "4326",
+          geometryPrecision: String(geometryPrecision),
+          maxAllowableOffset: String(maxAllowableOffset),
+          f: "json",
+          resultRecordCount: "100",
+        });
+        const response = await fetch(`${serviceUrl}?${params.toString()}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const json = await response.json();
+        if (json.error) throw new Error(json.error.message ?? "API error");
+        return (json.features ?? []).map((feature: NpsParkFeature) => ({ ...feature, precision }));
+      };
+
+      const [detailedFeatures, overviewFeatures] = await Promise.all([
+        // Roughly 110 m tolerance: retains the currently featured parks' recognizable outlines.
+        requestFeatures(detailedWhere, 5, 0.001, "detailed"),
+        // Roughly 11 km tolerance: intentional nationwide overview geometry for all other parks.
+        requestFeatures(overviewWhere, 2, 0.1, "overview"),
+      ]);
+      const features = [...detailedFeatures, ...overviewFeatures];
       parksDataRef.current = features;
       return features;
     } catch (err) {
@@ -1960,7 +1987,7 @@ export default function Home() {
                 ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ animation: "spin 1s linear infinite" }}><circle cx="12" cy="12" r="10" strokeOpacity="0.3"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
                 : <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 17l4-8 4 5 3-4 4 7H3z"/><circle cx="17" cy="7" r="2" fill="currentColor" strokeWidth="0"/></svg>
               }
-              {parksLoading ? "Loading…" : parksLayerOn ? "Parks: On" : "Parks"}
+              {parksLoading ? "Loading…" : parksLayerOn ? "Nat'l Parks: On" : "Nat'l Parks"}
             </button>
             <div className="flex rounded-lg overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.15)" }}>
               {(["terrain", "satellite", "roadmap"] as const).map((t) => (
@@ -2058,7 +2085,7 @@ export default function Home() {
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M3 17l4-8 4 5 3-4 4 7H3z"/><circle cx="17" cy="7" r="2" fill="currentColor" strokeWidth="0"/>
               </svg>
-              {parksLayerOn ? "National Parks: On (tap to hide)" : "Show National Parks"}
+              {parksLayerOn ? "Nat'l Parks: On (tap to hide)" : "Show Nat'l Parks"}
             </button>
             <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: 8, marginTop: 2 }}>
               <div style={{ fontSize: 10, color: "rgba(238,232,220,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Map Style</div>
@@ -2200,6 +2227,7 @@ interface NpsParkFeature {
   geometry: {
     rings: number[][][];
   };
+  precision?: "detailed" | "overview";
 }
 
 // ── Fire Perimeter Types ───────────────────────────────────────────────────
