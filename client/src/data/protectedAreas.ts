@@ -126,9 +126,11 @@ export const PROTECTED_AREA_SOURCES: ProtectedAreaSource[] = [
   },
 ];
 
+// A single treatment keeps this contextual layer readable without assigning
+// hierarchy or status through color; labels retain each area's identity.
 export const PROTECTED_AREA_COLORS: Record<ProtectedAreaKind, { stroke: string; fill: string; label: string }> = {
-  national_park: { stroke: "#CC0000", fill: "#FF0000", label: "National Park" },
-  national_monument: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "National Monument" },
-  state_park: { stroke: "#0B7769", fill: "#1FAF94", label: "State Park" },
-  regional_neighbor: { stroke: "#A65A12", fill: "#D98B36", label: "Regional Neighbor" },
+  national_park: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "Protected Area" },
+  national_monument: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "Protected Area" },
+  state_park: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "Protected Area" },
+  regional_neighbor: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "Protected Area" },
 };
