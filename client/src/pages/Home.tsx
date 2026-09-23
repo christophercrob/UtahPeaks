@@ -10,6 +10,7 @@ import React from "react";
 import { MapView } from "@/components/Map";
 import { MOUNTAIN_RANGES, type MountainRange } from "@/data/ranges";
 import { WURL_CENTER, WURL_COLOR, WURL_PEAKS, WURL_ZOOM, type WurlPeak } from "@/data/wurl";
+import { OTHER_PEAK_COLOR, OTHER_PEAK_GROUPS, OTHER_PEAKS, type OtherPeak } from "@/data/otherPeaks";
 
 // ── About Modal ───────────────────────────────────────────────────────────
 function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -392,6 +393,10 @@ function googleMapsDirectionsUrl(r: MountainRange) {
   return `https://www.google.com/maps/dir/?api=1&destination=${r.trailheadLat},${r.trailheadLon}&destination_place_id=&travelmode=driving`;
 }
 
+function otherPeakDirectionsUrl(peak: OtherPeak) {
+  return `https://www.google.com/maps/dir/?api=1&destination=${peak.lat},${peak.lon}&travelmode=driving`;
+}
+
 function createPinElement(color = "#CC0000", badge?: "summited" | "attempted"): HTMLElement {
   const div = document.createElement("div");
   div.style.cssText = "position:relative;width:18px;height:26px;cursor:pointer;";
@@ -414,6 +419,18 @@ function createWurlPinElement(): HTMLElement {
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="28" viewBox="0 0 20 28">
       <path d="M10 1 C4.48 1 0 5.48 0 11 C0 18.5 10 27 10 27 C10 27 20 18.5 20 11 C20 5.48 15.52 1 10 1 Z" fill="#6B3FA0" stroke="rgba(255,255,255,0.95)" stroke-width="1.6"/>
       <path d="M5.1 13.6l3.2-5 2.1 2.8 2.1-3.5 3 5.7H5.1z" fill="white" opacity="0.94"/>
+    </svg>
+  `;
+  return div;
+}
+
+function createOtherPeakPinElement(): HTMLElement {
+  const div = document.createElement("div");
+  div.style.cssText = "position:relative;width:20px;height:28px;cursor:pointer;filter:drop-shadow(0 2px 2px rgba(10,39,62,0.35));";
+  div.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="28" viewBox="0 0 20 28" aria-hidden="true">
+      <path d="M10 1 C4.48 1 0 5.48 0 11 C0 18.5 10 27 10 27 C10 27 20 18.5 20 11 C20 5.48 15.52 1 10 1 Z" fill="${OTHER_PEAK_COLOR}" stroke="rgba(255,255,255,0.95)" stroke-width="1.6"/>
+      <path d="M4.8 14.4 8.4 8.2l2.4 3.1 2.2-3.7 2.7 6.8H4.8z" fill="white" opacity="0.95"/>
     </svg>
   `;
   return div;
@@ -817,6 +834,179 @@ function WurlTableDrawer({
   );
 }
 
+// ── Other Peaks Catalog Drawer ──────────────────────────────────────────────
+function OtherPeaksDrawer({
+  open,
+  onClose,
+  onSelectPeak,
+  wurlVisible,
+  onToggleWurl,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onSelectPeak: (peak: OtherPeak) => void;
+  wurlVisible: boolean;
+  onToggleWurl: () => void;
+}) {
+  const [group, setGroup] = useState<string>("All areas");
+  const visiblePeaks = group === "All areas"
+    ? OTHER_PEAKS
+    : OTHER_PEAKS.filter((peak) => peak.group === group);
+
+  return (
+    <>
+      {open && (
+        <div
+          className="absolute inset-0 z-40"
+          style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(2px)" }}
+          onClick={onClose}
+        />
+      )}
+
+      <div
+        className="absolute inset-x-0 bottom-0 z-50 rounded-t-2xl overflow-hidden"
+        aria-label="Other prominent Utah peaks"
+        style={{
+          background: "#F5F0E8",
+          boxShadow: "0 -8px 40px rgba(0,0,0,0.3)",
+          height: "min(84vh, 720px)",
+          maxHeight: "84vh",
+          transform: open ? "translateY(0)" : "translateY(100%)",
+          transition: "transform 0.32s cubic-bezier(0.23,1,0.32,1)",
+          display: "flex",
+          flexDirection: "column",
+          fontFamily: "var(--font-body)",
+        }}
+      >
+        <div
+          className="flex items-center justify-between px-5 sm:px-6 py-4 flex-shrink-0"
+          style={{ background: OTHER_PEAK_COLOR, borderBottom: "1px solid rgba(255,255,255,0.12)" }}
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <div
+              aria-hidden="true"
+              className="flex items-center justify-center rounded-lg flex-shrink-0"
+              style={{ width: 30, height: 30, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)" }}
+            >
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#E9F4FF" strokeWidth="2">
+                <path d="m3 18 5-9 4 5 3-4 6 8H3Z" /><path d="m8 9 2-3 2 3" />
+              </svg>
+            </div>
+            <div className="min-w-0">
+              <div style={{ color: "#F3F8FC", fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 700 }}>
+                Other Peaks
+              </div>
+              <div style={{ color: "rgba(232,244,255,0.72)", fontSize: 11 }}>
+                {OTHER_PEAKS.length} prominent Utah summits · grouped by area
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-white/70 hover:text-white transition-colors text-2xl leading-none"
+            aria-label="Close Other Peaks catalog"
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="px-4 sm:px-6 pt-3 pb-2 flex-shrink-0" style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+          <div className="flex gap-2 overflow-x-auto pb-1" aria-label="Filter Other Peaks by area">
+            {["All areas", ...OTHER_PEAK_GROUPS].map((name) => {
+              const selected = group === name;
+              return (
+                <button
+                  key={name}
+                  type="button"
+                  onClick={() => setGroup(name)}
+                  className="px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors"
+                  style={{
+                    background: selected ? OTHER_PEAK_COLOR : "rgba(18,59,93,0.08)",
+                    color: selected ? "#fff" : OTHER_PEAK_COLOR,
+                    border: selected ? "1px solid transparent" : "1px solid rgba(18,59,93,0.16)",
+                  }}
+                >
+                  {name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="overflow-auto flex-1 px-4 sm:px-6 py-4">
+          <button
+            type="button"
+            onClick={() => { onToggleWurl(); if (!wurlVisible) onClose(); }}
+            className="w-full mb-4 rounded-xl p-4 text-left transition-transform active:scale-[0.99]"
+            style={{ background: "#F1EAF9", border: "1px solid rgba(107,63,160,0.28)" }}
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <div style={{ color: WURL_COLOR, fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 4 }}>Central Wasatch subgroup</div>
+                <div style={{ color: "#392258", fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 700 }}>Wasatch Ultimate Ridge Linkup</div>
+                <div style={{ color: "#705B85", fontSize: 12, lineHeight: 1.42, marginTop: 4 }}>{wurlVisible ? "Purple WURL summits are currently visible as the dedicated advanced route layer." : "Keep the existing 17 purple WURL summits as a dedicated, advanced route layer."}</div>
+              </div>
+              <span className="flex-shrink-0 rounded-full px-3 py-1.5" style={{ background: WURL_COLOR, color: "#fff", fontSize: 11, fontWeight: 800 }}>{wurlVisible ? "Hide WURL" : "Explore WURL"}</span>
+            </div>
+          </button>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {visiblePeaks.map((peak) => (
+              <div
+                key={peak.id}
+                role="button"
+                tabIndex={0}
+                onClick={() => { onSelectPeak(peak); onClose(); }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    onSelectPeak(peak);
+                    onClose();
+                  }
+                }}
+                className="text-left rounded-xl p-4 transition-transform active:scale-[0.98]"
+                style={{ background: "#FFFDF9", border: "1px solid rgba(18,59,93,0.14)", boxShadow: "0 2px 9px rgba(25,38,52,0.06)" }}
+                onMouseEnter={(event) => { event.currentTarget.style.borderColor = "rgba(18,59,93,0.42)"; event.currentTarget.style.boxShadow = "0 6px 18px rgba(18,59,93,0.13)"; }}
+                onMouseLeave={(event) => { event.currentTarget.style.borderColor = "rgba(18,59,93,0.14)"; event.currentTarget.style.boxShadow = "0 2px 9px rgba(25,38,52,0.06)"; }}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <div style={{ color: OTHER_PEAK_COLOR, fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 3 }}>{peak.group}</div>
+                    <div style={{ color: "#263442", fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 700, lineHeight: 1.15 }}>{peak.name}</div>
+                  </div>
+                  <div className="flex-shrink-0 rounded-md px-2 py-1" style={{ background: "#E8F0F7", color: OTHER_PEAK_COLOR, fontSize: 11, fontWeight: 800 }}>
+                    {peak.elevationFt.toLocaleString()} ft
+                  </div>
+                </div>
+                <div style={{ color: "#687683", fontSize: 11, marginTop: 6, lineHeight: 1.35 }}>{peak.area}</div>
+                <div style={{ color: "#354B5E", fontSize: 12, fontWeight: 700, marginTop: 9 }}>{peak.character}</div>
+                <div style={{ color: "#687683", fontSize: 11, lineHeight: 1.42, marginTop: 4 }}>{peak.accessNote}</div>
+                <div className="flex items-center justify-between gap-2 mt-3">
+                  <span style={{ color: OTHER_PEAK_COLOR, fontSize: 11, fontWeight: 800 }}>Locate on map →</span>
+                  <a
+                    href={otherPeakDirectionsUrl(peak)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(event) => event.stopPropagation()}
+                    style={{ color: "#1A6B3A", fontSize: 11, fontWeight: 800, textDecoration: "none" }}
+                  >
+                    Directions ↗
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+
+        <div className="px-5 sm:px-6 py-3 text-xs flex-shrink-0" style={{ color: "#65717B", borderTop: "1px solid rgba(0,0,0,0.08)", background: "#EDE8DF" }}>
+          Navy pins mark independent Other Peaks. Purple is reserved for the WURL route and its 17 Little Cottonwood summits.
+        </div>
+      </div>
+    </>
+  );
+}
+
 // ── Detail Sidebar ────────────────────────────────────────────────────────
 function DetailSidebar({
   range,
@@ -927,6 +1117,68 @@ function DetailSidebar({
   );
 }
 
+function OtherPeakSidebar({ peak, onClose }: { peak: OtherPeak | null; onClose: () => void }) {
+  if (!peak) return null;
+
+  return (
+    <div
+      className="absolute top-16 right-3 z-20 w-72 rounded-xl shadow-2xl overflow-hidden"
+      style={{ background: "#F5F0E8", border: "1px solid rgba(0,0,0,0.12)", fontFamily: "var(--font-body)", animation: "slideIn 0.22s cubic-bezier(0.23,1,0.32,1)" }}
+    >
+      <div className="px-4 py-3 flex items-start justify-between gap-2" style={{ background: OTHER_PEAK_COLOR }}>
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-widest mb-0.5" style={{ color: "rgba(255,255,255,0.72)" }}>{peak.group}</div>
+          <div className="text-lg font-bold leading-tight" style={{ color: "#fff", fontFamily: "var(--font-display)" }}>{peak.name}</div>
+        </div>
+        <button onClick={onClose} className="mt-0.5 text-white/70 hover:text-white transition-colors text-xl leading-none" aria-label="Close">×</button>
+      </div>
+
+      <div className="px-4 py-2 flex items-center gap-2" style={{ background: "rgba(18,59,93,0.06)", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1 13 13H1L7 1Z" fill={OTHER_PEAK_COLOR} /></svg>
+        <span className="text-base font-bold" style={{ fontFamily: "var(--font-display)", color: "#2D2D2D" }}>{peak.elevationFt.toLocaleString()} ft</span>
+        <span className="text-xs text-gray-500 ml-1">elevation</span>
+      </div>
+
+      <div className="px-4 py-3 space-y-2.5">
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-0.5">Area</div>
+          <div className="text-sm text-gray-700">{peak.area}</div>
+        </div>
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-0.5">Trip character</div>
+          <div className="text-sm text-gray-700">{peak.character}</div>
+        </div>
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-0.5">Summit coordinates</div>
+          <div className="text-sm text-gray-700 font-mono">{peak.lat.toFixed(4)}° N, {Math.abs(peak.lon).toFixed(4)}° W</div>
+        </div>
+      </div>
+
+      <div className="mx-4 mb-3 rounded-lg px-3 py-2.5" style={{ background: "#E8F0F7", border: "1px solid rgba(18,59,93,0.18)" }}>
+        <div className="text-[10px] font-extrabold uppercase tracking-[0.08em] mb-1.5" style={{ color: OTHER_PEAK_COLOR }}>Before you go</div>
+        <div style={{ color: "#354B5E", fontSize: 11, lineHeight: 1.48 }}>{peak.accessNote}</div>
+      </div>
+
+      <div className="px-4 pb-4">
+        <a
+          href={otherPeakDirectionsUrl(peak)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 w-full py-2 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          style={{ background: "#1A6B3A", textDecoration: "none" }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          Open Summit Location
+        </a>
+      </div>
+
+      <div className="px-4 py-2 text-xs text-gray-400 border-t" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
+        Verify current road, trail, weather, and land-access conditions before departure.
+      </div>
+    </div>
+  );
+}
+
 // ── Legend ────────────────────────────────────────────────────────────────
 function Legend({ selected, onSelect, onOpenJournal }: { selected: MountainRange | null; onSelect: (r: MountainRange) => void; onOpenJournal: (r: MountainRange) => void }) {
   const isMobile = useIsMobile();
@@ -1001,15 +1253,19 @@ function Legend({ selected, onSelect, onOpenJournal }: { selected: MountainRange
 // ── Main Page ─────────────────────────────────────────────────────────────
 export default function Home() {
   const mapRef = useRef<google.maps.Map | null>(null);
+  const [mapReady, setMapReady] = useState(false);
   const [selected, setSelected] = useState<MountainRange | null>(null);
+  const [selectedOtherPeak, setSelectedOtherPeak] = useState<OtherPeak | null>(null);
   const [mapType, setMapType] = useState<"terrain" | "satellite" | "roadmap">("terrain");
   const [tableOpen, setTableOpen] = useState(false);
+  const [otherPeaksOpen, setOtherPeaksOpen] = useState(false);
   const [wurlTableOpen, setWurlTableOpen] = useState(false);
   const [wurlVisible, setWurlVisible] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [journalRange, setJournalRange] = useState<MountainRange | null>(null);
   const polygonsRef = useRef<Array<google.maps.Polygon | google.maps.Polyline>>([]);
   const labelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const otherPeakMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const wurlMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const wurlLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
 
@@ -1149,12 +1405,31 @@ export default function Home() {
   }, [parksLayerOn, fetchParksData]);
 
   const handleSelect = useCallback((r: MountainRange) => {
+    setSelectedOtherPeak(null);
     setSelected(r);
     mapRef.current?.panTo({ lat: r.lat, lng: r.lon });
   }, []);
 
+  const handleSelectOtherPeak = useCallback((peak: OtherPeak) => {
+    setSelected(null);
+    setSelectedOtherPeak(peak);
+    mapRef.current?.panTo({ lat: peak.lat, lng: peak.lon });
+    mapRef.current?.setZoom(10);
+  }, []);
+
   const handleOpenJournal = useCallback((r: MountainRange) => {
     setJournalRange(r);
+  }, []);
+
+  const showWurl = useCallback(() => {
+    setSelected(null);
+    setSelectedOtherPeak(null);
+    setOtherPeaksOpen(false);
+    setWurlVisible(true);
+    setTableOpen(false);
+    setWurlTableOpen(true);
+    mapRef.current?.panTo(WURL_CENTER);
+    mapRef.current?.setZoom(WURL_ZOOM);
   }, []);
 
   const toggleWurl = useCallback(() => {
@@ -1163,19 +1438,38 @@ export default function Home() {
       setWurlTableOpen(false);
       return;
     }
-
-    setSelected(null);
-    setWurlVisible(true);
-    setTableOpen(false);
-    setWurlTableOpen(true);
-    mapRef.current?.panTo(WURL_CENTER);
-    mapRef.current?.setZoom(WURL_ZOOM);
-  }, [wurlVisible]);
+    showWurl();
+  }, [wurlVisible, showWurl]);
 
   const handleSelectWurlPeak = useCallback((peak: WurlPeak) => {
+    setSelected(null);
+    setSelectedOtherPeak(null);
     mapRef.current?.panTo({ lat: peak.lat, lng: peak.lon });
     mapRef.current?.setZoom(13);
   }, []);
+
+  // Render the statewide Other Peaks catalog as a persistent navy-blue marker layer.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady || otherPeakMarkersRef.current.length > 0) return;
+
+    OTHER_PEAKS.forEach((peak) => {
+      const marker = new google.maps.marker.AdvancedMarkerElement({
+        map,
+        position: { lat: peak.lat, lng: peak.lon },
+        content: createOtherPeakPinElement(),
+        title: `${peak.name} — ${peak.elevationFt.toLocaleString()} ft · Other Peaks`,
+        zIndex: 11,
+      });
+      marker.addListener("click", () => handleSelectOtherPeak(peak));
+      otherPeakMarkersRef.current.push(marker);
+    });
+
+    return () => {
+      otherPeakMarkersRef.current.forEach((marker) => { marker.map = null; });
+      otherPeakMarkersRef.current = [];
+    };
+  }, [mapReady, handleSelectOtherPeak]);
 
   // Render the curated WURL major peaks only after the WURL control is activated.
   useEffect(() => {
@@ -1471,6 +1765,8 @@ export default function Home() {
       new google.maps.marker.AdvancedMarkerElement({ map, position: { lat: r.lat, lng: r.lon }, content: peakLabelEl, zIndex: 9 });
     });
 
+    setMapReady(true);
+
     // If fire layer was already on when map became ready, trigger render
     // (handled by the useEffect dependency on fireLayerOn + mapRef)
   }, []);
@@ -1502,7 +1798,7 @@ export default function Home() {
                 Utah Peaks
               </div>
               <div className="hidden sm:block text-xs" style={{ color: "rgba(238,232,220,0.55)" }}>
-                Highest Peaks &amp; Range Locations
+                Highest Peaks, Other Peaks &amp; Range Locations
               </div>
             </div>
           </div>
@@ -1510,7 +1806,7 @@ export default function Home() {
           {/* Desktop buttons */}
           <div className="hidden sm:flex items-center gap-2">
             <button
-              onClick={() => { setWurlTableOpen(false); setTableOpen((open) => !open); }}
+              onClick={() => { setWurlTableOpen(false); setOtherPeaksOpen(false); setTableOpen((open) => !open); }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
               style={{ background: tableOpen ? "rgba(192,82,42,0.85)" : "rgba(255,255,255,0.10)", color: tableOpen ? "#fff" : "rgba(238,232,220,0.8)", border: tableOpen ? "1px solid rgba(255,185,145,0.38)" : "1px solid rgba(255,255,255,0.15)" }}
               onMouseEnter={(e) => (e.currentTarget.style.background = tableOpen ? "#C0522A" : "rgba(255,255,255,0.18)")}
@@ -1523,22 +1819,22 @@ export default function Home() {
               Peak List
             </button>
             <button
-              onClick={toggleWurl}
+              onClick={() => { setWurlTableOpen(false); setTableOpen(false); setOtherPeaksOpen((open) => !open); }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
               style={{
-                background: wurlVisible ? "#6B3FA0" : "rgba(255,255,255,0.10)",
-                color: wurlVisible ? "#fff" : "rgba(238,232,220,0.8)",
-                border: wurlVisible ? "1px solid rgba(218,194,245,0.36)" : "1px solid rgba(255,255,255,0.15)",
+                background: otherPeaksOpen ? OTHER_PEAK_COLOR : "rgba(255,255,255,0.10)",
+                color: otherPeaksOpen ? "#fff" : "rgba(238,232,220,0.8)",
+                border: otherPeaksOpen ? "1px solid rgba(193,220,241,0.4)" : "1px solid rgba(255,255,255,0.15)",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = wurlVisible ? "#6B3FA0" : "rgba(255,255,255,0.18)")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = wurlVisible ? "#6B3FA0" : "rgba(255,255,255,0.10)")}
-              title={wurlVisible ? "Hide WURL major peaks" : "Show WURL major peaks in Little Cottonwood Canyon"}
-              aria-pressed={wurlVisible}
+              onMouseEnter={(e) => (e.currentTarget.style.background = otherPeaksOpen ? OTHER_PEAK_COLOR : "rgba(255,255,255,0.18)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = otherPeaksOpen ? OTHER_PEAK_COLOR : "rgba(255,255,255,0.10)")}
+              title="Browse prominent secondary summits across Utah"
+              aria-pressed={otherPeaksOpen}
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                 <path d="M3 18l5-9 4 5 3-4 6 8H3z"/><path d="M8 9l2-3 2 3"/>
               </svg>
-              WURL Peaks
+              Other Peaks
             </button>
             <button
               onClick={() => setAboutOpen(true)}
@@ -1616,7 +1912,7 @@ export default function Home() {
             style={{ top: 56, background: "rgba(22,28,42,0.98)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(255,255,255,0.1)" }}
           >
             <button
-              onClick={() => { setWurlTableOpen(false); setTableOpen((open) => !open); setMenuOpen(false); }}
+              onClick={() => { setWurlTableOpen(false); setOtherPeaksOpen(false); setTableOpen((open) => !open); setMenuOpen(false); }}
               className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
               style={{ background: tableOpen ? "rgba(192,82,42,0.85)" : "rgba(255,255,255,0.08)", color: tableOpen ? "#fff" : "rgba(238,232,220,0.9)", border: tableOpen ? "1px solid rgba(255,185,145,0.38)" : "1px solid rgba(255,255,255,0.12)" }}
               aria-pressed={tableOpen}
@@ -1627,19 +1923,19 @@ export default function Home() {
               Peak List
             </button>
             <button
-              onClick={() => { toggleWurl(); setMenuOpen(false); }}
+              onClick={() => { setWurlTableOpen(false); setTableOpen(false); setOtherPeaksOpen((open) => !open); setMenuOpen(false); }}
               className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
               style={{
-                background: wurlVisible ? "#6B3FA0" : "rgba(255,255,255,0.08)",
-                color: wurlVisible ? "#fff" : "rgba(238,232,220,0.9)",
-                border: wurlVisible ? "1px solid rgba(218,194,245,0.36)" : "1px solid rgba(255,255,255,0.12)",
+                background: otherPeaksOpen ? OTHER_PEAK_COLOR : "rgba(255,255,255,0.08)",
+                color: otherPeaksOpen ? "#fff" : "rgba(238,232,220,0.9)",
+                border: otherPeaksOpen ? "1px solid rgba(193,220,241,0.4)" : "1px solid rgba(255,255,255,0.12)",
               }}
-              aria-pressed={wurlVisible}
+              aria-pressed={otherPeaksOpen}
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                 <path d="M3 18l5-9 4 5 3-4 6 8H3z"/><path d="M8 9l2-3 2 3"/>
               </svg>
-              {wurlVisible ? "Hide WURL Peaks" : "WURL Peaks"}
+              Other Peaks
             </button>
             <button
               onClick={() => { setAboutOpen(true); setMenuOpen(false); }}
@@ -1746,6 +2042,7 @@ export default function Home() {
 
       {/* ── Detail Sidebar ── */}
       <DetailSidebar range={selected} onClose={() => setSelected(null)} onOpenJournal={handleOpenJournal} />
+      <OtherPeakSidebar peak={selectedOtherPeak} onClose={() => setSelectedOtherPeak(null)} />
 
       {/* ── Data Table Drawer ── */}
       <DataTableDrawer
@@ -1753,6 +2050,15 @@ export default function Home() {
         onClose={() => setTableOpen(false)}
         onSelectRange={(r) => { handleSelect(r); setTableOpen(false); }}
         onOpenJournal={handleOpenJournal}
+      />
+
+      {/* ── Other Peaks Catalog ── */}
+      <OtherPeaksDrawer
+        open={otherPeaksOpen}
+        onClose={() => setOtherPeaksOpen(false)}
+        onSelectPeak={handleSelectOtherPeak}
+        wurlVisible={wurlVisible}
+        onToggleWurl={toggleWurl}
       />
 
       {/* ── WURL Peaks Table Drawer ── */}
