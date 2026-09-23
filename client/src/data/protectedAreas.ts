@@ -2,7 +2,7 @@
 // Sources are agency GIS services where available; PAD-US / National Map sources
 // are used as nationwide reference geometry for the named regional-neighbor parks.
 
-export type ProtectedAreaKind = "national_park" | "national_monument" | "state_park" | "regional_neighbor";
+export type ProtectedAreaKind = "national_park" | "national_monument" | "recreation_area" | "state_park" | "regional_neighbor";
 
 export interface ProtectedAreaSource {
   id: string;
@@ -34,6 +34,32 @@ export const PROTECTED_AREA_SOURCES: ProtectedAreaSource[] = [
     geometryNote: "NPS GIS boundary for thematic display; not a survey or legal boundary.",
   },
   {
+    id: "glen-canyon-recreation-area",
+    name: "Glen Canyon National Recreation Area",
+    shortName: "Glen Canyon",
+    kind: "recreation_area",
+    jurisdiction: "National Park Service",
+    sourceLabel: "NPS Boundary Service",
+    sourceUrl: "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/NPS_Land_Resources_Division_Boundary_and_Tract_Data_Service/FeatureServer/2",
+    endpoint: "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/NPS_Land_Resources_Division_Boundary_and_Tract_Data_Service/FeatureServer/2/query",
+    where: "UNIT_CODE='GLCA'",
+    nameField: "UNIT_NAME",
+    geometryNote: "NPS GIS boundary for Glen Canyon National Recreation Area; thematic display only, not a survey or legal boundary.",
+  },
+  {
+    id: "flaming-gorge-recreation-area",
+    name: "Flaming Gorge National Recreation Area",
+    shortName: "Flaming Gorge",
+    kind: "recreation_area",
+    jurisdiction: "U.S. Forest Service / Ashley National Forest",
+    sourceLabel: "U.S. Forest Service Nationally Designated Areas",
+    sourceUrl: "https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_OtherNationalDesignatedArea_01/MapServer/0",
+    endpoint: "https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_OtherNationalDesignatedArea_01/MapServer/0/query",
+    where: "areaname='Flaming Gorge' AND areatype='National Recreation Area'",
+    nameField: "fullname",
+    geometryNote: "U.S. Forest Service current designated-area boundary for thematic display; not a survey or legal boundary.",
+  },
+  {
     id: "utah-historic-monuments",
     name: "Historic Bears Ears and Grand Staircase–Escalante boundaries",
     shortName: "Historic Utah monument boundaries",
@@ -59,7 +85,7 @@ export const PROTECTED_AREA_SOURCES: ProtectedAreaSource[] = [
     sourceLabel: "Utah State Park Management Areas",
     sourceUrl: "https://services.arcgis.com/ZzrwjTRez6FJiOq4/arcgis/rest/services/Utah_State_Park_Management_Areas/FeatureServer/0",
     endpoint: "https://services.arcgis.com/ZzrwjTRez6FJiOq4/arcgis/rest/services/Utah_State_Park_Management_Areas/FeatureServer/0/query",
-    where: "parkabbid IN ('GVSP','CPSP','SNSP','AISP','KDSP')",
+    where: "parkabbid IN ('GVSP','CPSP','SNSP','AISP','KDSP','WMSP','JDSP','DCSP','SASP')",
     nameField: "name",
     nameOverrides: {
       "Goblin Valley": "Goblin Valley State Park",
@@ -67,6 +93,10 @@ export const PROTECTED_AREA_SOURCES: ProtectedAreaSource[] = [
       "Snow Canyon": "Snow Canyon State Park",
       "Antelope Island": "Antelope Island State Park",
       "Kodachrome Basin": "Kodachrome Basin State Park",
+      "Wasatch Mountain": "Wasatch Mountain State Park",
+      "Jordanelle": "Jordanelle State Park",
+      "Deer Creek": "Deer Creek State Park",
+      "Sand Hollow": "Sand Hollow State Park",
     },
     geometryNote: "Utah State Parks management-area geometry for planning and thematic display.",
   },
@@ -131,6 +161,7 @@ export const PROTECTED_AREA_SOURCES: ProtectedAreaSource[] = [
 export const PROTECTED_AREA_COLORS: Record<ProtectedAreaKind, { stroke: string; fill: string; label: string }> = {
   national_park: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "Protected Area" },
   national_monument: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "Protected Area" },
+  recreation_area: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "Protected Area" },
   state_park: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "Protected Area" },
   regional_neighbor: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "Protected Area" },
 };
