@@ -1956,18 +1956,6 @@ export default function Home() {
               {otherPeaksVisible ? "Other Peaks: On" : "Other Peaks"}
             </button>
             <button
-              onClick={() => setAboutOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
-              style={{ background: "rgba(255,255,255,0.10)", color: "rgba(238,232,220,0.8)", border: "1px solid rgba(255,255,255,0.15)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.18)")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.10)")}
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
-              </svg>
-              About
-            </button>
-            <button
               onClick={() => setFireLayerOn((v) => !v)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
               style={{ background: fireLayerOn ? "rgba(200,60,20,0.92)" : "rgba(255,255,255,0.10)", color: "#fff", border: fireLayerOn ? "1px solid rgba(255,120,80,0.5)" : "1px solid rgba(255,255,255,0.15)" }}
@@ -2001,6 +1989,15 @@ export default function Home() {
                 </button>
               ))}
             </div>
+            <button
+              onClick={() => setAboutOpen(true)}
+              className="px-3 py-1.5 rounded-lg text-xs font-bold transition-colors"
+              style={{ background: "#5A3C88", color: "#FFFFFF", border: "1px solid rgba(227,210,250,0.42)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "#6A4A9A")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "#5A3C88")}
+            >
+              About
+            </button>
           </div>
 
           {/* Mobile hamburger */}
@@ -2058,13 +2055,10 @@ export default function Home() {
             </button>
             <button
               onClick={() => { setAboutOpen(true); setMenuOpen(false); }}
-              className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
-              style={{ background: "rgba(255,255,255,0.08)", color: "rgba(238,232,220,0.9)", border: "1px solid rgba(255,255,255,0.12)" }}
+              className="w-full px-3 py-2.5 rounded-lg text-sm font-bold text-left transition-colors"
+              style={{ background: "#5A3C88", color: "#FFFFFF", border: "1px solid rgba(227,210,250,0.42)" }}
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
-              </svg>
-              About This Project
+              About
             </button>
             <button
               onClick={() => { setFireLayerOn((v) => !v); setMenuOpen(false); }}
