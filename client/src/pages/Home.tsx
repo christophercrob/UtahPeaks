@@ -2054,13 +2054,6 @@ export default function Home() {
               {otherPeaksVisible ? "Other Peaks: On (tap to hide)" : "Show Other Peaks"}
             </button>
             <button
-              onClick={() => { setAboutOpen(true); setMenuOpen(false); }}
-              className="w-full px-3 py-2.5 rounded-lg text-sm font-bold text-left transition-colors"
-              style={{ background: "#5A3C88", color: "#FFFFFF", border: "1px solid rgba(227,210,250,0.42)" }}
-            >
-              About
-            </button>
-            <button
               onClick={() => { setFireLayerOn((v) => !v); setMenuOpen(false); }}
               className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
               style={{ background: fireLayerOn ? "rgba(200,60,20,0.92)" : "rgba(255,255,255,0.08)", color: "#fff", border: fireLayerOn ? "1px solid rgba(255,120,80,0.4)" : "1px solid rgba(255,255,255,0.12)" }}
@@ -2096,6 +2089,13 @@ export default function Home() {
                 ))}
               </div>
             </div>
+            <button
+              onClick={() => { setAboutOpen(true); setMenuOpen(false); }}
+              className="w-full px-3 py-2.5 rounded-lg text-sm font-bold text-left transition-colors"
+              style={{ background: "#5A3C88", color: "#FFFFFF", border: "1px solid rgba(227,210,250,0.42)" }}
+            >
+              About
+            </button>
           </div>
         )}
       </header>
