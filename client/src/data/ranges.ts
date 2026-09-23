@@ -684,11 +684,16 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     elevationFt: 10466,
     lat: 38.994,
     lon: -112.173,
-    trailhead: "Paiute ATV Trail (Fillmore Canyon Rd)",
-    trailheadLat: 38.9600,
-    trailheadLon: -112.2100,
+    trailhead: "Forest Road 4688 (Pioneer Peak access)",
+    trailheadLat: 38.99472238194323,
+    trailheadLon: -112.16529312911297,
     gain: "~500 ft (from ridge road)",
     color: "#7D6608",
+    accessNotes: [
+      "From US-50 between Scipio and Sevier Valley, about 5 miles west of Sevier Valley, turn west onto Forest Road 102. Follow it up the canyon to the Pahvant Range backbone; most passenger vehicles can manage this road.",
+      "Turn right (north) onto Forest Road 96. Willow Creek Peak is the first peak along the road; Jacks Peak is the second and taller peak.",
+      "From the west slope of Jacks Peak, drive west on Forest Road 4688 toward Pioneer Peak and continue as far as conditions allow (less than 1 mile).",
+    ],
     polygon: [
       // From user-provided KML (Google Earth), Aug 2026
       [39.211525, -112.114868],

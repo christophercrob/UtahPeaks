@@ -877,6 +877,17 @@ function DetailSidebar({
         </div>
       </div>
 
+      {range.accessNotes && range.accessNotes.length > 0 && (
+        <div className="mx-4 mb-3 rounded-lg px-3 py-2.5" style={{ background: "#EEE4D0", border: "1px solid rgba(133,88,18,0.25)" }}>
+          <div className="text-[10px] font-extrabold uppercase tracking-[0.08em] mb-1.5" style={{ color: "#735111" }}>Driving Access</div>
+          <ul className="pl-4 space-y-1" style={{ color: "#51472E", fontSize: 11, lineHeight: 1.45 }}>
+            {range.accessNotes.map((note) => (
+              <li key={note}>{note}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* Action buttons */}
       <div className="px-4 pb-4 space-y-2">
         <a
