@@ -17,3 +17,9 @@
 - [x] Verify the supplied Google Maps trailhead destination.
 - [x] Replace the Box Elder directions target with the supplied location.
 - [x] Validate the card link and save a checkpoint.
+
+## Other Peaks Map Labels
+
+- [x] Review highest-peak marker label treatment and Other Peaks marker rendering.
+- [x] Apply matching peak and range labels to the navy Other Peaks markers.
+- [x] Verify labels appear only while the Other Peaks layer is on, then save a checkpoint.

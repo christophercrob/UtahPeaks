@@ -1383,6 +1383,7 @@ export default function Home() {
   const polygonsRef = useRef<Array<google.maps.Polygon | google.maps.Polyline>>([]);
   const labelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const otherPeakMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const otherPeakLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const wurlMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const wurlLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const wurlRouteLineRef = useRef<google.maps.Polyline | null>(null);
@@ -1758,6 +1759,8 @@ export default function Home() {
     if (!otherPeaksVisible) {
       otherPeakMarkersRef.current.forEach((marker) => { marker.map = null; });
       otherPeakMarkersRef.current = [];
+      otherPeakLabelsRef.current.forEach((label) => { label.map = null; });
+      otherPeakLabelsRef.current = [];
       return;
     }
 
@@ -1773,11 +1776,54 @@ export default function Home() {
       });
       marker.addListener("click", () => handleSelectOtherPeak(peak));
       otherPeakMarkersRef.current.push(marker);
+
+      // Match the primary-range marker treatment: peak name plus its regional group.
+      const labelEl = document.createElement("div");
+      labelEl.style.cssText = `
+        display:flex;flex-direction:column;align-items:flex-start;gap:1px;
+        pointer-events:none;
+        transform:translate(24px, -26px);
+      `;
+
+      const peakName = document.createElement("span");
+      peakName.style.cssText = `
+        font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:800;letter-spacing:0.01em;
+        color:#111;white-space:nowrap;line-height:1.2;
+        text-shadow:
+          0 0 3px #fff, 0 0 6px #fff, 0 0 10px #fff, 0 0 14px #fff,
+          1px 1px 0 #fff, -1px -1px 0 #fff,
+          1px -1px 0 #fff, -1px 1px 0 #fff,
+          2px 2px 0 #fff, -2px -2px 0 #fff,
+          2px -2px 0 #fff, -2px 2px 0 #fff;
+        background:none;padding:0;
+      `;
+      peakName.textContent = peak.name;
+      labelEl.appendChild(peakName);
+
+      const groupName = document.createElement("span");
+      groupName.style.cssText = `
+        font-family:'Source Sans 3',sans-serif;font-size:10.5px;font-weight:700;
+        color:${OTHER_PEAK_COLOR};white-space:nowrap;line-height:1.2;
+        text-shadow:1px 1px 2px #fff,-1px -1px 2px #fff,1px -1px 2px #fff,-1px 1px 2px #fff,
+          0 0 4px #fff, 0 0 8px #fff;
+      `;
+      groupName.textContent = peak.group;
+      labelEl.appendChild(groupName);
+
+      const label = new google.maps.marker.AdvancedMarkerElement({
+        map,
+        position: { lat: peak.lat, lng: peak.lon },
+        content: labelEl,
+        zIndex: 10,
+      });
+      otherPeakLabelsRef.current.push(label);
     });
 
     return () => {
       otherPeakMarkersRef.current.forEach((marker) => { marker.map = null; });
       otherPeakMarkersRef.current = [];
+      otherPeakLabelsRef.current.forEach((label) => { label.map = null; });
+      otherPeakLabelsRef.current = [];
     };
   }, [mapReady, otherPeaksVisible, handleSelectOtherPeak]);
 
