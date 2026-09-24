@@ -7,6 +7,7 @@ export interface OtherPeak {
   id: string;
   name: string;
   trailhead: string;
+  trailheadDirectionsUrl?: string;
   elevationFt: number;
   lat: number;
   lon: number;
@@ -53,7 +54,8 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "box-elder-peak",
     name: "Box Elder Peak",
-    trailhead: "Box Elder Trailhead · American Fork Canyon, Utah",
+    trailhead: "Trailhead Parking · Sandy, Utah",
+    trailheadDirectionsUrl: "https://maps.app.goo.gl/Mz9ZnVF1Gjoam83G6",
     elevationFt: 11101,
     lat: 40.4900328,
     lon: -111.6961037,

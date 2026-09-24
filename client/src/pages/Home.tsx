@@ -405,7 +405,7 @@ function googleMapsDirectionsUrl(r: MountainRange) {
 }
 
 function otherPeakDirectionsUrl(peak: OtherPeak) {
-  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(peak.trailhead)}&travelmode=driving`;
+  return peak.trailheadDirectionsUrl ?? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(peak.trailhead)}&travelmode=driving`;
 }
 
 function createPinElement(color = "#CC0000", badge?: "summited" | "attempted"): HTMLElement {
