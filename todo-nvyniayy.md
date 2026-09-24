@@ -74,3 +74,8 @@
 
 - [x] Anchor Other Peaks labels clear of their navy map pins.
 - [x] Verify pin-to-label separation and save a checkpoint.
+
+## Primary Label Spacing Refinement
+
+- [x] Bring primary peak-label blocks closer to their red pins while preserving badge clearance.
+- [x] Verify the compact vertical spacing and save a checkpoint.

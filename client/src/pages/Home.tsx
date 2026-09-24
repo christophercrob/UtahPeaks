@@ -2191,7 +2191,7 @@ export default function Home() {
       peakLabelEl.style.cssText = `
         display:flex;flex-direction:column;align-items:flex-start;gap:1px;
         pointer-events:none;
-        transform:translate(22px, -56px);
+        transform:translate(22px, -36px);
       `;
       const textSpan = document.createElement("span");
       textSpan.style.cssText = `
