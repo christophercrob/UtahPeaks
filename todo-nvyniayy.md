@@ -46,3 +46,26 @@
 
 - [x] Replace the mapped summit coordinate with the supplied NGS-linked location.
 - [x] Validate the updated marker and save a checkpoint.
+
+## Skier Icon Refinement
+
+- [x] Replace the generic symbol with a compact downhill skier that has two swept-back poles.
+- [x] Reduce the desktop toggle icon to the visual scale of adjacent controls.
+- [x] Verify the marker and toggle pictograms, then save a checkpoint.
+
+## Ski Resort Label Placement and Typography
+
+- [x] Center each resort label vertically and position it directly to the right of its skier marker.
+- [x] Match the clean black Source Sans treatment used for primary peak names, with a restrained white outline.
+- [x] Verify the placement at a close map zoom and save a checkpoint.
+
+## Map Peak Label Typography
+
+- [x] Load the actual Source Sans 700 face instead of relying on a synthesized 800 weight.
+- [x] Reduce peak, range, and resort label outlines to a restrained, consistent halo.
+- [x] Verify the rendered labels and save a checkpoint.
+
+## Primary Peak Label Clearance
+
+- [x] Raise all primary peak-label blocks above the pin badges and summit-status indicators.
+- [x] Verify clear vertical separation across labeled summits, then save a checkpoint.

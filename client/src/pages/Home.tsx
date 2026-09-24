@@ -448,11 +448,29 @@ function createOtherPeakPinElement(): HTMLElement {
   return div;
 }
 
+function SkierIcon({ size = 13 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <circle cx="14.5" cy="4.7" r="2.1" fill="currentColor" stroke="none" />
+      <path d="m12.1 8.2-3.6 4.2 4.9 2.2 3.9 3.3M10.4 10.3l4.7 1.9 3.1-3.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="m11.2 10.6-7.3-2.5M11.5 12.2l-8 1.4" strokeLinecap="round" strokeWidth="1.15" />
+      <path d="M2.1 20.2 20.4 18M3.2 22 21.7 20.8" strokeLinecap="round" strokeWidth="1.45" />
+    </svg>
+  );
+}
+
 function createSkiResortPinElement(): HTMLElement {
   const div = document.createElement("div");
   div.style.cssText = "position:relative;width:22px;height:22px;cursor:pointer;filter:drop-shadow(0 2px 2px rgba(8,47,73,0.32));";
   div.innerHTML = `
-    <span style="display:grid;place-items:center;width:22px;height:22px;border-radius:999px;background:${SKI_RESORT_COLOR};border:1.5px solid rgba(255,255,255,0.96);box-sizing:border-box;color:#fff;font-family:'Material Symbols Rounded';font-size:16px;font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 24;">downhill_skiing</span>
+    <span style="display:grid;place-items:center;width:22px;height:22px;border-radius:999px;background:${SKI_RESORT_COLOR};border:1.5px solid rgba(255,255,255,0.96);box-sizing:border-box;color:#fff;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <circle cx="14.5" cy="4.7" r="2.1" fill="currentColor" stroke="none"/>
+        <path d="m12.1 8.2-3.6 4.2 4.9 2.2 3.9 3.3M10.4 10.3l4.7 1.9 3.1-3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="m11.2 10.6-7.3-2.5M11.5 12.2l-8 1.4" stroke-linecap="round" stroke-width="1.15"/>
+        <path d="M2.1 20.2 20.4 18M3.2 22 21.7 20.8" stroke-linecap="round" stroke-width="1.45"/>
+      </svg>
+    </span>
   `;
   return div;
 }
@@ -1804,14 +1822,12 @@ export default function Home() {
 
       const peakName = document.createElement("span");
       peakName.style.cssText = `
-        font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:800;letter-spacing:0.01em;
+        font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:0.01em;
         color:${OTHER_PEAK_COLOR};white-space:nowrap;line-height:1.2;
         text-shadow:
-          0 0 3px #fff, 0 0 6px #fff, 0 0 10px #fff, 0 0 14px #fff,
+          0 0 2px #fff, 0 0 4px #fff,
           1px 1px 0 #fff, -1px -1px 0 #fff,
-          1px -1px 0 #fff, -1px 1px 0 #fff,
-          2px 2px 0 #fff, -2px -2px 0 #fff,
-          2px -2px 0 #fff, -2px 2px 0 #fff;
+          1px -1px 0 #fff, -1px 1px 0 #fff;
         background:none;padding:0;
       `;
       peakName.textContent = peak.name;
@@ -1861,15 +1877,13 @@ export default function Home() {
 
       const labelEl = document.createElement("div");
       labelEl.style.cssText = `
-        font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:800;letter-spacing:0.01em;
-        color:${SKI_RESORT_COLOR};white-space:nowrap;line-height:1.2;pointer-events:none;
-        transform:translate(24px, -12px);
+        font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:0.01em;
+        color:#111;white-space:nowrap;line-height:1.2;pointer-events:none;
+        transform:translate(calc(50% + 14px), 50%);
         text-shadow:
-          0 0 3px #fff, 0 0 6px #fff, 0 0 10px #fff, 0 0 14px #fff,
+          0 0 2px #fff, 0 0 4px #fff,
           1px 1px 0 #fff, -1px -1px 0 #fff,
-          1px -1px 0 #fff, -1px 1px 0 #fff,
-          2px 2px 0 #fff, -2px -2px 0 #fff,
-          2px -2px 0 #fff, -2px 2px 0 #fff;
+          1px -1px 0 #fff, -1px 1px 0 #fff;
       `;
       labelEl.textContent = resort.name;
       const label = new google.maps.marker.AdvancedMarkerElement({
@@ -2177,18 +2191,16 @@ export default function Home() {
       peakLabelEl.style.cssText = `
         display:flex;flex-direction:column;align-items:flex-start;gap:1px;
         pointer-events:none;
-        transform:translate(22px, -26px);
+        transform:translate(22px, -56px);
       `;
       const textSpan = document.createElement("span");
       textSpan.style.cssText = `
-        font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:800;letter-spacing:0.01em;
+        font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:0.01em;
         color:#111;white-space:nowrap;line-height:1.2;
         text-shadow:
-          0 0 3px #fff, 0 0 6px #fff, 0 0 10px #fff, 0 0 14px #fff,
+          0 0 2px #fff, 0 0 4px #fff,
           1px 1px 0 #fff, -1px -1px 0 #fff,
-          1px -1px 0 #fff, -1px 1px 0 #fff,
-          2px 2px 0 #fff, -2px -2px 0 #fff,
-          2px -2px 0 #fff, -2px 2px 0 #fff;
+          1px -1px 0 #fff, -1px 1px 0 #fff;
         background:none;padding:0;
       `;
       textSpan.textContent = r.peak;
@@ -2196,10 +2208,9 @@ export default function Home() {
 
       const rangeSpan = document.createElement("span");
       rangeSpan.style.cssText = `
-        font-family:'Source Sans 3',sans-serif;font-size:10.5px;font-weight:700;
+        font-family:'Source Sans 3',sans-serif;font-size:10.5px;font-weight:600;
         color:${r.color};white-space:nowrap;line-height:1.2;
-        text-shadow:1px 1px 2px #fff,-1px -1px 2px #fff,1px -1px 2px #fff,-1px 1px 2px #fff,
-          0 0 4px #fff, 0 0 8px #fff;
+        text-shadow:0 0 2px #fff,0 0 4px #fff,1px 1px 0 #fff,-1px -1px 0 #fff;
       `;
       rangeSpan.textContent = r.range;
       peakLabelEl.appendChild(rangeSpan);
@@ -2286,7 +2297,7 @@ export default function Home() {
               title={skiResortsVisible ? "Hide Utah ski resorts" : "Show Utah ski resorts"}
               aria-pressed={skiResortsVisible}
             >
-              <span className="material-symbols-rounded text-[13px]" aria-hidden="true">downhill_skiing</span>
+              <SkierIcon size={12} />
               {skiResortsVisible ? "Ski Resorts: On" : "Ski Resorts"}
             </button>
             <button
@@ -2406,7 +2417,7 @@ export default function Home() {
               style={{ background: skiResortsVisible ? SKI_RESORT_COLOR : "rgba(255,255,255,0.08)", color: skiResortsVisible ? "#fff" : "rgba(238,232,220,0.9)", border: skiResortsVisible ? "1px solid rgba(165,243,252,0.45)" : "1px solid rgba(255,255,255,0.12)" }}
               aria-pressed={skiResortsVisible}
             >
-              <span className="material-symbols-rounded text-[15px]" aria-hidden="true">downhill_skiing</span>
+              <SkierIcon size={14} />
               {skiResortsVisible ? "Ski Resorts: On (tap to hide)" : "Show Ski Resorts"}
             </button>
             <button
