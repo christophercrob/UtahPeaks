@@ -985,6 +985,15 @@ function OtherPeaksDrawer({
                     <div style={{ color: WURL_COLOR, fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 4 }}>Central Wasatch route group</div>
                     <div style={{ color: "#392258", fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 700 }}>Wasatch Ultimate Ridge Linkup</div>
                     <div style={{ color: "#705B85", fontSize: 12, lineHeight: 1.42, marginTop: 4 }}>A dedicated, advanced 17-summit Little Cottonwood Canyon linkup. Purple pins and a {WURL_ROUTE_DISTANCE_MI}-mile reference line show the {WURL_ROUTE_DIRECTION} route; either direction is valid.</div>
+                    <a
+                      href="https://runuphill.wordpress.com/2015/08/23/wasatch-ultimate-ridge-linkup-wurl/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center mt-2 rounded-md px-2 py-1 text-[11px] font-extrabold transition-colors"
+                      style={{ color: "#5A338B", background: "rgba(255,255,255,0.72)", border: "1px solid rgba(107,63,160,0.28)", textDecoration: "none" }}
+                    >
+                      Official WURL page · verified completions &amp; records ↗
+                    </a>
                   </div>
                   <button
                     type="button"
