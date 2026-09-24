@@ -513,8 +513,8 @@ function DataTableDrawer({
             <button
               type="button"
               onClick={onOpenOtherPeaks}
-              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-colors hover:bg-white/20"
-              style={{ color: "#EAF4FC", border: "1px solid rgba(210,232,248,0.34)", background: "rgba(18,59,93,0.58)" }}
+              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-colors hover:bg-[#E7F3FB]"
+              style={{ color: OTHER_PEAK_COLOR, border: "1px solid #A4C6DD", background: "#FFFFFF" }}
               title="Open the Other Peaks catalog"
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -938,8 +938,8 @@ function OtherPeaksDrawer({
             <button
               type="button"
               onClick={onOpenPeakList}
-              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-colors hover:bg-white/15"
-              style={{ color: "#F3F8FC", border: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.11)" }}
+              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-colors hover:bg-[#E7F3FB]"
+              style={{ color: OTHER_PEAK_COLOR, border: "1px solid #A4C6DD", background: "#FFFFFF" }}
               title="Return to highest peaks in every range"
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
@@ -1372,6 +1372,7 @@ export default function Home() {
   const [wurlVisible, setWurlVisible] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [journalRange, setJournalRange] = useState<MountainRange | null>(null);
+  const peakListModalOpen = tableOpen || otherPeaksOpen || wurlTableOpen;
   const polygonsRef = useRef<Array<google.maps.Polygon | google.maps.Polyline>>([]);
   const labelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const otherPeakMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
@@ -2133,26 +2134,27 @@ export default function Home() {
             <button
               onClick={() => { setWurlTableOpen(false); setOtherPeaksOpen(false); setTableOpen((open) => !open); }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
-              style={{ background: tableOpen ? "rgba(192,82,42,0.85)" : "rgba(255,255,255,0.10)", color: tableOpen ? "#fff" : "rgba(238,232,220,0.8)", border: tableOpen ? "1px solid rgba(255,185,145,0.38)" : "1px solid rgba(255,255,255,0.15)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = tableOpen ? "#C0522A" : "rgba(255,255,255,0.18)")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = tableOpen ? "rgba(192,82,42,0.85)" : "rgba(255,255,255,0.10)")}
-              aria-pressed={tableOpen}
+              style={{ background: "#FFFFFF", color: OTHER_PEAK_COLOR, border: peakListModalOpen ? "2px solid #5D9ED1" : "1px solid #A4C6DD", boxShadow: peakListModalOpen ? "0 0 0 1px rgba(93,158,209,0.2)" : undefined }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "#E7F3FB")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "#FFFFFF")}
+              aria-pressed={peakListModalOpen}
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>
               </svg>
-              Peak List
+              Peak Lists
             </button>
             <button
               onClick={toggleOtherPeaks}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
               style={{
-                background: otherPeaksVisible ? OTHER_PEAK_COLOR : "rgba(255,255,255,0.10)",
-                color: otherPeaksVisible ? "#fff" : "rgba(238,232,220,0.8)",
-                border: otherPeaksVisible ? "1px solid rgba(193,220,241,0.4)" : "1px solid rgba(255,255,255,0.15)",
+                background: "#FFFFFF",
+                color: OTHER_PEAK_COLOR,
+                border: otherPeaksVisible ? "2px solid #5D9ED1" : "1px solid #A4C6DD",
+                boxShadow: otherPeaksVisible ? "0 0 0 1px rgba(93,158,209,0.2)" : undefined,
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = otherPeaksVisible ? OTHER_PEAK_COLOR : "rgba(255,255,255,0.18)")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = otherPeaksVisible ? OTHER_PEAK_COLOR : "rgba(255,255,255,0.10)")}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "#E7F3FB")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "#FFFFFF")}
               title={otherPeaksVisible ? "Hide Other Peaks markers" : "Show Other Peaks markers"}
               aria-pressed={otherPeaksVisible}
             >
@@ -2249,21 +2251,22 @@ export default function Home() {
             <button
               onClick={() => { setWurlTableOpen(false); setOtherPeaksOpen(false); setTableOpen((open) => !open); setMenuOpen(false); }}
               className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
-              style={{ background: tableOpen ? "rgba(192,82,42,0.85)" : "rgba(255,255,255,0.08)", color: tableOpen ? "#fff" : "rgba(238,232,220,0.9)", border: tableOpen ? "1px solid rgba(255,185,145,0.38)" : "1px solid rgba(255,255,255,0.12)" }}
-              aria-pressed={tableOpen}
+              style={{ background: "#FFFFFF", color: OTHER_PEAK_COLOR, border: peakListModalOpen ? "2px solid #5D9ED1" : "1px solid #A4C6DD", boxShadow: peakListModalOpen ? "0 0 0 1px rgba(93,158,209,0.2)" : undefined }}
+              aria-pressed={peakListModalOpen}
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>
               </svg>
-              Peak List
+              Peak Lists
             </button>
             <button
               onClick={() => { toggleOtherPeaks(); setMenuOpen(false); }}
               className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
               style={{
-                background: otherPeaksVisible ? OTHER_PEAK_COLOR : "rgba(255,255,255,0.08)",
-                color: otherPeaksVisible ? "#fff" : "rgba(238,232,220,0.9)",
-                border: otherPeaksVisible ? "1px solid rgba(193,220,241,0.4)" : "1px solid rgba(255,255,255,0.12)",
+                background: "#FFFFFF",
+                color: OTHER_PEAK_COLOR,
+                border: otherPeaksVisible ? "2px solid #5D9ED1" : "1px solid #A4C6DD",
+                boxShadow: otherPeaksVisible ? "0 0 0 1px rgba(93,158,209,0.2)" : undefined,
               }}
               aria-pressed={otherPeaksVisible}
             >
