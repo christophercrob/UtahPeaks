@@ -1812,19 +1812,21 @@ export default function Home() {
       const labelEl = document.createElement("div");
       labelEl.style.cssText = `
         display:flex;flex-direction:column;align-items:flex-start;gap:1px;
-        pointer-events:none;
+        pointer-events:none;background:transparent!important;border:0!important;
+        border-radius:0!important;box-shadow:none!important;
         transform:translate(calc(50% + 14px), -7px);
       `;
 
       const peakName = document.createElement("span");
       peakName.style.cssText = `
         font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:0.01em;
-        color:${OTHER_PEAK_COLOR};white-space:nowrap;line-height:1.2;
+        color:${OTHER_PEAK_COLOR}!important;white-space:nowrap;line-height:1.2;
         text-shadow:
-          0 0 2px #fff, 0 0 4px #fff,
+          0 0 2px #fff, 0 0 3px #fff,
           1px 1px 0 #fff, -1px -1px 0 #fff,
-          1px -1px 0 #fff, -1px 1px 0 #fff;
-        background:none;padding:0;
+          1px -1px 0 #fff, -1px 1px 0 #fff!important;
+        background:transparent!important;border:0!important;border-radius:0!important;
+        box-shadow:none!important;padding:0;
       `;
       peakName.textContent = peak.name;
       labelEl.appendChild(peakName);
@@ -2187,7 +2189,7 @@ export default function Home() {
       peakLabelEl.style.cssText = `
         display:flex;flex-direction:column;align-items:flex-start;gap:1px;
         pointer-events:none;
-        transform:translate(22px, -36px);
+        transform:translate(22px, -32px);
       `;
       const textSpan = document.createElement("span");
       textSpan.style.cssText = `

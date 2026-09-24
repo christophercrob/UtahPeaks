@@ -86,3 +86,9 @@
 - [x] Replace the improvised skier drawing in map badges and resort toggles.
 - [x] Recenter resort labels vertically against their round badges.
 - [x] Verify the icon, label geometry, and production build, then save a checkpoint.
+
+## Peak Label Consistency Refinement
+
+- [x] Move primary peak labels slightly closer to their red pins.
+- [x] Force transparent backgrounds and consistent navy-with-white-outline styling for every Other Peaks label.
+- [x] Verify the rendered label styles and save a checkpoint.
