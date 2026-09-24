@@ -115,3 +115,16 @@
 - [x] Query the Google Maps place coordinate for Wasatch Peaks Ranch Ski Resort.
 - [x] Replace the offset marker with the supplied Google Maps coordinate: `41.10019182881441, -111.81670896070314`.
 - [x] Complete map-label and coordinate validation, then save a checkpoint.
+
+## Interactive Other Peaks Labels and Northern Arizona Coverage
+
+- [x] Identify the label marker path and validate northern-Arizona fire records in the WFIGS service.
+- [x] Make each Other Peaks name label open the same detail panel as its pin.
+- [x] Add Vermilion Cliffs, Beaver Dam Wash, and Baaj Nwaavjo I'tah Kukveni monument boundaries to the protected layer.
+- [x] Extend the fire overlay to the northern Arizona / Grand Canyon envelope while preserving statewide Utah fires.
+- [x] Verify all three map-layer changes and save a checkpoint.
+
+## Peak Selection Modal Behavior
+
+- [x] Close all peak-list modals when a highest, Other Peaks, or WURL summit is selected.
+- [x] Verify map-marker and list-card selections dismiss the catalog before opening details.

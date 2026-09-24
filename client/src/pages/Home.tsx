@@ -1767,12 +1767,18 @@ export default function Home() {
   }, [protectedAreasOn, fetchProtectedAreasData]);
 
   const handleSelect = useCallback((r: MountainRange) => {
+    setTableOpen(false);
+    setOtherPeaksOpen(false);
+    setWurlTableOpen(false);
     setSelectedOtherPeak(null);
     setSelected(r);
     mapRef.current?.panTo({ lat: r.lat, lng: r.lon });
   }, []);
 
   const handleSelectOtherPeak = useCallback((peak: OtherPeak) => {
+    setTableOpen(false);
+    setOtherPeaksOpen(false);
+    setWurlTableOpen(false);
     setSelected(null);
     setSelectedOtherPeak(peak);
     mapRef.current?.panTo({ lat: peak.lat, lng: peak.lon });
@@ -1798,6 +1804,9 @@ export default function Home() {
   }, []);
 
   const handleSelectWurlPeak = useCallback((peak: WurlPeak) => {
+    setTableOpen(false);
+    setOtherPeaksOpen(false);
+    setWurlTableOpen(false);
     setSelected(null);
     setSelectedOtherPeak(null);
     setWurlVisible(true);
@@ -1835,7 +1844,7 @@ export default function Home() {
       const labelEl = document.createElement("div");
       labelEl.style.cssText = `
         display:flex;flex-direction:column;align-items:flex-start;gap:1px;
-        pointer-events:none;background:transparent!important;border:0!important;
+        pointer-events:auto;cursor:pointer;background:transparent!important;border:0!important;
         border-radius:0!important;box-shadow:none!important;
         transform:translate(calc(50% + 14px), -7px);
       `;
@@ -1859,8 +1868,10 @@ export default function Home() {
         map,
         position: { lat: peak.lat, lng: peak.lon },
         content: labelEl,
+        title: `${peak.name} — ${peak.elevationFt.toLocaleString()} ft · Other Peaks`,
         zIndex: 10,
       });
+      label.addListener("click", () => handleSelectOtherPeak(peak));
       otherPeakLabelsRef.current.push(label);
     });
     syncMapLabelSizesAfterRender(map);
@@ -2005,26 +2016,44 @@ export default function Home() {
     setFireLoading(true);
     setFireError(null);
     try {
-      // NIFC WFIGS Interagency Perimeters — Utah wildfires ≥ 5,000 acres, past 3 years.
-      // Strategy: fetch ALL perimeters (Final + Daily) for Utah fires ≥ 5,000 ac,
-      // then deduplicate per incident keeping: Final perimeter if available, else
-      // the most recent Daily perimeter (for active/ongoing fires).
+      // NIFC WFIGS Interagency Perimeters — Utah plus the Grand Canyon / Kaibab
+      // region of northern Arizona. Major fires are limited to the past 3 years.
+      // Strategy: fetch Final + Daily perimeters, then deduplicate per incident
+      // keeping the Final perimeter if available, otherwise the newest Daily perimeter.
       const cutoff = new Date();
       cutoff.setFullYear(cutoff.getFullYear() - 3);
       const dateStr = cutoff.toISOString().slice(0, 10);
-      const where = encodeURIComponent(
-        `attr_POOState='US-UT' AND attr_FireDiscoveryDateTime >= DATE '${dateStr}' AND poly_GISAcres >= 5000`
-      );
-      const url =
-        `https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Interagency_Perimeters/FeatureServer/0/query` +
-        `?where=${where}` +
-        `&outFields=poly_IncidentName,attr_FireDiscoveryDateTime,poly_GISAcres,attr_POOState,attr_IncidentTypeCategory,poly_FeatureCategory,attr_FireOutDateTime,poly_DateCurrent` +
-        `&returnGeometry=true&outSR=4326&f=json&resultRecordCount=500&orderByFields=poly_DateCurrent+DESC`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      if (json.error) throw new Error(json.error.message ?? "API error");
-      const allFeatures: FireFeature[] = json.features ?? [];
+      const serviceUrl =
+        "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/" +
+        "WFIGS_Interagency_Perimeters/FeatureServer/0/query";
+      const fetchPerimeters = async (state: "US-UT" | "US-AZ", geometry?: string) => {
+        const params = new URLSearchParams({
+          where: `attr_POOState='${state}' AND attr_FireDiscoveryDateTime >= DATE '${dateStr}' AND poly_GISAcres >= 5000`,
+          outFields: "poly_IncidentName,attr_FireDiscoveryDateTime,poly_GISAcres,attr_POOState,attr_IncidentTypeCategory,poly_FeatureCategory,attr_FireOutDateTime,poly_DateCurrent",
+          returnGeometry: "true",
+          outSR: "4326",
+          f: "json",
+          resultRecordCount: "500",
+          orderByFields: "poly_DateCurrent DESC",
+        });
+        if (geometry) {
+          params.set("geometry", geometry);
+          params.set("geometryType", "esriGeometryEnvelope");
+          params.set("spatialRel", "esriSpatialRelIntersects");
+        }
+        const response = await fetch(`${serviceUrl}?${params.toString()}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const json = await response.json();
+        if (json.error) throw new Error(json.error.message ?? "API error");
+        return (json.features ?? []) as FireFeature[];
+      };
+
+      const [utahFeatures, northernArizonaFeatures] = await Promise.all([
+        fetchPerimeters("US-UT"),
+        // AZ-only envelope: Arizona Strip, Kaibab National Forest, and Grand Canyon vicinity.
+        fetchPerimeters("US-AZ", "-114.75,35.5,-108.5,38.5"),
+      ]);
+      const allFeatures = [...utahFeatures, ...northernArizonaFeatures];
 
       // Deduplicate: one polygon per incident name.
       // Priority: "Wildfire Final Fire Perimeter" > most-recent daily perimeter.
