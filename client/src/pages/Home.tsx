@@ -23,6 +23,7 @@ const OTHER_PEAK_FILTERS = [
   WURL_GROUP,
   ...OTHER_PEAK_GROUPS.filter((name) => name !== "Central Wasatch"),
 ];
+const SKIER_OUTLINE_URL = "/manus-storage/utah-peaks-skier-outline-192_4bb0a0ee.png";
 
 // ── About Modal ───────────────────────────────────────────────────────────
 function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -450,12 +451,12 @@ function createOtherPeakPinElement(): HTMLElement {
 
 function SkierIcon({ size = 13 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-      <circle cx="14.5" cy="4.7" r="2.1" fill="currentColor" stroke="none" />
-      <path d="m12.1 8.2-3.6 4.2 4.9 2.2 3.9 3.3M10.4 10.3l4.7 1.9 3.1-3.5" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="m11.2 10.6-7.3-2.5M11.5 12.2l-8 1.4" strokeLinecap="round" strokeWidth="1.15" />
-      <path d="M2.1 20.2 20.4 18M3.2 22 21.7 20.8" strokeLinecap="round" strokeWidth="1.45" />
-    </svg>
+    <img
+      src={SKIER_OUTLINE_URL}
+      alt=""
+      aria-hidden="true"
+      style={{ width: size, height: size, display: "block", objectFit: "contain" }}
+    />
   );
 }
 
@@ -464,12 +465,7 @@ function createSkiResortPinElement(): HTMLElement {
   div.style.cssText = "position:relative;width:22px;height:22px;cursor:pointer;filter:drop-shadow(0 2px 2px rgba(8,47,73,0.32));";
   div.innerHTML = `
     <span style="display:grid;place-items:center;width:22px;height:22px;border-radius:999px;background:${SKI_RESORT_COLOR};border:1.5px solid rgba(255,255,255,0.96);box-sizing:border-box;color:#fff;">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-        <circle cx="14.5" cy="4.7" r="2.1" fill="currentColor" stroke="none"/>
-        <path d="m12.1 8.2-3.6 4.2 4.9 2.2 3.9 3.3M10.4 10.3l4.7 1.9 3.1-3.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="m11.2 10.6-7.3-2.5M11.5 12.2l-8 1.4" stroke-linecap="round" stroke-width="1.15"/>
-        <path d="M2.1 20.2 20.4 18M3.2 22 21.7 20.8" stroke-linecap="round" stroke-width="1.45"/>
-      </svg>
+      <img src="${SKIER_OUTLINE_URL}" alt="" aria-hidden="true" style="display:block;width:15px;height:15px;object-fit:contain;"/>
     </span>
   `;
   return div;
@@ -1879,7 +1875,7 @@ export default function Home() {
       labelEl.style.cssText = `
         font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:0.01em;
         color:#111;white-space:nowrap;line-height:1.2;pointer-events:none;
-        transform:translate(calc(50% + 14px), 50%);
+        transform:translate(calc(50% + 14px), -4px);
         text-shadow:
           0 0 2px #fff, 0 0 4px #fff,
           1px 1px 0 #fff, -1px -1px 0 #fff,

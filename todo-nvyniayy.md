@@ -79,3 +79,10 @@
 
 - [x] Bring primary peak-label blocks closer to their red pins while preserving badge clearance.
 - [x] Verify the compact vertical spacing and save a checkpoint.
+
+## Supplied Skier Outline and Label Alignment
+
+- [x] Create a transparent white map-ready icon from the supplied skier silhouette.
+- [x] Replace the improvised skier drawing in map badges and resort toggles.
+- [x] Recenter resort labels vertically against their round badges.
+- [x] Verify the icon, label geometry, and production build, then save a checkpoint.
