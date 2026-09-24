@@ -23,3 +23,9 @@
 - [x] Review highest-peak marker label treatment and Other Peaks marker rendering.
 - [x] Apply matching peak and range labels to the navy Other Peaks markers.
 - [x] Verify labels appear only while the Other Peaks layer is on, then save a checkpoint.
+
+## Ski Resorts Layer
+
+- [x] Confirm the current 15-resort Utah Ski inventory and representative locations.
+- [x] Add a teal skier marker, single-line labels, and desktop/mobile toggle controls.
+- [x] Verify the layer lifecycle and simplified Other Peaks labels, then save a checkpoint.

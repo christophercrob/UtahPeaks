@@ -12,6 +12,7 @@ import { MOUNTAIN_RANGES, type MountainRange } from "@/data/ranges";
 import { WURL_CENTER, WURL_COLOR, WURL_PEAKS, WURL_ZOOM, type WurlPeak } from "@/data/wurl";
 import { WURL_ROUTE_DIRECTION, WURL_ROUTE_DISTANCE_MI, WURL_ROUTE_PATH } from "@/data/wurlRoute";
 import { OTHER_PEAK_COLOR, OTHER_PEAK_GROUPS, OTHER_PEAKS, type OtherPeak } from "@/data/otherPeaks";
+import { SKI_RESORT_COLOR, UTAH_SKI_RESORTS } from "@/data/skiResorts";
 import { PROTECTED_AREA_COLORS, PROTECTED_AREA_SOURCES, type ProtectedAreaKind } from "@/data/protectedAreas";
 
 const WURL_GROUP = "WURL · Central Wasatch";
@@ -442,6 +443,19 @@ function createOtherPeakPinElement(): HTMLElement {
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="28" viewBox="0 0 20 28" aria-hidden="true">
       <path d="M10 1 C4.48 1 0 5.48 0 11 C0 18.5 10 27 10 27 C10 27 20 18.5 20 11 C20 5.48 15.52 1 10 1 Z" fill="${OTHER_PEAK_COLOR}" stroke="rgba(255,255,255,0.95)" stroke-width="1.6"/>
       <path d="M4.8 14.4 8.4 8.2l2.4 3.1 2.2-3.7 2.7 6.8H4.8z" fill="white" opacity="0.95"/>
+    </svg>
+  `;
+  return div;
+}
+
+function createSkiResortPinElement(): HTMLElement {
+  const div = document.createElement("div");
+  div.style.cssText = "position:relative;width:22px;height:22px;cursor:pointer;filter:drop-shadow(0 2px 2px rgba(8,47,73,0.32));";
+  div.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+      <circle cx="11" cy="11" r="10" fill="${SKI_RESORT_COLOR}" stroke="rgba(255,255,255,0.96)" stroke-width="1.5"/>
+      <circle cx="12.2" cy="5.7" r="2" fill="white"/>
+      <path d="M10.4 8.1 8.6 12.4l3.6 1.2 2.9 2.1M10.7 9.4l3.4 1.6 2.2-2.4M6.1 16.1l9.8 2.3M7.5 17.8l8.9-3.1" fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.45"/>
     </svg>
   `;
   return div;
@@ -1375,6 +1389,7 @@ export default function Home() {
   const [tableOpen, setTableOpen] = useState(false);
   const [otherPeaksOpen, setOtherPeaksOpen] = useState(false);
   const [otherPeaksVisible, setOtherPeaksVisible] = useState(false);
+  const [skiResortsVisible, setSkiResortsVisible] = useState(false);
   const [wurlTableOpen, setWurlTableOpen] = useState(false);
   const [wurlVisible, setWurlVisible] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
@@ -1384,6 +1399,8 @@ export default function Home() {
   const labelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const otherPeakMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const otherPeakLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const skiResortMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const skiResortLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const wurlMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const wurlLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const wurlRouteLineRef = useRef<google.maps.Polyline | null>(null);
@@ -1743,6 +1760,10 @@ export default function Home() {
     setOtherPeaksVisible((visible) => !visible);
   }, [otherPeaksVisible]);
 
+  const toggleSkiResorts = useCallback(() => {
+    setSkiResortsVisible((visible) => !visible);
+  }, []);
+
   const handleSelectWurlPeak = useCallback((peak: WurlPeak) => {
     setSelected(null);
     setSelectedOtherPeak(null);
@@ -1777,18 +1798,18 @@ export default function Home() {
       marker.addListener("click", () => handleSelectOtherPeak(peak));
       otherPeakMarkersRef.current.push(marker);
 
-      // Match the primary-range marker treatment: peak name plus its regional group.
+      // Mirror the primary-range name treatment while reserving navy for Other Peaks.
       const labelEl = document.createElement("div");
       labelEl.style.cssText = `
         display:flex;flex-direction:column;align-items:flex-start;gap:1px;
         pointer-events:none;
-        transform:translate(24px, -26px);
+        transform:translate(24px, -13px);
       `;
 
       const peakName = document.createElement("span");
       peakName.style.cssText = `
         font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:800;letter-spacing:0.01em;
-        color:#111;white-space:nowrap;line-height:1.2;
+        color:${OTHER_PEAK_COLOR};white-space:nowrap;line-height:1.2;
         text-shadow:
           0 0 3px #fff, 0 0 6px #fff, 0 0 10px #fff, 0 0 14px #fff,
           1px 1px 0 #fff, -1px -1px 0 #fff,
@@ -1799,16 +1820,6 @@ export default function Home() {
       `;
       peakName.textContent = peak.name;
       labelEl.appendChild(peakName);
-
-      const groupName = document.createElement("span");
-      groupName.style.cssText = `
-        font-family:'Source Sans 3',sans-serif;font-size:10.5px;font-weight:700;
-        color:${OTHER_PEAK_COLOR};white-space:nowrap;line-height:1.2;
-        text-shadow:1px 1px 2px #fff,-1px -1px 2px #fff,1px -1px 2px #fff,-1px 1px 2px #fff,
-          0 0 4px #fff, 0 0 8px #fff;
-      `;
-      groupName.textContent = peak.group;
-      labelEl.appendChild(groupName);
 
       const label = new google.maps.marker.AdvancedMarkerElement({
         map,
@@ -1826,6 +1837,61 @@ export default function Home() {
       otherPeakLabelsRef.current = [];
     };
   }, [mapReady, otherPeaksVisible, handleSelectOtherPeak]);
+
+  // Render Utah's ski resort locations as a separately toggled, labeled layer.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+
+    if (!skiResortsVisible) {
+      skiResortMarkersRef.current.forEach((marker) => { marker.map = null; });
+      skiResortMarkersRef.current = [];
+      skiResortLabelsRef.current.forEach((label) => { label.map = null; });
+      skiResortLabelsRef.current = [];
+      return;
+    }
+
+    if (skiResortMarkersRef.current.length > 0) return;
+
+    UTAH_SKI_RESORTS.forEach((resort) => {
+      const marker = new google.maps.marker.AdvancedMarkerElement({
+        map,
+        position: { lat: resort.lat, lng: resort.lon },
+        content: createSkiResortPinElement(),
+        title: `${resort.name} — Utah ski resort`,
+        zIndex: 9,
+      });
+      skiResortMarkersRef.current.push(marker);
+
+      const labelEl = document.createElement("div");
+      labelEl.style.cssText = `
+        font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:800;letter-spacing:0.01em;
+        color:${SKI_RESORT_COLOR};white-space:nowrap;line-height:1.2;pointer-events:none;
+        transform:translate(24px, -20px);
+        text-shadow:
+          0 0 3px #fff, 0 0 6px #fff, 0 0 10px #fff, 0 0 14px #fff,
+          1px 1px 0 #fff, -1px -1px 0 #fff,
+          1px -1px 0 #fff, -1px 1px 0 #fff,
+          2px 2px 0 #fff, -2px -2px 0 #fff,
+          2px -2px 0 #fff, -2px 2px 0 #fff;
+      `;
+      labelEl.textContent = resort.name;
+      const label = new google.maps.marker.AdvancedMarkerElement({
+        map,
+        position: { lat: resort.lat, lng: resort.lon },
+        content: labelEl,
+        zIndex: 8,
+      });
+      skiResortLabelsRef.current.push(label);
+    });
+
+    return () => {
+      skiResortMarkersRef.current.forEach((marker) => { marker.map = null; });
+      skiResortMarkersRef.current = [];
+      skiResortLabelsRef.current.forEach((label) => { label.map = null; });
+      skiResortLabelsRef.current = [];
+    };
+  }, [mapReady, skiResortsVisible]);
 
   // Render the common WURL reference track together with its route-specific
   // summits. The line is deliberately direction-neutral, not turn-by-turn guidance.
@@ -2216,6 +2282,20 @@ export default function Home() {
               {otherPeaksVisible ? "Other Peaks: On" : "Other Peaks"}
             </button>
             <button
+              onClick={toggleSkiResorts}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+              style={{ background: skiResortsVisible ? SKI_RESORT_COLOR : "rgba(255,255,255,0.10)", color: skiResortsVisible ? "#fff" : "rgba(238,232,220,0.8)", border: skiResortsVisible ? "1px solid rgba(165,243,252,0.48)" : "1px solid rgba(255,255,255,0.15)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = skiResortsVisible ? SKI_RESORT_COLOR : "rgba(255,255,255,0.18)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = skiResortsVisible ? SKI_RESORT_COLOR : "rgba(255,255,255,0.10)")}
+              title={skiResortsVisible ? "Hide Utah ski resorts" : "Show Utah ski resorts"}
+              aria-pressed={skiResortsVisible}
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" aria-hidden="true">
+                <circle cx="13" cy="4.8" r="2" fill="currentColor" stroke="none"/><path d="m11.4 8.1-2.2 5.2 4.3 1.3 3.4 2.5m-4.8-7.3 4.2 2 2.6-2.8M5.6 19l12.7 3M7.1 21l11.6-4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              {skiResortsVisible ? "Ski Resorts: On" : "Ski Resorts"}
+            </button>
+            <button
               onClick={() => setFireLayerOn((v) => !v)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
               style={{ background: fireLayerOn ? "rgba(200,60,20,0.92)" : "rgba(255,255,255,0.10)", color: "#fff", border: fireLayerOn ? "1px solid rgba(255,120,80,0.5)" : "1px solid rgba(255,255,255,0.15)" }}
@@ -2325,6 +2405,17 @@ export default function Home() {
                 <path d="M3 18l5-9 4 5 3-4 6 8H3z"/><path d="M8 9l2-3 2 3"/>
               </svg>
               {otherPeaksVisible ? "Other Peaks: On (tap to hide)" : "Show Other Peaks"}
+            </button>
+            <button
+              onClick={() => { toggleSkiResorts(); setMenuOpen(false); }}
+              className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
+              style={{ background: skiResortsVisible ? SKI_RESORT_COLOR : "rgba(255,255,255,0.08)", color: skiResortsVisible ? "#fff" : "rgba(238,232,220,0.9)", border: skiResortsVisible ? "1px solid rgba(165,243,252,0.45)" : "1px solid rgba(255,255,255,0.12)" }}
+              aria-pressed={skiResortsVisible}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" aria-hidden="true">
+                <circle cx="13" cy="4.8" r="2" fill="currentColor" stroke="none"/><path d="m11.4 8.1-2.2 5.2 4.3 1.3 3.4 2.5m-4.8-7.3 4.2 2 2.6-2.8M5.6 19l12.7 3M7.1 21l11.6-4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              {skiResortsVisible ? "Ski Resorts: On (tap to hide)" : "Show Ski Resorts"}
             </button>
             <button
               onClick={() => { setFireLayerOn((v) => !v); setMenuOpen(false); }}
