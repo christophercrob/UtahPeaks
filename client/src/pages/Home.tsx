@@ -16,6 +16,12 @@ import { PROTECTED_AREA_COLORS, PROTECTED_AREA_SOURCES, type ProtectedAreaKind }
 
 const WURL_GROUP = "WURL · Central Wasatch";
 const SORTED_MOUNTAIN_RANGES = [...MOUNTAIN_RANGES].sort((a, b) => b.elevationFt - a.elevationFt);
+const OTHER_PEAK_FILTERS = [
+  "All areas",
+  "Central Wasatch",
+  WURL_GROUP,
+  ...OTHER_PEAK_GROUPS.filter((name) => name !== "Central Wasatch"),
+];
 
 // ── About Modal ───────────────────────────────────────────────────────────
 function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -954,7 +960,7 @@ function OtherPeaksDrawer({
 
         <div className="px-4 sm:px-6 pt-3 pb-2 flex-shrink-0" style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
           <div className="flex gap-2 overflow-x-auto pb-1" aria-label="Filter Other Peaks by area">
-            {["All areas", ...OTHER_PEAK_GROUPS, WURL_GROUP].map((name) => {
+            {OTHER_PEAK_FILTERS.map((name) => {
               const selected = group === name;
               const isWurlFilter = name === WURL_GROUP;
               return (
