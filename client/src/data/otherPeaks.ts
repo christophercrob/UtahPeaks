@@ -258,7 +258,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   },
   {
     id: "mount-tukuhnikivatz",
-    name: "Mount Tukuhnikivatz",
+    name: "Mount Tukuhnikivatz (Mount Tuk)",
     elevationFt: 12489,
     lat: 38.4396241,
     lon: -109.2600778,
