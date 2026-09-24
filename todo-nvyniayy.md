@@ -29,3 +29,8 @@
 - [x] Confirm the current 15-resort Utah Ski inventory and representative locations.
 - [x] Add a teal skier marker, single-line labels, and desktop/mobile toggle controls.
 - [x] Verify the layer lifecycle and simplified Other Peaks labels, then save a checkpoint.
+
+## SVG Console Warning Correction
+
+- [x] Replace hyphenated React SVG property names in the ski toggle controls.
+- [x] Verify rendered SVG attributes, production build, and save a checkpoint.

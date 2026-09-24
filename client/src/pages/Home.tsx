@@ -2291,7 +2291,7 @@ export default function Home() {
               aria-pressed={skiResortsVisible}
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" aria-hidden="true">
-                <circle cx="13" cy="4.8" r="2" fill="currentColor" stroke="none"/><path d="m11.4 8.1-2.2 5.2 4.3 1.3 3.4 2.5m-4.8-7.3 4.2 2 2.6-2.8M5.6 19l12.7 3M7.1 21l11.6-4" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="13" cy="4.8" r="2" fill="currentColor" stroke="none"/><path d="m11.4 8.1-2.2 5.2 4.3 1.3 3.4 2.5m-4.8-7.3 4.2 2 2.6-2.8M5.6 19l12.7 3M7.1 21l11.6-4" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               {skiResortsVisible ? "Ski Resorts: On" : "Ski Resorts"}
             </button>
@@ -2413,7 +2413,7 @@ export default function Home() {
               aria-pressed={skiResortsVisible}
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" aria-hidden="true">
-                <circle cx="13" cy="4.8" r="2" fill="currentColor" stroke="none"/><path d="m11.4 8.1-2.2 5.2 4.3 1.3 3.4 2.5m-4.8-7.3 4.2 2 2.6-2.8M5.6 19l12.7 3M7.1 21l11.6-4" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="13" cy="4.8" r="2" fill="currentColor" stroke="none"/><path d="m11.4 8.1-2.2 5.2 4.3 1.3 3.4 2.5m-4.8-7.3 4.2 2 2.6-2.8M5.6 19l12.7 3M7.1 21l11.6-4" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               {skiResortsVisible ? "Ski Resorts: On (tap to hide)" : "Show Ski Resorts"}
             </button>
