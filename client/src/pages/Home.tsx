@@ -25,6 +25,29 @@ const OTHER_PEAK_FILTERS = [
 ];
 const SKIER_OUTLINE_URL = "/manus-storage/utah-peaks-skier-outline-192_4bb0a0ee.png";
 
+function mapLabelScale(zoom: number) {
+  // Maintain the base label size at overview zooms, then outpace standard
+  // Google basemap labels as the user zooms into detailed terrain.
+  return Math.min(1.45, Math.max(1, 1 + Math.max(0, zoom - 10) * 0.09));
+}
+
+function syncMapLabelSizes(map: google.maps.Map) {
+  const scale = mapLabelScale(map.getZoom() ?? 10);
+  document.querySelectorAll<HTMLElement>("[data-map-label-base-size]").forEach((label) => {
+    const baseSize = Number(label.dataset.mapLabelBaseSize);
+    if (Number.isFinite(baseSize)) label.style.fontSize = `${(baseSize * scale).toFixed(2)}px`;
+  });
+}
+
+function syncMapLabelSizesAfterRender(map: google.maps.Map) {
+  // AdvancedMarker content is attached asynchronously. The short follow-up pass
+  // catches image-backed ski markers, which may mount after the next frame.
+  requestAnimationFrame(() => {
+    syncMapLabelSizes(map);
+    window.setTimeout(() => syncMapLabelSizes(map), 250);
+  });
+}
+
 // ── About Modal ───────────────────────────────────────────────────────────
 function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   if (!open) return null;
@@ -1828,6 +1851,7 @@ export default function Home() {
         background:transparent!important;border:0!important;border-radius:0!important;
         box-shadow:none!important;padding:0;
       `;
+      peakName.dataset.mapLabelBaseSize = "11.5";
       peakName.textContent = peak.name;
       labelEl.appendChild(peakName);
 
@@ -1839,6 +1863,7 @@ export default function Home() {
       });
       otherPeakLabelsRef.current.push(label);
     });
+    syncMapLabelSizesAfterRender(map);
 
     return () => {
       otherPeakMarkersRef.current.forEach((marker) => { marker.map = null; });
@@ -1875,7 +1900,7 @@ export default function Home() {
 
       const labelEl = document.createElement("div");
       labelEl.style.cssText = `
-        font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:0.01em;
+        font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:700;font-synthesis:none;letter-spacing:0.01em;
         color:#111;white-space:nowrap;line-height:1.2;pointer-events:none;
         transform:translate(calc(50% + 14px), -4px);
         text-shadow:
@@ -1883,6 +1908,7 @@ export default function Home() {
           1px 1px 0 #fff, -1px -1px 0 #fff,
           1px -1px 0 #fff, -1px 1px 0 #fff;
       `;
+      labelEl.dataset.mapLabelBaseSize = "11.5";
       labelEl.textContent = resort.name;
       const label = new google.maps.marker.AdvancedMarkerElement({
         map,
@@ -1892,6 +1918,7 @@ export default function Home() {
       });
       skiResortLabelsRef.current.push(label);
     });
+    syncMapLabelSizesAfterRender(map);
 
     return () => {
       skiResortMarkersRef.current.forEach((marker) => { marker.map = null; });
@@ -2202,6 +2229,7 @@ export default function Home() {
           1px -1px 0 #fff, -1px 1px 0 #fff;
         background:none;padding:0;
       `;
+      textSpan.dataset.mapLabelBaseSize = "12.5";
       textSpan.textContent = r.peak;
       peakLabelEl.appendChild(textSpan);
 
@@ -2211,10 +2239,14 @@ export default function Home() {
         color:${r.color};white-space:nowrap;line-height:1.2;
         text-shadow:0 0 2px #fff,0 0 4px #fff,1px 1px 0 #fff,-1px -1px 0 #fff;
       `;
+      rangeSpan.dataset.mapLabelBaseSize = "11";
       rangeSpan.textContent = r.range;
       peakLabelEl.appendChild(rangeSpan);
       new google.maps.marker.AdvancedMarkerElement({ map, position: { lat: r.lat, lng: r.lon }, content: peakLabelEl, zIndex: 9 });
     });
+
+    syncMapLabelSizes(map);
+    map.addListener("zoom_changed", () => syncMapLabelSizes(map));
 
     setMapReady(true);
 

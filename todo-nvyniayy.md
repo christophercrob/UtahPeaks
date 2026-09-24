@@ -104,3 +104,14 @@
 - [x] Calculate a 0.75-mile west-southwest geodesic offset from the current marker coordinate.
 - [x] Update the resort marker to the resulting location.
 - [x] Validate the map data and save a checkpoint.
+
+## Zoom-Responsive Map Labels
+
+- [x] Define a capped font-scaling curve that preserves the base label size and increases it at detailed zooms.
+- [x] Apply it to primary peaks, Other Peaks, and ski-resort labels; verify at multiple zoom levels and save a checkpoint.
+
+## Wasatch Peaks Ranch Google Maps Alignment
+
+- [x] Query the Google Maps place coordinate for Wasatch Peaks Ranch Ski Resort.
+- [x] Replace the offset marker with the supplied Google Maps coordinate: `41.10019182881441, -111.81670896070314`.
+- [x] Complete map-label and coordinate validation, then save a checkpoint.
