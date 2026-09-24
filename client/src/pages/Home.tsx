@@ -1817,7 +1817,7 @@ export default function Home() {
       labelEl.style.cssText = `
         display:flex;flex-direction:column;align-items:flex-start;gap:1px;
         pointer-events:none;
-        transform:translate(24px, -13px);
+        transform:translate(calc(50% + 14px), -7px);
       `;
 
       const peakName = document.createElement("span");

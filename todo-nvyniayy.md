@@ -69,3 +69,8 @@
 
 - [x] Raise all primary peak-label blocks above the pin badges and summit-status indicators.
 - [x] Verify clear vertical separation across labeled summits, then save a checkpoint.
+
+## Other Peaks Label Clearance
+
+- [x] Anchor Other Peaks labels clear of their navy map pins.
+- [x] Verify pin-to-label separation and save a checkpoint.
