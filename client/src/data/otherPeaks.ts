@@ -6,6 +6,7 @@ export const OTHER_PEAK_COLOR = "#123B5D";
 export interface OtherPeak {
   id: string;
   name: string;
+  trailhead: string;
   elevationFt: number;
   lat: number;
   lon: number;
@@ -28,6 +29,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "lone-peak",
     name: "Lone Peak",
+    trailhead: "Jacob's Ladder Trailhead · Alpine, Utah",
     elevationFt: 11253,
     lat: 40.5268567,
     lon: -111.7560942,
@@ -39,6 +41,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "mount-olympus",
     name: "Mount Olympus",
+    trailhead: "Mount Olympus Trailhead · Salt Lake City, Utah",
     elevationFt: 9028,
     lat: 40.6567926,
     lon: -111.7710817,
@@ -50,6 +53,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "box-elder-peak",
     name: "Box Elder Peak",
+    trailhead: "Box Elder Trailhead · American Fork Canyon, Utah",
     elevationFt: 11101,
     lat: 40.4900328,
     lon: -111.6961037,
@@ -61,6 +65,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "ben-lomond-peak",
     name: "Ben Lomond Peak",
+    trailhead: "North Ogden Divide Trailhead · Utah",
     elevationFt: 9712,
     lat: 41.3632454,
     lon: -111.9606838,
@@ -72,6 +77,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "willard-peak",
     name: "Willard Peak",
+    trailhead: "Willard Basin Trailhead · Utah",
     elevationFt: 9763,
     lat: 41.3828016,
     lon: -111.9744755,
@@ -83,6 +89,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "mount-ogden",
     name: "Mount Ogden",
+    trailhead: "Snowbasin Resort Trailhead · Huntsville, Utah",
     elevationFt: 9579,
     lat: 41.1999128,
     lon: -111.882208,
@@ -94,6 +101,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "thurston-peak",
     name: "Thurston Peak",
+    trailhead: "Farmington Canyon Trailhead · Farmington, Utah",
     elevationFt: 9709,
     lat: 41.0818984,
     lon: -111.8515077,
@@ -105,6 +113,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "francis-peak",
     name: "Francis Peak",
+    trailhead: "Farmington Canyon Trailhead · Farmington, Utah",
     elevationFt: 9525,
     lat: 41.0329999,
     lon: -111.8382715,
@@ -116,6 +125,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "south-thurston-peak-9491",
     name: "South Thurston Peak (Peak 9491)",
+    trailhead: "Farmington Canyon Trailhead · Farmington, Utah",
     elevationFt: 9491,
     lat: 41.062782,
     lon: -111.849438,
@@ -127,6 +137,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "bountiful-peak",
     name: "Bountiful Peak",
+    trailhead: "Farmington Canyon Trailhead · Farmington, Utah",
     elevationFt: 9259,
     lat: 40.9643832,
     lon: -111.8182586,
@@ -138,6 +149,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "grandview-peak",
     name: "Grandview Peak",
+    trailhead: "Big Mountain Pass Trailhead · Utah",
     elevationFt: 9410,
     lat: 40.8518664,
     lon: -111.752294,
@@ -149,6 +161,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "big-mountain",
     name: "Big Mountain",
+    trailhead: "Big Mountain Pass Trailhead · Utah",
     elevationFt: 8472,
     lat: 40.84521,
     lon: -111.6606,
@@ -160,6 +173,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "mount-timpanogos",
     name: "Mount Timpanogos",
+    trailhead: "Mount Timpanogos Trailhead · Aspen Grove, Utah",
     elevationFt: 11750,
     lat: 40.3908264,
     lon: -111.6460609,
@@ -171,6 +185,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "provo-peak",
     name: "Provo Peak",
+    trailhead: "Rock Canyon Trailhead · Provo, Utah",
     elevationFt: 11068,
     lat: 40.2443103,
     lon: -111.556725,
@@ -182,6 +197,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "cascade-mountain",
     name: "Cascade Mountain",
+    trailhead: "Dry Canyon Trailhead · Lindon, Utah",
     elevationFt: 10908,
     lat: 40.3069728,
     lon: -111.5881371,
@@ -193,6 +209,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "kyhv-peak",
     name: "Kyhv Peak",
+    trailhead: "Rock Canyon Trailhead · Provo, Utah",
     elevationFt: 7859,
     lat: 40.2712361,
     lon: -111.616915,
@@ -204,6 +221,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "loafer-mountain",
     name: "Loafer Mountain",
+    trailhead: "Loafer Mountain Trailhead · Payson Canyon, Utah",
     elevationFt: 10687,
     lat: 39.9762,
     lon: -111.6153,
@@ -215,6 +233,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "mount-emmons",
     name: "Mount Emmons",
+    trailhead: "Henry's Fork Trailhead · High Uintas, Utah",
     elevationFt: 13446,
     lat: 40.7118896,
     lon: -110.302936,
@@ -226,6 +245,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "gilbert-peak",
     name: "Gilbert Peak",
+    trailhead: "Henry's Fork Trailhead · High Uintas, Utah",
     elevationFt: 13442,
     lat: 40.8232786,
     lon: -110.3404361,
@@ -237,6 +257,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "mount-powell",
     name: "Mount Powell",
+    trailhead: "Mirror Lake Trailhead · High Uintas, Utah",
     elevationFt: 13159,
     lat: 40.7982028,
     lon: -110.425945,
@@ -248,6 +269,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "wilson-peak",
     name: "Wilson Peak",
+    trailhead: "China Meadows Trailhead · High Uintas, Utah",
     elevationFt: 13060,
     lat: 40.7758221,
     lon: -110.461782,
@@ -259,6 +281,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "mount-tukuhnikivatz",
     name: "Mount Tukuhnikivatz (Mount Tuk)",
+    trailhead: "La Sal Pass Trailhead · Utah",
     elevationFt: 12489,
     lat: 38.4396241,
     lon: -109.2600778,
@@ -270,6 +293,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "mount-mellenthin",
     name: "Mount Mellenthin",
+    trailhead: "Geyser Pass Trailhead · La Sal Mountains, Utah",
     elevationFt: 12646,
     lat: 38.4633203,
     lon: -109.234002,
@@ -281,6 +305,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "mount-waas",
     name: "Mount Waas",
+    trailhead: "La Sal Pass Road access · La Sal Mountains, Utah",
     elevationFt: 12391,
     lat: 38.5390946,
     lon: -109.2278708,
@@ -292,6 +317,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "manns-peak",
     name: "Manns Peak",
+    trailhead: "Geyser Pass Trailhead · La Sal Mountains, Utah",
     elevationFt: 12273,
     lat: 38.5150047,
     lon: -109.2224472,
@@ -303,6 +329,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "notch-peak",
     name: "Notch Peak",
+    trailhead: "Notch Peak Trailhead · Utah",
     elevationFt: 9658,
     lat: 39.1431994,
     lon: -113.409257,
@@ -314,6 +341,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "pilot-peak",
     name: "Pilot Peak",
+    trailhead: "Pilot Peak Trailhead · Utah–Nevada border",
     elevationFt: 10716,
     lat: 41.0213,
     lon: -114.077,
@@ -325,6 +353,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "wheeler-peak-nv",
     name: "Wheeler Peak",
+    trailhead: "Wheeler Peak Summit Trailhead · Great Basin National Park, Nevada",
     elevationFt: 13062,
     lat: 38.98577,
     lon: -114.31391,
@@ -336,6 +365,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "frary-peak",
     name: "Frary Peak",
+    trailhead: "Frary Peak Trailhead · Antelope Island, Utah",
     elevationFt: 6596,
     lat: 40.9620733,
     lon: -112.2161111,
@@ -347,6 +377,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "dooly-knob",
     name: "Dooly Knob",
+    trailhead: "Dooly Knob Trailhead · Antelope Island, Utah",
     elevationFt: 5278,
     lat: 40.9944969,
     lon: -112.2103414,
@@ -358,6 +389,7 @@ export const OTHER_PEAKS: OtherPeak[] = [
   {
     id: "buffalo-point",
     name: "Buffalo Point",
+    trailhead: "Buffalo Point Trailhead · Antelope Island, Utah",
     elevationFt: 4771,
     lat: 41.0328664,
     lon: -112.2634014,

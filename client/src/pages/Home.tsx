@@ -405,7 +405,7 @@ function googleMapsDirectionsUrl(r: MountainRange) {
 }
 
 function otherPeakDirectionsUrl(peak: OtherPeak) {
-  return `https://www.google.com/maps/dir/?api=1&destination=${peak.lat},${peak.lon}&travelmode=driving`;
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(peak.trailhead)}&travelmode=driving`;
 }
 
 function createPinElement(color = "#CC0000", badge?: "summited" | "attempted"): HTMLElement {
@@ -1079,6 +1079,7 @@ function OtherPeaksDrawer({
                 </div>
                 <div style={{ color: "#687683", fontSize: 11, marginTop: 6, lineHeight: 1.35 }}>{peak.area}</div>
                 <div style={{ color: "#354B5E", fontSize: 12, fontWeight: 700, marginTop: 9 }}>{peak.character}</div>
+                <div style={{ color: OTHER_PEAK_COLOR, fontSize: 11, fontWeight: 800, marginTop: 8 }}>Primary trailhead · {peak.trailhead}</div>
                 <div style={{ color: "#687683", fontSize: 11, lineHeight: 1.42, marginTop: 4 }}>{peak.accessNote}</div>
                 <div className="flex items-center justify-between gap-2 mt-3">
                   <span style={{ color: OTHER_PEAK_COLOR, fontSize: 11, fontWeight: 800 }}>Locate on map →</span>
@@ -1087,9 +1088,11 @@ function OtherPeaksDrawer({
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(event) => event.stopPropagation()}
-                    style={{ color: "#1A6B3A", fontSize: 11, fontWeight: 800, textDecoration: "none" }}
+                    style={{ display: "inline-flex", alignItems: "center", background: "#1A6B3A", color: "#fff", borderRadius: 6, padding: "4px 8px", fontSize: 11, fontWeight: 800, textDecoration: "none" }}
+                    onMouseEnter={(event) => (event.currentTarget.style.background = "#145229")}
+                    onMouseLeave={(event) => (event.currentTarget.style.background = "#1A6B3A")}
                   >
-                    Directions ↗
+                    Trailhead directions ↗
                   </a>
                 </div>
               </div>
@@ -1249,6 +1252,10 @@ function OtherPeakSidebar({ peak, onClose }: { peak: OtherPeak | null; onClose: 
           <div className="text-sm text-gray-700">{peak.character}</div>
         </div>
         <div>
+          <div className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-0.5">Primary trailhead</div>
+          <div className="text-sm text-gray-700">{peak.trailhead}</div>
+        </div>
+        <div>
           <div className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-0.5">Summit coordinates</div>
           <div className="text-sm text-gray-700 font-mono">{peak.lat.toFixed(4)}° N, {Math.abs(peak.lon).toFixed(4)}° W</div>
         </div>
@@ -1268,7 +1275,7 @@ function OtherPeakSidebar({ peak, onClose }: { peak: OtherPeak | null; onClose: 
           style={{ background: "#1A6B3A", textDecoration: "none" }}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-          Open Summit Location
+          Get Directions to Trailhead
         </a>
       </div>
 
