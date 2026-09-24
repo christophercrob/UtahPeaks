@@ -48,8 +48,8 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
         <div className="px-6 py-5" style={{ background: "#1C2333", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
           <div className="flex items-center gap-3 mb-1">
             <img
-              src="/manus-storage/utah-peaks-logo_8f4509c5.png"
-              alt="Utah mountain emblem"
+              src="/manus-storage/utah-peaks-heritage-logo-512_354899d2.png"
+              alt="Utah Peaks heritage emblem"
               style={{ width: 32, height: 32, objectFit: "contain", flexShrink: 0 }}
             />
             <div>
@@ -496,8 +496,8 @@ function DataTableDrawer({
         >
           <div className="flex items-center gap-3">
             <img
-              src="/manus-storage/utah-peaks-logo_8f4509c5.png"
-              alt="Utah mountain emblem"
+              src="/manus-storage/utah-peaks-heritage-logo-512_354899d2.png"
+              alt="Utah Peaks heritage emblem"
               style={{ width: 28, height: 28, objectFit: "contain", flexShrink: 0 }}
             />
             <div>
@@ -2115,8 +2115,8 @@ export default function Home() {
           {/* Brand */}
           <div className="flex items-center gap-2 shrink-0">
             <img
-              src="/manus-storage/utah-peaks-logo_8f4509c5.png"
-              alt="Utah Peaks"
+              src="/manus-storage/utah-peaks-heritage-logo-512_354899d2.png"
+              alt="Utah Peaks heritage emblem"
               style={{ width: 34, height: 34, objectFit: "contain", flexShrink: 0 }}
             />
             <div>
@@ -2134,9 +2134,9 @@ export default function Home() {
             <button
               onClick={() => { setWurlTableOpen(false); setOtherPeaksOpen(false); setTableOpen((open) => !open); }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
-              style={{ background: "#FFFFFF", color: OTHER_PEAK_COLOR, border: peakListModalOpen ? "2px solid #5D9ED1" : "1px solid #A4C6DD", boxShadow: peakListModalOpen ? "0 0 0 1px rgba(93,158,209,0.2)" : undefined }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#E7F3FB")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "#FFFFFF")}
+              style={{ background: peakListModalOpen ? "rgba(192,82,42,0.85)" : "rgba(255,255,255,0.10)", color: peakListModalOpen ? "#fff" : "rgba(238,232,220,0.8)", border: peakListModalOpen ? "1px solid rgba(255,185,145,0.38)" : "1px solid rgba(255,255,255,0.15)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = peakListModalOpen ? "#C0522A" : "rgba(255,255,255,0.18)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = peakListModalOpen ? "rgba(192,82,42,0.85)" : "rgba(255,255,255,0.10)")}
               aria-pressed={peakListModalOpen}
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -2148,13 +2148,12 @@ export default function Home() {
               onClick={toggleOtherPeaks}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
               style={{
-                background: "#FFFFFF",
-                color: OTHER_PEAK_COLOR,
-                border: otherPeaksVisible ? "2px solid #5D9ED1" : "1px solid #A4C6DD",
-                boxShadow: otherPeaksVisible ? "0 0 0 1px rgba(93,158,209,0.2)" : undefined,
+                background: otherPeaksVisible ? OTHER_PEAK_COLOR : "rgba(255,255,255,0.10)",
+                color: otherPeaksVisible ? "#fff" : "rgba(238,232,220,0.8)",
+                border: otherPeaksVisible ? "1px solid rgba(193,220,241,0.4)" : "1px solid rgba(255,255,255,0.15)",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#E7F3FB")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "#FFFFFF")}
+              onMouseEnter={(e) => (e.currentTarget.style.background = otherPeaksVisible ? OTHER_PEAK_COLOR : "rgba(255,255,255,0.18)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = otherPeaksVisible ? OTHER_PEAK_COLOR : "rgba(255,255,255,0.10)")}
               title={otherPeaksVisible ? "Hide Other Peaks markers" : "Show Other Peaks markers"}
               aria-pressed={otherPeaksVisible}
             >
@@ -2251,7 +2250,7 @@ export default function Home() {
             <button
               onClick={() => { setWurlTableOpen(false); setOtherPeaksOpen(false); setTableOpen((open) => !open); setMenuOpen(false); }}
               className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
-              style={{ background: "#FFFFFF", color: OTHER_PEAK_COLOR, border: peakListModalOpen ? "2px solid #5D9ED1" : "1px solid #A4C6DD", boxShadow: peakListModalOpen ? "0 0 0 1px rgba(93,158,209,0.2)" : undefined }}
+              style={{ background: peakListModalOpen ? "rgba(192,82,42,0.85)" : "rgba(255,255,255,0.08)", color: peakListModalOpen ? "#fff" : "rgba(238,232,220,0.9)", border: peakListModalOpen ? "1px solid rgba(255,185,145,0.38)" : "1px solid rgba(255,255,255,0.12)" }}
               aria-pressed={peakListModalOpen}
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -2263,10 +2262,9 @@ export default function Home() {
               onClick={() => { toggleOtherPeaks(); setMenuOpen(false); }}
               className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-colors"
               style={{
-                background: "#FFFFFF",
-                color: OTHER_PEAK_COLOR,
-                border: otherPeaksVisible ? "2px solid #5D9ED1" : "1px solid #A4C6DD",
-                boxShadow: otherPeaksVisible ? "0 0 0 1px rgba(93,158,209,0.2)" : undefined,
+                background: otherPeaksVisible ? OTHER_PEAK_COLOR : "rgba(255,255,255,0.08)",
+                color: otherPeaksVisible ? "#fff" : "rgba(238,232,220,0.9)",
+                border: otherPeaksVisible ? "1px solid rgba(193,220,241,0.4)" : "1px solid rgba(255,255,255,0.12)",
               }}
               aria-pressed={otherPeaksVisible}
             >
