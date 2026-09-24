@@ -34,3 +34,10 @@
 
 - [x] Replace hyphenated React SVG property names in the ski toggle controls.
 - [x] Verify rendered SVG attributes, production build, and save a checkpoint.
+
+## Ski Layer Refinement
+
+- [x] Replace the custom skier drawing with the filled Material Symbols downhill-skiing pictogram.
+- [x] Align ski resort names to the right of their markers.
+- [x] Add the private Wasatch Peaks Ranch ski resort from its official Morgan County address.
+- [x] Verify the refined layer and save a checkpoint.

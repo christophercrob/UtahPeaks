@@ -452,11 +452,7 @@ function createSkiResortPinElement(): HTMLElement {
   const div = document.createElement("div");
   div.style.cssText = "position:relative;width:22px;height:22px;cursor:pointer;filter:drop-shadow(0 2px 2px rgba(8,47,73,0.32));";
   div.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
-      <circle cx="11" cy="11" r="10" fill="${SKI_RESORT_COLOR}" stroke="rgba(255,255,255,0.96)" stroke-width="1.5"/>
-      <circle cx="12.2" cy="5.7" r="2" fill="white"/>
-      <path d="M10.4 8.1 8.6 12.4l3.6 1.2 2.9 2.1M10.7 9.4l3.4 1.6 2.2-2.4M6.1 16.1l9.8 2.3M7.5 17.8l8.9-3.1" fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.45"/>
-    </svg>
+    <span style="display:grid;place-items:center;width:22px;height:22px;border-radius:999px;background:${SKI_RESORT_COLOR};border:1.5px solid rgba(255,255,255,0.96);box-sizing:border-box;color:#fff;font-family:'Material Symbols Rounded';font-size:16px;font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 24;">downhill_skiing</span>
   `;
   return div;
 }
@@ -1867,7 +1863,7 @@ export default function Home() {
       labelEl.style.cssText = `
         font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:800;letter-spacing:0.01em;
         color:${SKI_RESORT_COLOR};white-space:nowrap;line-height:1.2;pointer-events:none;
-        transform:translate(24px, -20px);
+        transform:translate(24px, -12px);
         text-shadow:
           0 0 3px #fff, 0 0 6px #fff, 0 0 10px #fff, 0 0 14px #fff,
           1px 1px 0 #fff, -1px -1px 0 #fff,
@@ -2290,9 +2286,7 @@ export default function Home() {
               title={skiResortsVisible ? "Hide Utah ski resorts" : "Show Utah ski resorts"}
               aria-pressed={skiResortsVisible}
             >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" aria-hidden="true">
-                <circle cx="13" cy="4.8" r="2" fill="currentColor" stroke="none"/><path d="m11.4 8.1-2.2 5.2 4.3 1.3 3.4 2.5m-4.8-7.3 4.2 2 2.6-2.8M5.6 19l12.7 3M7.1 21l11.6-4" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <span className="material-symbols-rounded text-[13px]" aria-hidden="true">downhill_skiing</span>
               {skiResortsVisible ? "Ski Resorts: On" : "Ski Resorts"}
             </button>
             <button
@@ -2412,9 +2406,7 @@ export default function Home() {
               style={{ background: skiResortsVisible ? SKI_RESORT_COLOR : "rgba(255,255,255,0.08)", color: skiResortsVisible ? "#fff" : "rgba(238,232,220,0.9)", border: skiResortsVisible ? "1px solid rgba(165,243,252,0.45)" : "1px solid rgba(255,255,255,0.12)" }}
               aria-pressed={skiResortsVisible}
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" aria-hidden="true">
-                <circle cx="13" cy="4.8" r="2" fill="currentColor" stroke="none"/><path d="m11.4 8.1-2.2 5.2 4.3 1.3 3.4 2.5m-4.8-7.3 4.2 2 2.6-2.8M5.6 19l12.7 3M7.1 21l11.6-4" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <span className="material-symbols-rounded text-[15px]" aria-hidden="true">downhill_skiing</span>
               {skiResortsVisible ? "Ski Resorts: On (tap to hide)" : "Show Ski Resorts"}
             </button>
             <button

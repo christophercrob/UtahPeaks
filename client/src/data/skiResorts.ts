@@ -1,4 +1,4 @@
-// Utah's 15 operating ski resorts, as listed by Ski Utah.
+// Utah's 15 Ski Utah resorts, plus Wasatch Peaks Ranch, a private Morgan County ski resort.
 // Coordinates place each marker at a representative resort access or base-area location.
 
 export const SKI_RESORT_COLOR = "#0E7490";
@@ -25,5 +25,6 @@ export const UTAH_SKI_RESORTS: SkiResort[] = [
   { id: "snowbird", name: "Snowbird", lat: 40.5665, lon: -111.6523 },
   { id: "solitude", name: "Solitude", lat: 40.6231058, lon: -111.59763 },
   { id: "sundance", name: "Sundance", lat: 40.390898, lon: -111.577661 },
+  { id: "wasatch-peaks-ranch", name: "Wasatch Peaks Ranch", lat: 41.1141452, lon: -111.795713 },
   { id: "woodward-park-city", name: "Woodward Park City", lat: 40.7547751, lon: -111.5858869 },
 ];
