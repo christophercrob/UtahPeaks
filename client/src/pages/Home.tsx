@@ -10,6 +10,7 @@ import React from "react";
 import { MapView } from "@/components/Map";
 import { MOUNTAIN_RANGES, type MountainRange } from "@/data/ranges";
 import { WURL_CENTER, WURL_COLOR, WURL_PEAKS, WURL_ZOOM, type WurlPeak } from "@/data/wurl";
+import { WURL_ROUTE_DIRECTION, WURL_ROUTE_DISTANCE_MI, WURL_ROUTE_PATH } from "@/data/wurlRoute";
 import { OTHER_PEAK_COLOR, OTHER_PEAK_GROUPS, OTHER_PEAKS, type OtherPeak } from "@/data/otherPeaks";
 import { PROTECTED_AREA_COLORS, PROTECTED_AREA_SOURCES, type ProtectedAreaKind } from "@/data/protectedAreas";
 
@@ -983,7 +984,7 @@ function OtherPeaksDrawer({
                   <div>
                     <div style={{ color: WURL_COLOR, fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 4 }}>Central Wasatch route group</div>
                     <div style={{ color: "#392258", fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 700 }}>Wasatch Ultimate Ridge Linkup</div>
-                    <div style={{ color: "#705B85", fontSize: 12, lineHeight: 1.42, marginTop: 4 }}>A dedicated, advanced 17-summit Little Cottonwood Canyon linkup. Purple pins identify its route-specific summits.</div>
+                    <div style={{ color: "#705B85", fontSize: 12, lineHeight: 1.42, marginTop: 4 }}>A dedicated, advanced 17-summit Little Cottonwood Canyon linkup. Purple pins and a {WURL_ROUTE_DISTANCE_MI}-mile reference line show the {WURL_ROUTE_DIRECTION} route; either direction is valid.</div>
                   </div>
                   <button
                     type="button"
@@ -992,7 +993,7 @@ function OtherPeaksDrawer({
                     style={{ background: wurlVisible ? WURL_COLOR : "#fff", color: wurlVisible ? "#fff" : WURL_COLOR, border: `1px solid ${WURL_COLOR}` }}
                     aria-pressed={wurlVisible}
                   >
-                    {wurlVisible ? "WURL Pins: On" : "WURL Pins: Off"}
+                    {wurlVisible ? "WURL Layer: On" : "WURL Layer: Off"}
                   </button>
                 </div>
               </div>
@@ -1361,6 +1362,7 @@ export default function Home() {
   const otherPeakMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const wurlMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const wurlLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const wurlRouteLineRef = useRef<google.maps.Polyline | null>(null);
 
   // ── Fire layer state ──
   const [fireLayerOn, setFireLayerOn] = useState(false);
@@ -1755,6 +1757,30 @@ export default function Home() {
       otherPeakMarkersRef.current = [];
     };
   }, [mapReady, otherPeaksVisible, handleSelectOtherPeak]);
+
+  // Render the common WURL reference track together with its route-specific
+  // summits. The line is deliberately direction-neutral, not turn-by-turn guidance.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady || !wurlVisible) return;
+
+    const routeLine = new google.maps.Polyline({
+      path: WURL_ROUTE_PATH,
+      strokeColor: WURL_COLOR,
+      strokeOpacity: 0.92,
+      strokeWeight: 4,
+      clickable: false,
+      geodesic: false,
+      map,
+      zIndex: 12,
+    });
+    wurlRouteLineRef.current = routeLine;
+
+    return () => {
+      routeLine.setMap(null);
+      if (wurlRouteLineRef.current === routeLine) wurlRouteLineRef.current = null;
+    };
+  }, [mapReady, wurlVisible]);
 
   // Render the curated WURL major peaks only after the WURL control is activated.
   useEffect(() => {
