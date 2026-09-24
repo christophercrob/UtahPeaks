@@ -92,3 +92,9 @@
 - [x] Move primary peak labels slightly closer to their red pins.
 - [x] Force transparent backgrounds and consistent navy-with-white-outline styling for every Other Peaks label.
 - [x] Verify the rendered label styles and save a checkpoint.
+
+## Centered Primary Peak Labels
+
+- [x] Center the primary peak-name and range-name stack over each red pin.
+- [x] Increase label type slightly while preserving the loaded Source Sans 700 face and disabling synthetic weight.
+- [x] Verify rendered geometry and font styles, then save a checkpoint.

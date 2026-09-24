@@ -2184,16 +2184,17 @@ export default function Home() {
       });
       peakMarker.addListener("click", () => setSelected(r));
 
-      // Peak name + range name label (two lines, to the right of pin)
+      // Peak name + range name label (two lines, centered above the red pin)
       const peakLabelEl = document.createElement("div");
       peakLabelEl.style.cssText = `
-        display:flex;flex-direction:column;align-items:flex-start;gap:1px;
+        display:flex;flex-direction:column;align-items:center;gap:1px;
         pointer-events:none;
-        transform:translate(22px, -32px);
+        text-align:center;
+        transform:translate(0, -32px);
       `;
       const textSpan = document.createElement("span");
       textSpan.style.cssText = `
-        font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:0.01em;
+        font-family:'Source Sans 3',sans-serif;font-size:12.5px;font-weight:700;font-synthesis:none;letter-spacing:0.01em;
         color:#111;white-space:nowrap;line-height:1.2;
         text-shadow:
           0 0 2px #fff, 0 0 4px #fff,
@@ -2206,7 +2207,7 @@ export default function Home() {
 
       const rangeSpan = document.createElement("span");
       rangeSpan.style.cssText = `
-        font-family:'Source Sans 3',sans-serif;font-size:10.5px;font-weight:600;
+        font-family:'Source Sans 3',sans-serif;font-size:11px;font-weight:600;font-synthesis:none;
         color:${r.color};white-space:nowrap;line-height:1.2;
         text-shadow:0 0 2px #fff,0 0 4px #fff,1px 1px 0 #fff,-1px -1px 0 #fff;
       `;
