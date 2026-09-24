@@ -1543,43 +1543,66 @@ export default function Home() {
 
     try {
       const fetchSource = async (source: (typeof PROTECTED_AREA_SOURCES)[number]) => {
-        const params = new URLSearchParams({
-          where: source.where,
-          outFields: "*",
-          returnGeometry: "true",
-          outSR: "4326",
-          geometryPrecision: "5",
-          maxAllowableOffset: "0.001",
-          f: "json",
-        });
-        const response = await fetch(`${source.endpoint}?${params.toString()}`);
-        if (!response.ok) throw new Error(`${source.shortName}: HTTP ${response.status}`);
-        const json = await response.json();
-        if (json.error) throw new Error(`${source.shortName}: ${json.error.message ?? "API error"}`);
+        try {
+          const params = new URLSearchParams({
+            where: source.where,
+            outFields: "*",
+            returnGeometry: "true",
+            outSR: "4326",
+            geometryPrecision: "5",
+            maxAllowableOffset: "0.001",
+            f: "json",
+          });
+          const response = await fetch(`${source.endpoint}?${params.toString()}`);
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const json = await response.json();
+          if (json.error) throw new Error(json.error.message ?? "API error");
 
-        return (json.features ?? []).map((feature: EsriBoundaryFeature) => {
-          const rawName = String(feature.attributes?.[source.nameField] ?? source.name).trim();
-          const name = source.nameOverrides?.[rawName] ?? rawName;
-          return {
-            name,
-            kind: source.kind,
-            jurisdiction: source.jurisdiction,
-            sourceLabel: source.sourceLabel,
-            sourceUrl: source.sourceUrl,
-            geometryNote: source.geometryNote,
-            geometry: feature.geometry,
-          } satisfies ProtectedAreaFeature;
-        });
+          return (json.features ?? []).map((feature: EsriBoundaryFeature) => {
+            const rawName = String(feature.attributes?.[source.nameField] ?? source.name).trim();
+            const name = source.nameOverrides?.[rawName] ?? rawName;
+            return {
+              name,
+              kind: source.kind,
+              jurisdiction: source.jurisdiction,
+              sourceLabel: source.sourceLabel,
+              sourceUrl: source.sourceUrl,
+              geometryNote: source.geometryNote,
+              geometry: feature.geometry,
+            } satisfies ProtectedAreaFeature;
+          });
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : "Unknown error";
+          throw new Error(`${source.shortName}: ${msg}`);
+        }
       };
 
-      const results = await Promise.all(PROTECTED_AREA_SOURCES.map(fetchSource));
-      const features = results.flat().filter((feature) => feature.geometry?.rings?.length);
-      if (!features.length) throw new Error("No protected-area boundaries returned");
+      // A third-party GIS service can be temporarily unavailable. Preserve the
+      // remaining overlay instead of letting one rejected request hide every area.
+      const results = await Promise.allSettled(PROTECTED_AREA_SOURCES.map(fetchSource));
+      const failureMessages = results.flatMap((result) =>
+        result.status === "rejected"
+          ? [result.reason instanceof Error ? result.reason.message : "Unknown source failure"]
+          : [],
+      );
+      const features = results
+        .flatMap((result) => (result.status === "fulfilled" ? result.value : []))
+        .filter((feature) => feature.geometry?.rings?.length);
+      if (!features.length) {
+        throw new Error(failureMessages.join("; ") || "No protected-area boundaries returned");
+      }
       protectedAreasDataRef.current = features;
+      if (failureMessages.length) {
+        setProtectedAreasError(
+          "Some protected areas are temporarily unavailable. Other boundaries are shown.",
+        );
+      }
       return features;
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Unknown error";
-      setProtectedAreasError(`Could not load protected areas: ${msg}`);
+      console.warn("Protected-area boundary load failed", err);
+      setProtectedAreasError("Could not load protected areas. Please try again.");
+      // Never leave the control active when no polygons are available to show.
+      setProtectedAreasOn(false);
       return [];
     } finally {
       setProtectedAreasLoading(false);
