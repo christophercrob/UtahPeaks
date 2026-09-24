@@ -730,15 +730,16 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
 ];
 
 // ── Markagunt Plateau ─────────────────────────────────────────────────────────
-// Highest peak: Brian Head, 11,307 ft (37.6946°N, 112.8483°W)
+// Highest peak: Brian Head, 11,307 ft (37.681166033°N, 112.831243225°W)
+// Summit coordinate: user-supplied Geohack link citing NGS.
 // Trailhead: Brian Head Peak Trail (off UT-143)
 MOUNTAIN_RANGES.push({
   range: "Markagunt Plateau",
   peak: "Brian Head Peak",
   elevation: "11,307 ft",
   elevationFt: 11307,
-  lat: 37.6946,
-  lon: -112.8483,
+  lat: 37.681166033,
+  lon: -112.831243225,
   trailhead: "Brian Head Peak Trailhead (UT-143)",
   trailheadLat: 37.6980,
   trailheadLon: -112.8520,

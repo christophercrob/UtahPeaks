@@ -41,3 +41,8 @@
 - [x] Align ski resort names to the right of their markers.
 - [x] Add the private Wasatch Peaks Ranch ski resort from its official Morgan County address.
 - [x] Verify the refined layer and save a checkpoint.
+
+## Brian Head Peak Coordinate Correction
+
+- [x] Replace the mapped summit coordinate with the supplied NGS-linked location.
+- [x] Validate the updated marker and save a checkpoint.
