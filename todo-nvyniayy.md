@@ -98,3 +98,9 @@
 - [x] Center the primary peak-name and range-name stack over each red pin.
 - [x] Increase label type slightly while preserving the loaded Source Sans 700 face and disabling synthetic weight.
 - [x] Verify rendered geometry and font styles, then save a checkpoint.
+
+## Wasatch Peaks Ranch Marker Adjustment
+
+- [x] Calculate a 0.75-mile west-southwest geodesic offset from the current marker coordinate.
+- [x] Update the resort marker to the resulting location.
+- [x] Validate the map data and save a checkpoint.
