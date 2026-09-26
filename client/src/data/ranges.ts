@@ -745,6 +745,35 @@ MOUNTAIN_RANGES.push({
   trailheadLon: -112.8520,
   gain: "~700 ft (from ski resort base road)",
   color: "#5D6D7E",
+  summited: true,
+  summitDate: "September 26, 2026",
+  hikeNote: "A clear September morning on Brian Head Peak — Utah's 11,307-foot high point on the Markagunt Plateau. The short approach leads past the overlook sign and stone shelter to expansive views over forested ridges and early autumn color.",
+  trailheadPhoto: {
+    url: "/manus-storage/20260926_092733_f8e2b675.jpg",
+    caption: "Vista Point sign at the Brian Head Peak approach — September 26, 2026",
+  },
+  summitPhoto: {
+    url: "/manus-storage/20260926_094040_f34715c2.jpg",
+    caption: "At the summit of Brian Head Peak — September 26, 2026",
+  },
+  extraPhotos: [
+    {
+      url: "/manus-storage/20260926_093519_8e0a5d63.jpg",
+      caption: "Brian Head Peak Overlook and the 11,307-foot elevation sign",
+    },
+    {
+      url: "/manus-storage/20260926_093912_062c1239.jpg",
+      caption: "Stone shelter on the Brian Head Peak summit",
+    },
+    {
+      url: "/manus-storage/20260926_094146_a26ac90a.jpg",
+      caption: "Autumn color and the Brian Head area from the summit",
+    },
+    {
+      url: "/manus-storage/20260926_094152_38670046.jpg",
+      caption: "Looking across the Markagunt Plateau from Brian Head Peak",
+    },
+  ],
   polygon: [
     // Approximate boundary: Markagunt Plateau between Cedar City (NW), Panguitch (NE),
     // Long Valley (E), Zion NP (S), and Cedar Valley (W)
@@ -758,6 +787,4 @@ MOUNTAIN_RANGES.push({
     [37.850, -112.900],  // North edge
     [37.950, -112.650],  // back to start
   ],
-  hikeNote: "The Markagunt Plateau sits above Cedar City at over 10,000 feet, offering sweeping views of Zion Canyon to the south and the Cedar Valley to the west. Brian Head Peak is the highest point in the region and one of Utah's most accessible high summits — the ski resort road brings you within a short hike of the top.",
-  summitPhoto: { url: "/manus-storage/markagunt_zion_27b24df0_238bd347.jpg", caption: "Looking south from the Markagunt Plateau — Zion NP visible on the horizon" },
 });
