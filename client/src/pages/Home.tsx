@@ -179,7 +179,41 @@ function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onC
   const isAttempted = range.attempted === true && !isSummited;
   const hasPhotos = !!(range.trailheadPhoto || range.summitPhoto);
   const hasExtra = !!(range.extraPhotos?.length || range.videoUrl);
-  const [lightbox, setLightbox] = useState<{ url: string; caption?: string } | null>(null);
+  const journalPhotos = [range.trailheadPhoto, range.summitPhoto, ...(range.extraPhotos ?? [])].filter(
+    (photo): photo is { url: string; caption?: string } => Boolean(photo),
+  );
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const lightbox = lightboxIndex === null ? null : journalPhotos[lightboxIndex] ?? null;
+  const openLightbox = (photo: { url: string; caption?: string }) => {
+    const index = journalPhotos.findIndex((item) => item.url === photo.url);
+    setLightboxIndex(index >= 0 ? index : 0);
+  };
+  const moveLightbox = useCallback((direction: -1 | 1) => {
+    setLightboxIndex((currentIndex) => {
+      if (currentIndex === null || journalPhotos.length < 2) return currentIndex;
+      return (currentIndex + direction + journalPhotos.length) % journalPhotos.length;
+    });
+  }, [journalPhotos.length]);
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        moveLightbox(-1);
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        moveLightbox(1);
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        setLightboxIndex(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [lightboxIndex, moveLightbox]);
 
   return (
     <>
@@ -280,7 +314,7 @@ function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onC
                   src={range.trailheadPhoto.url}
                   alt={`${range.peak} trailhead`}
                   style={{ width: "100%", borderRadius: 8, objectFit: "cover", aspectRatio: "4/3", cursor: "zoom-in" }}
-                  onClick={() => setLightbox(range.trailheadPhoto!)}
+                  onClick={() => openLightbox(range.trailheadPhoto!)}
                 />
                 {range.trailheadPhoto.caption && (
                   <div style={{ fontSize: 11, color: "#888", marginTop: 4 }}>{range.trailheadPhoto.caption}</div>
@@ -294,7 +328,7 @@ function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onC
                   src={range.summitPhoto.url}
                   alt={`${range.peak} summit`}
                   style={{ width: "100%", borderRadius: 8, objectFit: "cover", aspectRatio: "4/3", cursor: "zoom-in" }}
-                  onClick={() => setLightbox(range.summitPhoto!)}
+                  onClick={() => openLightbox(range.summitPhoto!)}
                 />
                 {range.summitPhoto.caption && (
                   <div style={{ fontSize: 11, color: "#888", marginTop: 4 }}>{range.summitPhoto.caption}</div>
@@ -320,7 +354,7 @@ function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onC
                         alt={photo.caption ?? `Photo ${i + 1}`}
                         style={{ width: "100%", borderRadius: 6, objectFit: "cover", aspectRatio: "4/3", display: "block", cursor: "zoom-in" }}
                         title={photo.caption}
-                        onClick={() => setLightbox(photo)}
+                        onClick={() => openLightbox(photo)}
                       />
                     </div>
                   ))}
@@ -384,7 +418,7 @@ function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onC
     {lightbox && (
       <div
         style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(0,0,0,0.93)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 16 }}
-        onClick={() => setLightbox(null)}
+        onClick={() => setLightboxIndex(null)}
       >
         <img
           src={lightbox.url}
@@ -392,13 +426,42 @@ function PeakJournalModal({ range, onClose }: { range: MountainRange | null; onC
           style={{ maxWidth: "min(92vw, 1000px)", maxHeight: "82vh", borderRadius: 10, objectFit: "contain", boxShadow: "0 8px 60px rgba(0,0,0,0.6)" }}
           onClick={(e) => e.stopPropagation()}
         />
+        {journalPhotos.length > 1 && (
+          <>
+            <button
+              type="button"
+              aria-label="Previous photo"
+              onClick={(event) => { event.stopPropagation(); moveLightbox(-1); }}
+              style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", width: 46, height: 46, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.35)", background: "rgba(15,20,28,0.64)", color: "#fff", fontSize: 34, lineHeight: 1, cursor: "pointer", display: "grid", placeItems: "center", transition: "transform 160ms cubic-bezier(0.23,1,0.32,1), background 160ms ease" }}
+              onMouseEnter={(event) => { event.currentTarget.style.background = "rgba(45,58,76,0.92)"; event.currentTarget.style.transform = "translateY(-50%) scale(1.06)"; }}
+              onMouseLeave={(event) => { event.currentTarget.style.background = "rgba(15,20,28,0.64)"; event.currentTarget.style.transform = "translateY(-50%)"; }}
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              aria-label="Next photo"
+              onClick={(event) => { event.stopPropagation(); moveLightbox(1); }}
+              style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", width: 46, height: 46, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.35)", background: "rgba(15,20,28,0.64)", color: "#fff", fontSize: 34, lineHeight: 1, cursor: "pointer", display: "grid", placeItems: "center", transition: "transform 160ms cubic-bezier(0.23,1,0.32,1), background 160ms ease" }}
+              onMouseEnter={(event) => { event.currentTarget.style.background = "rgba(45,58,76,0.92)"; event.currentTarget.style.transform = "translateY(-50%) scale(1.06)"; }}
+              onMouseLeave={(event) => { event.currentTarget.style.background = "rgba(15,20,28,0.64)"; event.currentTarget.style.transform = "translateY(-50%)"; }}
+            >
+              ›
+            </button>
+            <div style={{ position: "absolute", bottom: 18, left: "50%", transform: "translateX(-50%)", borderRadius: 999, background: "rgba(15,20,28,0.72)", color: "rgba(255,255,255,0.85)", padding: "6px 11px", fontSize: 12, fontWeight: 700, letterSpacing: "0.04em" }}>
+              {(lightboxIndex ?? 0) + 1} / {journalPhotos.length}
+            </div>
+          </>
+        )}
         {lightbox.caption && (
           <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, marginTop: 12, textAlign: "center", maxWidth: 600 }}>
             {lightbox.caption}
           </div>
         )}
         <button
-          onClick={() => setLightbox(null)}
+          type="button"
+          aria-label="Close photo viewer"
+          onClick={(event) => { event.stopPropagation(); setLightboxIndex(null); }}
           style={{ position: "absolute", top: 16, right: 20, background: "rgba(255,255,255,0.15)", border: "none", borderRadius: "50%", width: 36, height: 36, color: "#fff", fontSize: 20, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
         >×</button>
       </div>

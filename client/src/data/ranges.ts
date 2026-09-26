@@ -776,6 +776,10 @@ MOUNTAIN_RANGES.push({
       url: "/manus-storage/20260926_094152_38670046.jpg",
       caption: "Looking across the Markagunt Plateau from Brian Head Peak",
     },
+    {
+      url: "/manus-storage/20260926_094138_51661d0b.jpg",
+      caption: "Looking at the top of the Giant Steps ski lift from Brian Head Peak.",
+    },
   ],
   polygon: [
     // Approximate boundary: Markagunt Plateau between Cedar City (NW), Panguitch (NE),
