@@ -748,9 +748,12 @@ MOUNTAIN_RANGES.push({
   summited: true,
   summitDate: "September 26, 2026",
   hikeNote: "A clear September morning on Brian Head Peak — Utah's 11,307-foot high point on the Markagunt Plateau. The access road brings you essentially to the summit, with roughly 75 feet from the mapped access point to the overlook sign and stone shelter, plus expansive views over forested ridges and early autumn color.",
+  accessNotes: [
+    "Look for the Vista Point sign to turn east off Utah 143; it marks the approach to the Brian Head Peak near-summit access point.",
+  ],
   trailheadPhoto: {
-    url: "/manus-storage/20260926_092733_f8e2b675.jpg",
-    caption: "Vista Point sign at the Brian Head Peak approach — September 26, 2026",
+    url: "/manus-storage/20260926_093519_8e0a5d63.jpg",
+    caption: "Brian Head Peak trailhead and overlook, marked with the 11,307-foot elevation sign — September 26, 2026",
   },
   summitPhoto: {
     url: "/manus-storage/20260926_094040_f34715c2.jpg",
@@ -758,8 +761,8 @@ MOUNTAIN_RANGES.push({
   },
   extraPhotos: [
     {
-      url: "/manus-storage/20260926_093519_8e0a5d63.jpg",
-      caption: "Brian Head Peak Overlook and the 11,307-foot elevation sign",
+      url: "/manus-storage/20260926_092733_f8e2b675.jpg",
+      caption: "Vista Point sign — look for this east turn off Utah 143",
     },
     {
       url: "/manus-storage/20260926_093912_062c1239.jpg",
