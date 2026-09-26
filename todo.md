@@ -8,3 +8,9 @@
 ## Verification Notes
 
 The new navy Utah silhouette with violet snow-capped peaks is visible against the dark header at both desktop and mobile widths. Its square silhouette remains clear beside the site title and is configured as the browser favicon and Apple touch icon.
+
+## Reusable Skill Packaging
+
+- [x] Define the reusable brand-asset, favicon, responsive-review, and publication workflow.
+- [x] Create the skill package and its concise procedural guide.
+- [x] Validate and deliver the reusable skill.

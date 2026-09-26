@@ -1994,20 +1994,26 @@ export default function Home() {
 
       const labelEl = document.createElement("div");
       labelEl.style.cssText = `
+        display:flex;align-items:center;justify-content:center;
         font-family:'Source Sans 3',sans-serif;font-size:10.5px;font-weight:800;
-        color:#43236B;white-space:nowrap;line-height:1.2;pointer-events:none;
-        transform:translate(24px, -23px);
-        text-shadow:0 0 3px #fff,0 0 6px #fff,0 0 10px #fff,1px 1px 0 #fff,-1px -1px 0 #fff;
+        color:#43236B;white-space:nowrap;line-height:1.2;text-align:center;pointer-events:auto;cursor:pointer;
+        background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;
+        transform:translate(0, -42px);
+        text-shadow:0 0 3px #fff,0 0 6px #fff,0 0 10px #fff,1px 1px 0 #fff,-1px -1px 0 #fff!important;
       `;
+      labelEl.dataset.mapLabelBaseSize = "10.5";
       labelEl.textContent = peak.name;
       const label = new google.maps.marker.AdvancedMarkerElement({
         map,
         position: { lat: peak.lat, lng: peak.lon },
         content: labelEl,
+        title: `${peak.name} — ${Math.round(peak.elevationFt).toLocaleString()} ft (WURL major peak)`,
         zIndex: 14,
       });
+      label.addListener("click", () => handleSelectWurlPeak(peak));
       wurlLabelsRef.current.push(label);
     });
+    syncMapLabelSizesAfterRender(map);
   }, [wurlVisible, handleSelectWurlPeak]);
 
   // Fetch fire perimeters once (lazy, on first toggle-on)
