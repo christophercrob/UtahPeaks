@@ -1,7 +1,7 @@
 /**
  * Wire Pass & Buckskin Gulch — Southern Utah trail reference
  *
- * Purple reference geometry includes the Wire Pass access from its trailhead
+ * Navy reference geometry matches the Other Peaks treatment and includes the Wire Pass access from its trailhead
  * and the entire mapped 17+ mile Buckskin Gulch corridor. This is a visual
  * reference only, not turn-by-turn navigation. Wire Pass mileage is verified
  * against the BLM route description; path geometry is simplified from
@@ -19,7 +19,7 @@ export interface TrailRoute {
   pathSegments: Array<Array<[number, number]>>;
 }
 
-export const SOUTHERN_UTAH_TRAIL_COLOR = "#7C3AED";
+export const SOUTHERN_UTAH_TRAIL_COLOR = "#123B5D";
 
 export const WIRE_PASS_BUCKSKIN_ROUTE: TrailRoute = {
   id: "wire-pass-buckskin-gulch",

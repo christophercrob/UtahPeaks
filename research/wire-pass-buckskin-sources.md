@@ -7,4 +7,4 @@
   - Used solely to trace a simplified visual reference line for the full mapped Buckskin Gulch corridor in the app.
   - The full Buckskin Gulch path segment measures approximately **17.37 miles** in the retrieved geometry.
 
-The site display rounds this to **17+ miles** and labels Wire Pass separately as **1.7 miles one way**.
+The site display rounds this to **17+ miles**, labels Wire Pass separately as **1.7 miles one way**, and uses the navy Other Peaks color treatment for the route.

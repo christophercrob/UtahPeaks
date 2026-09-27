@@ -982,6 +982,7 @@ function OtherPeaksDrawer({
   open,
   onClose,
   onSelectPeak,
+  onSelectTrailRoute,
   onSelectWurlPeak,
   wurlVisible,
   onToggleWurl,
@@ -990,6 +991,7 @@ function OtherPeaksDrawer({
   open: boolean;
   onClose: () => void;
   onSelectPeak: (peak: OtherPeak) => void;
+  onSelectTrailRoute: (route: TrailRoute) => void;
   onSelectWurlPeak: (peak: WurlPeak) => void;
   wurlVisible: boolean;
   onToggleWurl: () => void;
@@ -997,6 +999,7 @@ function OtherPeaksDrawer({
 }) {
   const [group, setGroup] = useState<string>("All areas");
   const isWurlGroup = group === WURL_GROUP;
+  const isSouthernUtahGroup = group === "Southern Utah";
   const visiblePeaks = group === "All areas"
     ? OTHER_PEAKS
     : OTHER_PEAKS.filter((peak) => peak.group === group);
@@ -1045,7 +1048,7 @@ function OtherPeaksDrawer({
                 Other Peaks
               </div>
               <div style={{ color: "rgba(232,244,255,0.72)", fontSize: 11 }}>
-                {OTHER_PEAKS.length} independent summits · plus the WURL route group
+                {OTHER_PEAKS.length} independent summits · plus curated route cards
               </div>
             </div>
           </div>
@@ -1165,6 +1168,48 @@ function OtherPeaksDrawer({
             </>
           ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {isSouthernUtahGroup && (
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => { onSelectTrailRoute(WIRE_PASS_BUCKSKIN_ROUTE); onClose(); }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    onSelectTrailRoute(WIRE_PASS_BUCKSKIN_ROUTE);
+                    onClose();
+                  }
+                }}
+                className="text-left rounded-xl p-4 transition-transform active:scale-[0.98]"
+                style={{ background: "#FFFDF9", border: "1px solid rgba(18,59,93,0.32)", boxShadow: "0 2px 9px rgba(25,38,52,0.07)" }}
+                onMouseEnter={(event) => { event.currentTarget.style.borderColor = "rgba(18,59,93,0.60)"; event.currentTarget.style.boxShadow = "0 6px 18px rgba(18,59,93,0.15)"; }}
+                onMouseLeave={(event) => { event.currentTarget.style.borderColor = "rgba(18,59,93,0.32)"; event.currentTarget.style.boxShadow = "0 2px 9px rgba(25,38,52,0.07)"; }}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <div style={{ color: OTHER_PEAK_COLOR, fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 3 }}>Southern Utah · Trail route</div>
+                    <div style={{ color: "#263442", fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 700, lineHeight: 1.15 }}>{WIRE_PASS_BUCKSKIN_ROUTE.name}</div>
+                  </div>
+                  <div className="flex-shrink-0 rounded-md px-2 py-1" style={{ background: "#E8F0F7", color: OTHER_PEAK_COLOR, fontSize: 11, fontWeight: 800 }}>17+ mi</div>
+                </div>
+                <div style={{ color: "#354B5E", fontSize: 12, fontWeight: 700, marginTop: 9 }}>Distance · {WIRE_PASS_BUCKSKIN_ROUTE.distance}</div>
+                <div style={{ color: OTHER_PEAK_COLOR, fontSize: 11, fontWeight: 800, marginTop: 8 }}>Trailhead · {WIRE_PASS_BUCKSKIN_ROUTE.trailhead}</div>
+                <div className="flex items-center justify-between gap-2 mt-3">
+                  <span style={{ color: OTHER_PEAK_COLOR, fontSize: 11, fontWeight: 800 }}>Locate on map →</span>
+                  <a
+                    href={trailRouteDirectionsUrl(WIRE_PASS_BUCKSKIN_ROUTE)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(event) => event.stopPropagation()}
+                    style={{ display: "inline-flex", alignItems: "center", background: "#1A6B3A", color: "#fff", borderRadius: 6, padding: "4px 8px", fontSize: 11, fontWeight: 800, textDecoration: "none" }}
+                    onMouseEnter={(event) => (event.currentTarget.style.background = "#145229")}
+                    onMouseLeave={(event) => (event.currentTarget.style.background = "#1A6B3A")}
+                  >
+                    Trailhead directions ↗
+                  </a>
+                </div>
+              </div>
+            )}
             {visiblePeaks.map((peak) => (
               <div
                 key={peak.id}
@@ -1218,7 +1263,7 @@ function OtherPeaksDrawer({
         </div>
 
         <div className="px-5 sm:px-6 py-3 text-xs flex-shrink-0" style={{ color: "#65717B", borderTop: "1px solid rgba(0,0,0,0.08)", background: "#EDE8DF" }}>
-          Navy pins mark independent Other Peaks. Purple identifies curated route overlays, including WURL and Wire Pass–Buckskin Gulch.
+          Navy identifies Other Peaks and the Wire Pass–Buckskin Gulch route. Purple is reserved for the WURL route and its 17 Little Cottonwood summits.
         </div>
       </div>
     </>
@@ -1577,6 +1622,7 @@ export default function Home() {
   const wurlLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const wurlRouteLineRef = useRef<google.maps.Polyline | null>(null);
   const southernUtahTrailLinesRef = useRef<google.maps.Polyline[]>([]);
+  const southernUtahTrailLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
 
   // ── Fire layer state ──
   const [fireLayerOn, setFireLayerOn] = useState(false);
@@ -2142,9 +2188,45 @@ export default function Home() {
     });
     southernUtahTrailLinesRef.current = lines;
 
+    // Use the same unboxed navy label treatment as Other Peaks, while keeping
+    // this trail-only route free of a summit/peak pin.
+    const labelEl = document.createElement("div");
+    labelEl.style.cssText = `
+      display:flex;flex-direction:column;align-items:flex-start;gap:1px;
+      pointer-events:auto;cursor:pointer;background:transparent!important;border:0!important;
+      border-radius:0!important;box-shadow:none!important;
+      transform:translate(calc(50% + 14px), -7px);
+    `;
+    const routeName = document.createElement("span");
+    routeName.style.cssText = `
+      font-family:'Source Sans 3',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:0.01em;
+      color:${WIRE_PASS_BUCKSKIN_ROUTE.color}!important;white-space:nowrap;line-height:1.2;
+      text-shadow:
+        0 0 2px #fff, 0 0 3px #fff,
+        1px 1px 0 #fff, -1px -1px 0 #fff,
+        1px -1px 0 #fff, -1px 1px 0 #fff!important;
+      background:transparent!important;border:0!important;border-radius:0!important;
+      box-shadow:none!important;padding:0;
+    `;
+    routeName.dataset.mapLabelBaseSize = "11.5";
+    routeName.textContent = WIRE_PASS_BUCKSKIN_ROUTE.name;
+    labelEl.appendChild(routeName);
+    const routeLabel = new google.maps.marker.AdvancedMarkerElement({
+      map,
+      position: { lat: 37.0075, lng: -111.931 },
+      content: labelEl,
+      title: `${WIRE_PASS_BUCKSKIN_ROUTE.name} · Southern Utah trail`,
+      zIndex: 12,
+    });
+    routeLabel.addListener("click", () => handleSelectTrailRoute(WIRE_PASS_BUCKSKIN_ROUTE));
+    southernUtahTrailLabelsRef.current = [routeLabel];
+    syncMapLabelSizesAfterRender(map);
+
     return () => {
       lines.forEach((line) => line.setMap(null));
       if (southernUtahTrailLinesRef.current === lines) southernUtahTrailLinesRef.current = [];
+      routeLabel.map = null;
+      if (southernUtahTrailLabelsRef.current[0] === routeLabel) southernUtahTrailLabelsRef.current = [];
     };
   }, [mapReady, handleSelectTrailRoute]);
 
@@ -2830,6 +2912,7 @@ export default function Home() {
         open={otherPeaksOpen}
         onClose={() => setOtherPeaksOpen(false)}
         onSelectPeak={handleSelectOtherPeak}
+        onSelectTrailRoute={handleSelectTrailRoute}
         onSelectWurlPeak={handleSelectWurlPeak}
         wurlVisible={wurlVisible}
         onToggleWurl={toggleWurl}
