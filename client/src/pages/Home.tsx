@@ -14,6 +14,7 @@ import { WURL_ROUTE_DIRECTION, WURL_ROUTE_DISTANCE_MI, WURL_ROUTE_PATH } from "@
 import { OTHER_PEAK_COLOR, OTHER_PEAK_GROUPS, OTHER_PEAKS, type OtherPeak } from "@/data/otherPeaks";
 import { SKI_RESORT_COLOR, UTAH_SKI_RESORTS } from "@/data/skiResorts";
 import { PROTECTED_AREA_COLORS, PROTECTED_AREA_SOURCES, type ProtectedAreaKind } from "@/data/protectedAreas";
+import { WIRE_PASS_BUCKSKIN_ROUTE, type TrailRoute } from "@/data/southernUtahTrail";
 
 const WURL_GROUP = "WURL · Central Wasatch";
 const SORTED_MOUNTAIN_RANGES = [...MOUNTAIN_RANGES].sort((a, b) => b.elevationFt - a.elevationFt);
@@ -494,6 +495,10 @@ function googleMapsDirectionsUrl(r: MountainRange) {
 
 function otherPeakDirectionsUrl(peak: OtherPeak) {
   return peak.trailheadDirectionsUrl ?? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(peak.trailhead)}&travelmode=driving`;
+}
+
+function trailRouteDirectionsUrl(route: TrailRoute) {
+  return `https://www.google.com/maps/dir/?api=1&destination=${route.trailheadLat},${route.trailheadLon}&travelmode=driving`;
 }
 
 function createPinElement(color = "#CC0000", badge?: "summited" | "attempted"): HTMLElement {
@@ -1213,7 +1218,7 @@ function OtherPeaksDrawer({
         </div>
 
         <div className="px-5 sm:px-6 py-3 text-xs flex-shrink-0" style={{ color: "#65717B", borderTop: "1px solid rgba(0,0,0,0.08)", background: "#EDE8DF" }}>
-          Navy pins mark independent Other Peaks. Purple is reserved for the WURL route and its 17 Little Cottonwood summits.
+          Navy pins mark independent Other Peaks. Purple identifies curated route overlays, including WURL and Wire Pass–Buckskin Gulch.
         </div>
       </div>
     </>
@@ -1330,6 +1335,49 @@ function DetailSidebar({
   );
 }
 
+function TrailRouteSidebar({ route, onClose }: { route: TrailRoute | null; onClose: () => void }) {
+  if (!route) return null;
+
+  return (
+    <div
+      className="absolute top-16 right-3 z-20 w-72 rounded-xl shadow-2xl overflow-hidden"
+      style={{ background: "#F5F0E8", border: "1px solid rgba(0,0,0,0.12)", fontFamily: "var(--font-body)", animation: "slideIn 0.22s cubic-bezier(0.23,1,0.32,1)" }}
+    >
+      <div className="px-4 py-3 flex items-start justify-between gap-2" style={{ background: route.color }}>
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-widest mb-0.5" style={{ color: "rgba(255,255,255,0.75)" }}>{route.group}</div>
+          <div className="text-lg font-bold leading-tight" style={{ color: "#fff", fontFamily: "var(--font-display)" }}>{route.name}</div>
+        </div>
+        <button onClick={onClose} className="mt-0.5 text-white/70 hover:text-white transition-colors text-xl leading-none" aria-label="Close trail route details">×</button>
+      </div>
+
+      <div className="px-4 py-4 space-y-3">
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-0.5">Trailhead</div>
+          <div className="text-sm text-gray-700">{route.trailhead}</div>
+        </div>
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-0.5">Distance</div>
+          <div className="text-sm text-gray-700">{route.distance}</div>
+        </div>
+      </div>
+
+      <div className="px-4 pb-4">
+        <a
+          href={trailRouteDirectionsUrl(route)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 w-full py-2 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          style={{ background: "#1A6B3A", textDecoration: "none" }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          Get Directions to Trailhead
+        </a>
+      </div>
+    </div>
+  );
+}
+
 function OtherPeakSidebar({ peak, onClose }: { peak: OtherPeak | null; onClose: () => void }) {
   if (!peak) return null;
 
@@ -1401,10 +1449,14 @@ function Legend({
   selected,
   onSelect,
   onOpenJournal,
+  trailRoute,
+  onSelectTrailRoute,
 }: {
   selected: MountainRange | null;
   onSelect: (r: MountainRange) => void;
   onOpenJournal: (r: MountainRange) => void;
+  trailRoute: TrailRoute;
+  onSelectTrailRoute: (route: TrailRoute) => void;
 }) {
   const isMobile = useIsMobile();
   const [collapsed, setCollapsed] = useState(() => window.innerWidth < 768);
@@ -1439,8 +1491,8 @@ function Legend({
         <>
           <div className="py-1.5 px-2">
             {SORTED_MOUNTAIN_RANGES.map((r) => (
+              <React.Fragment key={r.range}>
               <button
-                key={r.range}
                 onClick={() => onSelect(r)}
                 className="w-full flex items-center gap-2 px-1.5 py-1 rounded-md text-left transition-colors hover:bg-black/5"
                 style={{ background: selected?.range === r.range ? `${r.color}18` : undefined }}
@@ -1453,8 +1505,18 @@ function Legend({
                 {r.attempted && !r.summited && (
                   <span title={`Attempted ${r.attemptDate ?? ""}`} style={{ fontSize: 10, color: "#B7950B", fontWeight: 700, flexShrink: 0 }}>⚡</span>
                 )}
-                <button
+                <span
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`View ${r.peak} hike journal`}
                   onClick={(e) => { e.stopPropagation(); onOpenJournal(r); }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      onOpenJournal(r);
+                    }
+                  }}
                   title="View hike journal"
                   style={{ flexShrink: 0, padding: "1px 3px", borderRadius: 4, background: "rgba(0,0,0,0.06)", border: "none", cursor: "pointer", lineHeight: 1 }}
                 >
@@ -1462,8 +1524,21 @@ function Legend({
                     <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
                     <circle cx="12" cy="13" r="4"/>
                   </svg>
-                </button>
+                </span>
               </button>
+              {r.range === "Southern Utah" && (
+                <button
+                  type="button"
+                  onClick={() => onSelectTrailRoute(trailRoute)}
+                  className="w-full flex items-center gap-2 px-1.5 py-1.5 text-left transition-colors hover:bg-black/5"
+                  title="Show Wire Pass & Buckskin Gulch trail route"
+                >
+                  <span className="flex-shrink-0 rounded-full" style={{ width: 12, height: 3, background: trailRoute.color }} />
+                  <span className="text-[11px] leading-tight flex-1" style={{ color: trailRoute.color }}>{trailRoute.name}</span>
+                  <span className="text-[10px] text-gray-500 whitespace-nowrap">17+ mi</span>
+                </button>
+              )}
+              </React.Fragment>
             ))}
           </div>
           <div className="px-3 py-1.5 text-xs text-gray-400 border-t" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
@@ -1481,6 +1556,7 @@ export default function Home() {
   const [mapReady, setMapReady] = useState(false);
   const [selected, setSelected] = useState<MountainRange | null>(null);
   const [selectedOtherPeak, setSelectedOtherPeak] = useState<OtherPeak | null>(null);
+  const [selectedTrailRoute, setSelectedTrailRoute] = useState<TrailRoute | null>(null);
   const [mapType, setMapType] = useState<"terrain" | "satellite" | "roadmap">("terrain");
   const [tableOpen, setTableOpen] = useState(false);
   const [otherPeaksOpen, setOtherPeaksOpen] = useState(false);
@@ -1500,6 +1576,7 @@ export default function Home() {
   const wurlMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const wurlLabelsRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const wurlRouteLineRef = useRef<google.maps.Polyline | null>(null);
+  const southernUtahTrailLinesRef = useRef<google.maps.Polyline[]>([]);
 
   // ── Fire layer state ──
   const [fireLayerOn, setFireLayerOn] = useState(false);
@@ -1834,6 +1911,7 @@ export default function Home() {
     setOtherPeaksOpen(false);
     setWurlTableOpen(false);
     setSelectedOtherPeak(null);
+    setSelectedTrailRoute(null);
     setSelected(r);
     mapRef.current?.panTo({ lat: r.lat, lng: r.lon });
   }, []);
@@ -1843,9 +1921,24 @@ export default function Home() {
     setOtherPeaksOpen(false);
     setWurlTableOpen(false);
     setSelected(null);
+    setSelectedTrailRoute(null);
     setSelectedOtherPeak(peak);
     mapRef.current?.panTo({ lat: peak.lat, lng: peak.lon });
     mapRef.current?.setZoom(10);
+  }, []);
+
+  const handleSelectTrailRoute = useCallback((route: TrailRoute) => {
+    setTableOpen(false);
+    setOtherPeaksOpen(false);
+    setWurlTableOpen(false);
+    setSelected(null);
+    setSelectedOtherPeak(null);
+    setSelectedTrailRoute(route);
+    const map = mapRef.current;
+    if (!map) return;
+    const bounds = new google.maps.LatLngBounds();
+    route.pathSegments.forEach((segment) => segment.forEach(([lat, lng]) => bounds.extend({ lat, lng })));
+    map.fitBounds(bounds, 64);
   }, []);
 
   const handleOpenJournal = useCallback((r: MountainRange) => {
@@ -1872,6 +1965,7 @@ export default function Home() {
     setWurlTableOpen(false);
     setSelected(null);
     setSelectedOtherPeak(null);
+    setSelectedTrailRoute(null);
     setWurlVisible(true);
     mapRef.current?.panTo({ lat: peak.lat, lng: peak.lon });
     mapRef.current?.setZoom(13);
@@ -2025,6 +2119,34 @@ export default function Home() {
       if (wurlRouteLineRef.current === routeLine) wurlRouteLineRef.current = null;
     };
   }, [mapReady, wurlVisible]);
+
+  // Southern Utah trail-only overlay: the full Buckskin Gulch corridor plus
+  // the Wire Pass access line. It intentionally has no peak marker or elevation.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+
+    const lines = WIRE_PASS_BUCKSKIN_ROUTE.pathSegments.map((segment) => {
+      const line = new google.maps.Polyline({
+        path: segment.map(([lat, lng]) => ({ lat, lng })),
+        strokeColor: WIRE_PASS_BUCKSKIN_ROUTE.color,
+        strokeOpacity: 0.94,
+        strokeWeight: 4,
+        clickable: true,
+        geodesic: false,
+        map,
+        zIndex: 13,
+      });
+      line.addListener("click", () => handleSelectTrailRoute(WIRE_PASS_BUCKSKIN_ROUTE));
+      return line;
+    });
+    southernUtahTrailLinesRef.current = lines;
+
+    return () => {
+      lines.forEach((line) => line.setMap(null));
+      if (southernUtahTrailLinesRef.current === lines) southernUtahTrailLinesRef.current = [];
+    };
+  }, [mapReady, handleSelectTrailRoute]);
 
   // Render the curated WURL major peaks only after the WURL control is activated.
   useEffect(() => {
@@ -2685,10 +2807,13 @@ export default function Home() {
         selected={selected}
         onSelect={handleSelect}
         onOpenJournal={handleOpenJournal}
+        trailRoute={WIRE_PASS_BUCKSKIN_ROUTE}
+        onSelectTrailRoute={handleSelectTrailRoute}
       />
 
       {/* ── Detail Sidebar ── */}
       <DetailSidebar range={selected} onClose={() => setSelected(null)} onOpenJournal={handleOpenJournal} />
+      <TrailRouteSidebar route={selectedTrailRoute} onClose={() => setSelectedTrailRoute(null)} />
       <OtherPeakSidebar peak={selectedOtherPeak} onClose={() => setSelectedOtherPeak(null)} />
 
       {/* ── Data Table Drawer ── */}
