@@ -999,7 +999,7 @@ function OtherPeaksDrawer({
 }) {
   const [group, setGroup] = useState<string>("All areas");
   const isWurlGroup = group === WURL_GROUP;
-  const isSouthernUtahGroup = group === "Southern Utah";
+  const isSoUtahGroup = group === "So. Utah";
   const visiblePeaks = group === "All areas"
     ? OTHER_PEAKS
     : OTHER_PEAKS.filter((peak) => peak.group === group);
@@ -1168,7 +1168,7 @@ function OtherPeaksDrawer({
             </>
           ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {isSouthernUtahGroup && (
+            {isSoUtahGroup && (
               <div
                 role="button"
                 tabIndex={0}
@@ -1187,7 +1187,7 @@ function OtherPeaksDrawer({
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <div style={{ color: OTHER_PEAK_COLOR, fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 3 }}>Southern Utah · Trail route</div>
+                    <div style={{ color: OTHER_PEAK_COLOR, fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 3 }}>So. Utah · Trail route</div>
                     <div style={{ color: "#263442", fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 700, lineHeight: 1.15 }}>{WIRE_PASS_BUCKSKIN_ROUTE.name}</div>
                   </div>
                   <div className="flex-shrink-0 rounded-md px-2 py-1" style={{ background: "#E8F0F7", color: OTHER_PEAK_COLOR, fontSize: 11, fontWeight: 800 }}>17+ mi</div>
@@ -1571,18 +1571,6 @@ function Legend({
                   </svg>
                 </span>
               </button>
-              {r.range === "Southern Utah" && (
-                <button
-                  type="button"
-                  onClick={() => onSelectTrailRoute(trailRoute)}
-                  className="w-full flex items-center gap-2 px-1.5 py-1.5 text-left transition-colors hover:bg-black/5"
-                  title="Show Wire Pass & Buckskin Gulch trail route"
-                >
-                  <span className="flex-shrink-0 rounded-full" style={{ width: 12, height: 3, background: trailRoute.color }} />
-                  <span className="text-[11px] leading-tight flex-1" style={{ color: trailRoute.color }}>{trailRoute.name}</span>
-                  <span className="text-[10px] text-gray-500 whitespace-nowrap">17+ mi</span>
-                </button>
-              )}
               </React.Fragment>
             ))}
           </div>
@@ -2166,11 +2154,11 @@ export default function Home() {
     };
   }, [mapReady, wurlVisible]);
 
-  // Southern Utah trail-only overlay: the full Buckskin Gulch corridor plus
+  // So. Utah trail-only overlay: the full Buckskin Gulch corridor plus
   // the Wire Pass access line. It intentionally has no peak marker or elevation.
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !mapReady) return;
+    if (!map || !mapReady || !otherPeaksVisible) return;
 
     const lines = WIRE_PASS_BUCKSKIN_ROUTE.pathSegments.map((segment) => {
       const line = new google.maps.Polyline({
@@ -2215,7 +2203,7 @@ export default function Home() {
       map,
       position: { lat: 37.0075, lng: -111.931 },
       content: labelEl,
-      title: `${WIRE_PASS_BUCKSKIN_ROUTE.name} · Southern Utah trail`,
+      title: `${WIRE_PASS_BUCKSKIN_ROUTE.name} · So. Utah trail`,
       zIndex: 12,
     });
     routeLabel.addListener("click", () => handleSelectTrailRoute(WIRE_PASS_BUCKSKIN_ROUTE));
@@ -2228,7 +2216,7 @@ export default function Home() {
       routeLabel.map = null;
       if (southernUtahTrailLabelsRef.current[0] === routeLabel) southernUtahTrailLabelsRef.current = [];
     };
-  }, [mapReady, handleSelectTrailRoute]);
+  }, [mapReady, otherPeaksVisible, handleSelectTrailRoute]);
 
   // Render the curated WURL major peaks only after the WURL control is activated.
   useEffect(() => {

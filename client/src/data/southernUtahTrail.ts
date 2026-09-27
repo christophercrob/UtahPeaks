@@ -23,7 +23,7 @@ export const SOUTHERN_UTAH_TRAIL_COLOR = "#123B5D";
 
 export const WIRE_PASS_BUCKSKIN_ROUTE: TrailRoute = {
   id: "wire-pass-buckskin-gulch",
-  group: "Southern Utah",
+  group: "So. Utah",
   name: "Wire Pass & Buckskin Gulch",
   color: SOUTHERN_UTAH_TRAIL_COLOR,
   trailhead: "Wire Pass Trailhead · House Rock Valley Road",

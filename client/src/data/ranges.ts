@@ -85,7 +85,7 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     ],
   },
   {
-    range: "Southern Utah",
+    range: "La Sal Mountains",
     peak: "Mount Peale",
     elevation: "12,721 ft",
     elevationFt: 12721,

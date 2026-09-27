@@ -128,3 +128,9 @@
 
 - [x] Close all peak-list modals when a highest, Other Peaks, or WURL summit is selected.
 - [x] Verify map-marker and list-card selections dismiss the catalog before opening details.
+
+## So. Utah Other Peaks Classification
+
+- [x] Preserve the La Sal Mountains primary range and Mount Peale primary high point.
+- [x] Group Mount Tukuhnikivatz, Mount Mellenthin, Mount Waas, Manns Peak, and Wire Pass–Buckskin Gulch under the `So. Utah` Other Peaks filter.
+- [x] Validate the corrected catalog and map behavior; checkpoint and GitHub mirror follow.
