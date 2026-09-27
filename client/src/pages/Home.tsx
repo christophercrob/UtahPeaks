@@ -999,7 +999,7 @@ function OtherPeaksDrawer({
 }) {
   const [group, setGroup] = useState<string>("All areas");
   const isWurlGroup = group === WURL_GROUP;
-  const isSoUtahGroup = group === "So. Utah";
+  const isSouthernUtahGroup = group === "Southern Utah";
   const visiblePeaks = group === "All areas"
     ? OTHER_PEAKS
     : OTHER_PEAKS.filter((peak) => peak.group === group);
@@ -1168,7 +1168,7 @@ function OtherPeaksDrawer({
             </>
           ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {isSoUtahGroup && (
+            {isSouthernUtahGroup && (
               <div
                 role="button"
                 tabIndex={0}
@@ -1187,7 +1187,7 @@ function OtherPeaksDrawer({
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <div style={{ color: OTHER_PEAK_COLOR, fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 3 }}>So. Utah · Trail route</div>
+                    <div style={{ color: OTHER_PEAK_COLOR, fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 3 }}>Southern Utah · Trail route</div>
                     <div style={{ color: "#263442", fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 700, lineHeight: 1.15 }}>{WIRE_PASS_BUCKSKIN_ROUTE.name}</div>
                   </div>
                   <div className="flex-shrink-0 rounded-md px-2 py-1" style={{ background: "#E8F0F7", color: OTHER_PEAK_COLOR, fontSize: 11, fontWeight: 800 }}>17+ mi</div>
@@ -2154,7 +2154,7 @@ export default function Home() {
     };
   }, [mapReady, wurlVisible]);
 
-  // So. Utah trail-only overlay: the full Buckskin Gulch corridor plus
+  // Southern Utah trail-only overlay: the full Buckskin Gulch corridor plus
   // the Wire Pass access line. It intentionally has no peak marker or elevation.
   useEffect(() => {
     const map = mapRef.current;
@@ -2203,7 +2203,7 @@ export default function Home() {
       map,
       position: { lat: 37.0075, lng: -111.931 },
       content: labelEl,
-      title: `${WIRE_PASS_BUCKSKIN_ROUTE.name} · So. Utah trail`,
+      title: `${WIRE_PASS_BUCKSKIN_ROUTE.name} · Southern Utah trail`,
       zIndex: 12,
     });
     routeLabel.addListener("click", () => handleSelectTrailRoute(WIRE_PASS_BUCKSKIN_ROUTE));
