@@ -424,15 +424,26 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
       "Google Maps lists the access point as “Deseret Peak Trailhead, Deseret Peak Trail, Dugway, UT 84022.”",
       "The trailhead is immediately next to Loop Campground.",
     ],
-    attempted: true,
-    attemptDate: "July 25, 2026",
-    attemptNote: "Got some bad directions from Google and ended up miles from the correct trailhead. By the time I sorted it out, afternoon thunderstorms were already building over the summit — too risky to start that late. Still got in a good hike on the lower slopes and got a great look at Deseret Peak. I\'ll be back.",
-    summitPhoto: { url: "/manus-storage/deseret-peak-lead_1615af41.jpg", caption: "Deseret Peak summit ridge from the lower slopes — July 25, 2026" },
+    summited: true,
+    summitDate: "October 5, 2026",
+    hikeNote: "Summited Deseret Peak on October 5, 2026. The Pockets Fork approach passed beneath the Stansbury limestone walls and through bright autumn aspens before opening to a broad, airy summit with views across the Tooele Valley and Great Salt Lake.",
+    trailheadPhoto: {
+      url: "/manus-storage/20261004_162623_5d97b59a.webp",
+      caption: "At the Deseret Peak Loop Trailhead beneath the Stansbury limestone walls and autumn color",
+    },
+    summitPhoto: {
+      url: "/manus-storage/20261004_135954_3d52bc78.webp",
+      caption: "On the summit of Deseret Peak, 11,031 ft",
+    },
     extraPhotos: [
-      { url: "/manus-storage/deseret-peak-valley_d0de19da.jpg", caption: "Looking west over Tooele Valley — the Great Salt Lake and salt flats visible on the horizon, Oquirrh Mountains beyond" },
-      { url: "/manus-storage/deseret-peak-trail_cc61bbd4.jpg", caption: "The trail through aspens and firs on the way up" },
-      { url: "/manus-storage/20260905_154359_d5540263.jpg", caption: "On the Deseret Peak Loop Trail, a few miles from Loop Campground — September 5, 2026" },
-      { url: "/manus-storage/20260905_142911_3ba4fdb5.webp", caption: "Deseret Peak Loop Trail junction for South Willow Creek and Pockets Fork, a few miles from Loop Campground — September 5, 2026" },
+      {
+        url: "/manus-storage/20261004_140046_40824945.webp",
+        caption: "Summit selfie with the Stansbury Range, Tooele Valley, and Great Salt Lake beyond",
+      },
+      {
+        url: "/manus-storage/20261004_163454_b56c4b78.webp",
+        caption: "Autumn color and limestone walls along the Deseret Peak Loop Trail",
+      },
     ],
     polygon: [
       // Shifted east 0.5 miles (+0.007°) from previous position
