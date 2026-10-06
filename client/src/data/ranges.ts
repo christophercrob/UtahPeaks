@@ -427,15 +427,19 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     summited: true,
     summitDate: "October 5, 2026",
     hikeNote: "Summited Deseret Peak on October 5, 2026. The Pockets Fork approach passed beneath the Stansbury limestone walls and through bright autumn aspens before opening to a broad, airy summit with views across the Tooele Valley and Great Salt Lake.",
-    trailheadPhoto: {
-      url: "/manus-storage/20261004_162623_5d97b59a.webp",
-      caption: "At the Deseret Peak Loop Trailhead beneath the Stansbury limestone walls and autumn color",
-    },
     summitPhoto: {
       url: "/manus-storage/20261004_135954_3d52bc78.webp",
       caption: "On the summit of Deseret Peak, 11,031 ft",
     },
     extraPhotos: [
+      {
+        url: "/manus-storage/20260905_142911(1)_1d51d746.webp",
+        caption: "Deseret Peak Loop trail junction via South Willow Creek and Pockets Fork — about one mile from the trailhead",
+      },
+      {
+        url: "/manus-storage/20261004_162623_5d97b59a.webp",
+        caption: "On the way down through autumn color below Deseret Peak",
+      },
       {
         url: "/manus-storage/20261004_140046_40824945.webp",
         caption: "Summit selfie with the Stansbury Range, Tooele Valley, and Great Salt Lake beyond",
