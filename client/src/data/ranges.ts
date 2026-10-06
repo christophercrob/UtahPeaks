@@ -426,7 +426,7 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     ],
     summited: true,
     summitDate: "October 5, 2026",
-    hikeNote: "Summited Deseret Peak on October 5, 2026. The Pockets Fork approach passed beneath the Stansbury limestone walls and through bright autumn aspens before opening to a broad, airy summit with views across the Tooele Valley and Great Salt Lake.",
+    hikeNote: "Summited Deseret Peak on October 5, 2026 via the full Deseret Peak Wilderness Loop, traveling clockwise up Mill Fork and descending Pockets Fork. The weather was perfect—cool in the morning and warm, but never hot, throughout the hike. The loose Pockets Fork descent required some route-finding after we lost the trail a couple of times, but it delivered spectacular views of Skull Valley; crossing toward Dry Lake Fork and several streams then revealed beautiful views back to Deseret Peak.",
     summitPhoto: {
       url: "/manus-storage/20261004_135954_3d52bc78.webp",
       caption: "On the summit of Deseret Peak, 11,031 ft",
