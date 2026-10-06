@@ -441,6 +441,10 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
         caption: "On the way down through autumn color below Deseret Peak",
       },
       {
+        url: "/manus-storage/20261004_150349_6aaec6ed.webp",
+        caption: "Looking west over Skull Valley on the backside of Pockets Peak",
+      },
+      {
         url: "/manus-storage/20261004_140046_40824945.webp",
         caption: "Summit selfie with the Stansbury Range, Tooele Valley, and Great Salt Lake beyond",
       },
