@@ -1784,7 +1784,7 @@ export default function Home() {
     })();
   }, [parksLayerOn, fetchParksData]);
 
-  // Fetch the curated monuments, state parks, and regional-neighbor areas only
+  // Fetch the curated national conservation areas, monuments, state parks, and regional-neighbor areas only
   // when requested. Every configured source returns Esri polygon geometry in WGS84.
   const fetchProtectedAreasData = useCallback(async (): Promise<ProtectedAreaFeature[]> => {
     if (protectedAreasDataRef.current) return protectedAreasDataRef.current;
@@ -1859,8 +1859,9 @@ export default function Home() {
     }
   }, []);
 
-  // Draw the complete research-register layer: federal monuments, recreation
-  // areas, state parks, and neighboring Nevada/Arizona places use one treatment.
+  // Draw the complete research-register layer: national conservation areas,
+  // federal monuments, recreation areas, state parks, and regional neighbors
+  // use one treatment.
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -2636,7 +2637,7 @@ export default function Home() {
               onClick={() => setProtectedAreasOn((v) => !v)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
               style={{ background: protectedAreasOn ? "rgba(90,60,136,0.96)" : "rgba(255,255,255,0.10)", color: "#fff", border: protectedAreasOn ? "1px solid rgba(220,200,255,0.46)" : "1px solid rgba(255,255,255,0.15)" }}
-              title={protectedAreasOn ? "Hide monuments, recreation areas, state parks, and regional neighbors" : "Show monuments, recreation areas, state parks, and regional neighbors"}
+              title={protectedAreasOn ? "Hide national conservation areas, monuments, recreation areas, state parks, and regional neighbors" : "Show national conservation areas, monuments, recreation areas, state parks, and regional neighbors"}
               aria-pressed={protectedAreasOn}
             >
               {protectedAreasLoading

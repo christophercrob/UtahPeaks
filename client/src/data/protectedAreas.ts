@@ -2,7 +2,7 @@
 // Sources are agency GIS services where available; PAD-US / National Map sources
 // are used as nationwide reference geometry for the named regional-neighbor parks.
 
-export type ProtectedAreaKind = "national_park" | "national_monument" | "recreation_area" | "state_park" | "regional_neighbor";
+export type ProtectedAreaKind = "national_park" | "national_monument" | "national_conservation_area" | "recreation_area" | "state_park" | "regional_neighbor";
 
 export interface ProtectedAreaSource {
   id: string;
@@ -162,7 +162,7 @@ export const PROTECTED_AREA_SOURCES: ProtectedAreaSource[] = [
     id: "beaver-dam-wash",
     name: "Beaver Dam Wash National Conservation Area",
     shortName: "Beaver Dam Wash",
-    kind: "recreation_area",
+    kind: "national_conservation_area",
     jurisdiction: "Bureau of Land Management, Utah",
     sourceLabel: "BLM Utah National Conservation Lands",
     sourceUrl: "https://gis.blm.gov/utarcgis/rest/services/NLCS/BLM_UT_NMNCA/FeatureServer/1",
@@ -171,6 +171,20 @@ export const PROTECTED_AREA_SOURCES: ProtectedAreaSource[] = [
     nameField: "NLCS_NAME",
     nameOverrides: { "Beaver Dam Wash": "Beaver Dam Wash National Conservation Area" },
     geometryNote: "BLM Utah boundary service for the Beaver Dam Wash National Conservation Area; thematic display only, not a survey or legal boundary.",
+  },
+  {
+    id: "red-cliffs-nca",
+    name: "Red Cliffs National Conservation Area",
+    shortName: "Red Cliffs NCA",
+    kind: "national_conservation_area",
+    jurisdiction: "Bureau of Land Management, Utah",
+    sourceLabel: "BLM Utah National Conservation Lands",
+    sourceUrl: "https://gis.blm.gov/utarcgis/rest/services/NLCS/BLM_UT_NMNCA/FeatureServer/1",
+    endpoint: "https://gis.blm.gov/utarcgis/rest/services/NLCS/BLM_UT_NMNCA/FeatureServer/1/query",
+    where: "NLCS_ID='NLCS000855'",
+    nameField: "NLCS_NAME",
+    nameOverrides: { "Red Cliffs": "Red Cliffs National Conservation Area" },
+    geometryNote: "BLM Utah boundary service for the Red Cliffs National Conservation Area; thematic display only, not a survey or legal boundary.",
   },
   {
     id: "nevada-state-parks",
@@ -192,6 +206,7 @@ export const PROTECTED_AREA_SOURCES: ProtectedAreaSource[] = [
 export const PROTECTED_AREA_COLORS: Record<ProtectedAreaKind, { stroke: string; fill: string; label: string }> = {
   national_park: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "Protected Area" },
   national_monument: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "Protected Area" },
+  national_conservation_area: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "Protected Area" },
   recreation_area: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "Protected Area" },
   state_park: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "Protected Area" },
   regional_neighbor: { stroke: "#6A3D9A", fill: "#8E5BBC", label: "Protected Area" },
