@@ -2467,26 +2467,30 @@ export default function Home() {
     });
 
     MOUNTAIN_RANGES.forEach((r) => {
-      const rangePath = r.polygon.map(([lat, lng]) => ({ lat, lng }));
-      const boundary = r.boundaryType === "line"
-        ? new google.maps.Polyline({
-            path: rangePath,
+      const polygonGroups = r.polygonGroups ?? [[r.polygon]];
+      const boundaries = r.boundaryType === "line"
+        ? [new google.maps.Polyline({
+            path: r.polygon.map(([lat, lng]) => ({ lat, lng })),
             strokeColor: r.color,
             strokeOpacity: 0.9,
             strokeWeight: 3,
             map,
-          })
-        : new google.maps.Polygon({
-            paths: rangePath,
+          })]
+        : polygonGroups.map((group) => new google.maps.Polygon({
+            // Google Maps treats the first path as the exterior and following
+            // paths as holes, preserving the spatial-audit exclusions.
+            paths: group.map((ring) => ring.map(([lat, lng]) => ({ lat, lng }))),
             strokeColor: r.color,
             strokeOpacity: 0.85,
             strokeWeight: 2,
             fillColor: r.color,
             fillOpacity: 0.18,
             map,
-          });
-      boundary.addListener("click", () => setSelected(r));
-      polygonsRef.current.push(boundary);
+          }));
+      boundaries.forEach((boundary) => {
+        boundary.addListener("click", () => setSelected(r));
+        polygonsRef.current.push(boundary);
+      });
 
       // Range label at centroid (unused — range name shown below peak pin)
       const centLat = r.polygon.reduce((s, p) => s + p[0], 0) / r.polygon.length;
