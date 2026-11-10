@@ -1987,7 +1987,11 @@ export default function Home() {
 
   const toggleOtherPeaks = useCallback(() => {
     if (otherPeaksVisible) setSelectedOtherPeak(null);
-    setOtherPeaksVisible((visible) => !visible);
+    // The main layer control includes WURL; its catalog toggle still lets
+    // visitors hide just the purple route and summits while browsing other peaks.
+    const nextVisible = !otherPeaksVisible;
+    setOtherPeaksVisible(nextVisible);
+    setWurlVisible(nextVisible);
   }, [otherPeaksVisible]);
 
   const toggleSkiResorts = useCallback(() => {
@@ -2270,7 +2274,7 @@ export default function Home() {
       wurlLabelsRef.current.push(label);
     });
     syncMapLabelSizesAfterRender(map);
-  }, [wurlVisible, handleSelectWurlPeak]);
+  }, [mapReady, wurlVisible, handleSelectWurlPeak]);
 
   // Fetch fire perimeters once (lazy, on first toggle-on)
   const fetchFireData = useCallback(async (): Promise<FireFeature[]> => {
@@ -2606,13 +2610,13 @@ export default function Home() {
               }}
               onMouseEnter={(e) => (e.currentTarget.style.background = otherPeaksVisible ? OTHER_PEAK_COLOR : "rgba(255,255,255,0.18)")}
               onMouseLeave={(e) => (e.currentTarget.style.background = otherPeaksVisible ? OTHER_PEAK_COLOR : "rgba(255,255,255,0.10)")}
-              title={otherPeaksVisible ? "Hide Other Peaks markers" : "Show Other Peaks markers"}
+              title={otherPeaksVisible ? "Hide Other Peaks and the WURL route and summits" : "Show Other Peaks and the WURL route and summits"}
               aria-pressed={otherPeaksVisible}
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                 <path d="M3 18l5-9 4 5 3-4 6 8H3z"/><path d="M8 9l2-3 2 3"/>
               </svg>
-              {otherPeaksVisible ? "Other Peaks: On" : "Other Peaks"}
+              Other Peaks + WURL
             </button>
             <button
               onClick={toggleSkiResorts}
@@ -2735,7 +2739,7 @@ export default function Home() {
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                 <path d="M3 18l5-9 4 5 3-4 6 8H3z"/><path d="M8 9l2-3 2 3"/>
               </svg>
-              {otherPeaksVisible ? "Other Peaks: On (tap to hide)" : "Show Other Peaks"}
+              {otherPeaksVisible ? "Other Peaks + WURL: On (tap to hide)" : "Show Other Peaks + WURL"}
             </button>
             <button
               onClick={() => { toggleSkiResorts(); setMenuOpen(false); }}
