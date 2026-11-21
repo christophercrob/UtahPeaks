@@ -24,7 +24,7 @@ const OTHER_PEAK_FILTERS = [
   WURL_GROUP,
   ...OTHER_PEAK_GROUPS.filter((name) => name !== "Central Wasatch"),
 ];
-const SKIER_OUTLINE_URL = "/manus-storage/utah-peaks-skier-outline-192_4bb0a0ee.png";
+const SKIER_OUTLINE_URL = "/media/utah-peaks-skier-outline-192_4bb0a0ee.png";
 
 function mapLabelScale(zoom: number) {
   // Maintain the base label size at overview zooms, then outpace standard
@@ -74,7 +74,7 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
         <div className="px-6 py-5" style={{ background: "#1C2333", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
           <div className="flex items-center gap-3 mb-1">
             <img
-              src="/manus-storage/utah-peaks-heritage-logo-512_354899d2.png"
+              src="/media/utah-peaks-heritage-logo-512_354899d2.png"
               alt="Utah Peaks heritage emblem"
               style={{ width: 32, height: 32, objectFit: "contain", flexShrink: 0 }}
             />
@@ -100,7 +100,7 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
           {/* Photo */}
           <div>
             <img
-              src="/manus-storage/markagunt_zion_27b24df0_238bd347.jpg"
+              src="/media/markagunt_zion_27b24df0_238bd347.jpg"
               alt="Chris Roberts on the Markagunt Plateau with Zion NP in the distance"
               style={{
                 width: "100%",
@@ -611,7 +611,7 @@ function DataTableDrawer({
         >
           <div className="flex items-center gap-3">
             <img
-              src="/manus-storage/utah-peaks-heritage-logo-512_354899d2.png"
+              src="/media/utah-peaks-heritage-logo-512_354899d2.png"
               alt="Utah Peaks heritage emblem"
               style={{ width: 28, height: 28, objectFit: "contain", flexShrink: 0 }}
             />
@@ -2571,7 +2571,7 @@ export default function Home() {
           {/* Brand */}
           <div className="flex items-center gap-2 shrink-0">
             <img
-              src="/manus-storage/utah-peaks-heritage-logo-512_354899d2.png"
+              src="/media/utah-peaks-heritage-logo-512_354899d2.png"
               alt="Utah Peaks heritage emblem"
               style={{ width: 34, height: 34, objectFit: "contain", flexShrink: 0 }}
             />
