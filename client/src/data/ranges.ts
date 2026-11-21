@@ -168,11 +168,11 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     summited: true,
     summitDate: "June 13, 2026",
     hikeNote: "A beautiful high-altitude drive to Big John Flat puts you within striking distance of the summit. The Tushars are one of Utah's hidden gems — dramatic volcanic terrain, lush forests, and sweeping views of Eagle Point ski resort and the Sevier Plateau. The forest below the summit was still pristine on this June day, before the Cottonwood Fire swept through later that summer.",
-    trailheadPhoto: { url: "/manus-storage/delano_trailhead_46c9d901_bb5ab61c.jpg", caption: "Delano Peak Trailhead #224 — June 13, 2026" },
-    summitPhoto: { url: "/manus-storage/delano_summit_cc63fe5e_9bb4c144.jpg", caption: "Summit of Delano Peak, 12,169 ft — June 13, 2026" },
+    trailheadPhoto: { url: "/media/delano_trailhead_46c9d901_bb5ab61c.jpg", caption: "Delano Peak Trailhead #224 — June 13, 2026" },
+    summitPhoto: { url: "/media/delano_summit_cc63fe5e_9bb4c144.jpg", caption: "Summit of Delano Peak, 12,169 ft — June 13, 2026" },
     extraPhotos: [
-      { url: "/manus-storage/delano_forest_35dd78a9_59674a62.jpg", caption: "The lush Tushar forest looking west toward Beaver Valley — before the Cottonwood Fire" },
-      { url: "/manus-storage/delano_eaglepoint_e2e04fb5_0c07ece2.jpg", caption: "Eagle Point ski resort visible from the summit ridge" },
+      { url: "/media/delano_forest_35dd78a9_59674a62.jpg", caption: "The lush Tushar forest looking west toward Beaver Valley — before the Cottonwood Fire" },
+      { url: "/media/delano_eaglepoint_e2e04fb5_0c07ece2.jpg", caption: "Eagle Point ski resort visible from the summit ridge" },
     ],
     polygon: [
       // From user-provided KML (Google Earth), Aug 2026
@@ -262,8 +262,8 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     summited: true,
     summitDate: "July 11, 2026",
     hikeNote: "Mount Nebo is the southern sentinel of the Wasatch — a long, exposed ridge walk with three distinct summits. The north peak is the true high point. Views stretch from the Uintas to the Tushar Mountains on a clear day.",
-    trailheadPhoto: { url: "/manus-storage/nebo_trailhead_5b821db1_c8e3cbdc.jpg", caption: "North Nebo Trailhead — July 11, 2026" },
-    summitPhoto: { url: "/manus-storage/nebo_summit_1eaf7d79_cf8ba1fb.jpg", caption: "Summit of Mount Nebo looking north toward Utah Lake — July 11, 2026" },
+    trailheadPhoto: { url: "/media/nebo_trailhead_5b821db1_c8e3cbdc.jpg", caption: "North Nebo Trailhead — July 11, 2026" },
+    summitPhoto: { url: "/media/nebo_summit_1eaf7d79_cf8ba1fb.jpg", caption: "Summit of Mount Nebo looking north toward Utah Lake — July 11, 2026" },
     // Spatial-audit correction: clipped to the listed authoritative conservation
     // boundaries using the same WGS84/simplification request as the map overlay.
     polygon: [
@@ -864,12 +864,12 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     summited: true,
     summitDate: "July 5, 2026",
     hikeNote: "The Henry Mountains are the last range in the contiguous US to be named and mapped. Mount Ellen's summit ridge is a short hike from Bull Creek Pass — but the remoteness and the views over Capitol Reef and Canyonlands make it feel like the edge of the world.",
-    trailheadPhoto: { url: "/manus-storage/ellen_trail2_9610ab3f_304ef872.jpg", caption: "Looking back toward Bull Creek Pass Trailhead from the ridge" },
-    summitPhoto: { url: "/manus-storage/ellen_summit_118ed81e_1842c51f.jpg", caption: "Summit of Mount Ellen with Capitol Reef in the distance — July 5, 2026" },
+    trailheadPhoto: { url: "/media/ellen_trail2_9610ab3f_304ef872.jpg", caption: "Looking back toward Bull Creek Pass Trailhead from the ridge" },
+    summitPhoto: { url: "/media/ellen_summit_118ed81e_1842c51f.jpg", caption: "Summit of Mount Ellen with Capitol Reef in the distance — July 5, 2026" },
     extraPhotos: [
-      { url: "/manus-storage/ellen_trailhead2_85a487fd_923812cb.jpg", caption: "Morning approach — Mount Ellen glowing in the distance" },
-      { url: "/manus-storage/ellen_trail1_c6df66f4_a71badc6.jpg", caption: "On the ridge with canyon country stretching to the horizon" },
-      { url: "/manus-storage/ellen_trailhead_412fbfe4_353cf314.jpg", caption: "Morning approach to the Henry Mountains — July 5, 2026" },
+      { url: "/media/ellen_trailhead2_85a487fd_923812cb.jpg", caption: "Morning approach — Mount Ellen glowing in the distance" },
+      { url: "/media/ellen_trail1_c6df66f4_a71badc6.jpg", caption: "On the ridge with canyon country stretching to the horizon" },
+      { url: "/media/ellen_trailhead_412fbfe4_353cf314.jpg", caption: "Morning approach to the Henry Mountains — July 5, 2026" },
     ],
     videoUrl: "https://photos.app.goo.gl/M7ukkBM9tKKmd8o99",
     polygon: [
@@ -1005,28 +1005,28 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     summitDate: "October 5, 2026",
     hikeNote: "Summited Deseret Peak on October 5, 2026 via the full Deseret Peak Wilderness Loop, traveling clockwise up Mill Fork and descending Pockets Fork. The weather was perfect—cool in the morning and warm, but never hot, throughout the hike. The loose Pockets Fork descent required some route-finding after we lost the trail a couple of times, but it delivered spectacular views of Skull Valley; crossing toward Dry Lake Fork and several streams then revealed beautiful views back to Deseret Peak.",
     summitPhoto: {
-      url: "/manus-storage/20261004_135954_3d52bc78.webp",
+      url: "/media/20261004_135954_3d52bc78.webp",
       caption: "On the summit of Deseret Peak, 11,031 ft",
     },
     extraPhotos: [
       {
-        url: "/manus-storage/20260905_142911(1)_1d51d746.webp",
+        url: "/media/20260905_142911(1)_1d51d746.webp",
         caption: "Deseret Peak Loop trail junction via South Willow Creek and Pockets Fork — about one mile from the trailhead",
       },
       {
-        url: "/manus-storage/20261004_162623_5d97b59a.webp",
+        url: "/media/20261004_162623_5d97b59a.webp",
         caption: "On the way down through autumn color below Deseret Peak",
       },
       {
-        url: "/manus-storage/20261004_150349_6aaec6ed.webp",
+        url: "/media/20261004_150349_6aaec6ed.webp",
         caption: "Looking west over Skull Valley on the backside of Pockets Peak",
       },
       {
-        url: "/manus-storage/20261004_140046_40824945.webp",
+        url: "/media/20261004_140046_40824945.webp",
         caption: "Summit selfie with the Stansbury Range, Tooele Valley, and Great Salt Lake beyond",
       },
       {
-        url: "/manus-storage/20261004_163454_b56c4b78.webp",
+        url: "/media/20261004_163454_b56c4b78.webp",
         caption: "Autumn color and limestone walls along the Deseret Peak Loop Trail",
       },
     ],
@@ -1071,28 +1071,28 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
       "There are no trails from the peak to Halls Basin. The northwest slope below the peak is densely forested with heavy overgrowth.",
     ],
     trailheadPhoto: {
-      url: "/manus-storage/flat-top-trailhead-20260919_b1474251.webp",
+      url: "/media/flat-top-trailhead-20260919_b1474251.webp",
       caption: "Flat Top Peak trailhead in Ophir Canyon — September 19, 2026",
     },
     summitPhoto: {
-      url: "/manus-storage/20260919_144824_d640fe72.webp",
+      url: "/media/20260919_144824_d640fe72.webp",
       caption: "Flat Top Peak summit — September 19, 2026",
     },
     extraPhotos: [
       {
-        url: "/manus-storage/flat-top-view-valley-20260919_0a2e063e.webp",
+        url: "/media/flat-top-view-valley-20260919_0a2e063e.webp",
         caption: "Fall color and ridgelines above Ophir Canyon",
       },
       {
-        url: "/manus-storage/flat-top-view-ridge-20260919_03c4003e.webp",
+        url: "/media/flat-top-view-ridge-20260919_03c4003e.webp",
         caption: "Rocky upper slopes below Flat Top Peak",
       },
       {
-        url: "/manus-storage/flat-top-trail-20260919_3068bf3e.webp",
+        url: "/media/flat-top-trail-20260919_3068bf3e.webp",
         caption: "Morning trail through Ophir Canyon",
       },
       {
-        url: "/manus-storage/flat-top-view-forest-20260919_300362ff.webp",
+        url: "/media/flat-top-view-forest-20260919_300362ff.webp",
         caption: "Forest and autumn color along the high ridge",
       },
     ],
@@ -1180,14 +1180,14 @@ export const MOUNTAIN_RANGES: MountainRange[] = [
     summited: true,
     summitDate: "May 25, 2025",
     hikeNote: "Signal Peak is a long, forested climb through pine and aspen above the town of Pine Valley. The summit offers a surprising 360° panorama — Zion to the east, the Nevada desert to the west, and the red cliffs of the Arizona Strip to the south.",
-    trailheadPhoto: { url: "/manus-storage/signal_trailhead_cceb968f_91fe447b.jpg", caption: "Pine Valley Mountains Wilderness / Dixie National Forest — the trail begins here" },
-    summitPhoto: { url: "/manus-storage/signal_summit_ad132126_aaa401bd.jpg", caption: "Summit of Signal Peak — St. George valley, Quail Creek Reservoir, and red rock mesas below" },
+    trailheadPhoto: { url: "/media/signal_trailhead_cceb968f_91fe447b.jpg", caption: "Pine Valley Mountains Wilderness / Dixie National Forest — the trail begins here" },
+    summitPhoto: { url: "/media/signal_summit_ad132126_aaa401bd.jpg", caption: "Summit of Signal Peak — St. George valley, Quail Creek Reservoir, and red rock mesas below" },
     extraPhotos: [
-      { url: "/manus-storage/signal_view1_a684b5fe_1e0be07c.jpg", caption: "Looking east from the summit ridge — St. George and Quail Creek Reservoir" },
-      { url: "/manus-storage/signal_sign_6df7889f_5c3c30fe.jpg", caption: "Whipple Valley / Further Water trail junction — still plenty of snow in late May" },
-      { url: "/manus-storage/signal_meadow_8f187816_7798b15e.jpg", caption: "High alpine meadow with lingering snow patches near the summit" },
-      { url: "/manus-storage/signal_trees_34c72bdb_9151b48c.jpg", caption: "View through the pines looking down toward Pine Valley" },
-      { url: "/manus-storage/signal_view2_e9221050_43a4b132.jpg", caption: "Looking south from the rocky summit edge — Arizona Strip and Lake Powell area in the distance" },
+      { url: "/media/signal_view1_a684b5fe_1e0be07c.jpg", caption: "Looking east from the summit ridge — St. George and Quail Creek Reservoir" },
+      { url: "/media/signal_sign_6df7889f_5c3c30fe.jpg", caption: "Whipple Valley / Further Water trail junction — still plenty of snow in late May" },
+      { url: "/media/signal_meadow_8f187816_7798b15e.jpg", caption: "High alpine meadow with lingering snow patches near the summit" },
+      { url: "/media/signal_trees_34c72bdb_9151b48c.jpg", caption: "View through the pines looking down toward Pine Valley" },
+      { url: "/media/signal_view2_e9221050_43a4b132.jpg", caption: "Looking south from the rocky summit edge — Arizona Strip and Lake Powell area in the distance" },
     ],
     videoUrl: "https://photos.app.goo.gl/8rm5s3KfetCBDb386",
     polygon: [
@@ -1361,32 +1361,32 @@ MOUNTAIN_RANGES.push({
     "Look for the Vista Point sign to turn east off Utah 143; it marks the approach to the Brian Head Peak near-summit access point.",
   ],
   trailheadPhoto: {
-    url: "/manus-storage/20260926_093519_8e0a5d63.jpg",
+    url: "/media/20260926_093519_8e0a5d63.jpg",
     caption: "Brian Head Peak trailhead and overlook, marked with the 11,307-foot elevation sign — September 26, 2026",
   },
   summitPhoto: {
-    url: "/manus-storage/20260926_094040_f34715c2.jpg",
+    url: "/media/20260926_094040_f34715c2.jpg",
     caption: "At the summit of Brian Head Peak — September 26, 2026",
   },
   extraPhotos: [
     {
-      url: "/manus-storage/20260926_092733_f8e2b675.jpg",
+      url: "/media/20260926_092733_f8e2b675.jpg",
       caption: "Vista Point sign — look for this east turn off Utah 143",
     },
     {
-      url: "/manus-storage/20260926_093912_062c1239.jpg",
+      url: "/media/20260926_093912_062c1239.jpg",
       caption: "Stone shelter on the Brian Head Peak summit",
     },
     {
-      url: "/manus-storage/20260926_094146_a26ac90a.jpg",
+      url: "/media/20260926_094146_a26ac90a.jpg",
       caption: "Autumn color and the Brian Head area from the summit",
     },
     {
-      url: "/manus-storage/20260926_094152_38670046.jpg",
+      url: "/media/20260926_094152_38670046.jpg",
       caption: "Looking across the Markagunt Plateau from Brian Head Peak",
     },
     {
-      url: "/manus-storage/20260926_094138_51661d0b.jpg",
+      url: "/media/20260926_094138_51661d0b.jpg",
       caption: "Looking at the top of the Giant Steps ski lift from Brian Head Peak.",
     },
   ],

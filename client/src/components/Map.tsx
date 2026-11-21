@@ -86,49 +86,25 @@ declare global {
   }
 }
 
-const FORGE_API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-const FORGE_BASE_URL =
-  import.meta.env.VITE_FRONTEND_FORGE_API_URL ||
-  "https://forge.butterfly-effect.dev";
 const GOOGLE_MAPS_SCRIPT_URL = "https://maps.googleapis.com/maps/api/js";
-// In dev, use the Vite server proxy to avoid CORS/auth issues with the dev preview URL.
-// Cloud Run builds receive a browser-restricted Maps key through VITE_GOOGLE_MAPS_API_KEY.
-const IS_DEV = import.meta.env.DEV;
-const MAPS_PROXY_URL = IS_DEV
-  ? `${window.location.origin}/__maps_proxy`
-  : `${FORGE_BASE_URL}/v1/maps/proxy`;
 
-function loadMapScript() {
+// Cloud Run injects VITE_GOOGLE_MAPS_API_KEY at image build time. Local dev
+// reads the same variable from a gitignored .env. The key is browser-visible
+// and must be restricted by HTTP referrer.
+function loadMapScript(): Promise<void> {
   return new Promise(resolve => {
-    // If Google Maps is already loaded, resolve immediately
     if (window.google?.maps) {
-      resolve(null);
+      resolve();
       return;
     }
-    // If a script with the same src is already in the DOM, wait for it
-    const existingScript = document.querySelector(`script[src*="maps/api/js"]`);
-    if (existingScript) {
-      existingScript.addEventListener('load', () => resolve(null));
+    if (!GOOGLE_MAPS_API_KEY) {
+      console.error(
+        "Google Maps did not load: VITE_GOOGLE_MAPS_API_KEY is not set.",
+      );
+      resolve();
       return;
     }
-    const script = document.createElement("script");
-    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${FORGE_API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
-    script.async = true;
-    script.onload = () => {
-      resolve(null);
-    };
-    script.onerror = () => {
-      console.error("Failed to load Google Maps script");
-      resolve(null); // resolve anyway so UI doesn't hang
-    };
-    document.head.appendChild(script);
-  });
-}
-
-function loadMapScriptDirectly(): Promise<void> {
-  return new Promise((resolve) => {
-    if (window.google?.maps) { resolve(); return; }
     const existingScript = document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]');
     if (existingScript) {
       existingScript.addEventListener("load", () => resolve(), { once: true });
@@ -144,44 +120,6 @@ function loadMapScriptDirectly(): Promise<void> {
       resolve();
     };
     document.head.appendChild(script);
-  });
-}
-
-// Manus-hosted production domains receive Maps access through the Forge proxy.
-// Fetching and injecting the script keeps the request's Referer tied to the
-// custom domain, which the proxy requires. Cloud Run builds instead use their
-// browser-restricted Google Maps key via the direct loader above.
-function loadMapScriptThroughForgeProxy(): Promise<void> {
-  return new Promise((resolve) => {
-    if (window.google?.maps) { resolve(); return; }
-    if (!FORGE_API_KEY) {
-      console.error("Google Maps proxy credentials are not configured for production");
-      resolve();
-      return;
-    }
-    const url = `${MAPS_PROXY_URL}/maps/api/js?key=${encodeURIComponent(FORGE_API_KEY)}&v=weekly&libraries=marker,places,geocoding,geometry`;
-    fetch(url, {
-      headers: {
-        Referer: `${window.location.origin}/`,
-        Origin: window.location.origin,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Maps proxy returned ${response.status}`);
-        }
-        return response.text();
-      })
-      .then((code) => {
-        const script = document.createElement("script");
-        script.textContent = code;
-        document.head.appendChild(script);
-        window.setTimeout(resolve, 100);
-      })
-      .catch((error) => {
-        console.error("Failed to load Google Maps through the proxy", error);
-        resolve();
-      });
   });
 }
 
@@ -202,13 +140,7 @@ export function MapView({
   const map = useRef<google.maps.Map | null>(null);
 
   const init = usePersistFn(async () => {
-    if (IS_DEV) {
-      await loadMapScript();
-    } else if (GOOGLE_MAPS_API_KEY) {
-      await loadMapScriptDirectly();
-    } else {
-      await loadMapScriptThroughForgeProxy();
-    }
+    await loadMapScript();
     if (!mapContainer.current) {
       console.error("Map container not found");
       return;
@@ -226,17 +158,6 @@ export function MapView({
       streetViewControl: true,
       mapId: "DEMO_MAP_ID",
     });
-    // Dismiss the "This page can't load Google Maps correctly" dialog
-    // that appears in dev when the domain isn't registered
-    if (IS_DEV) {
-      setTimeout(() => {
-        const dialogs = document.querySelectorAll('[role="dialog"], .dismissButton, .gm-err-container');
-        dialogs.forEach(el => (el as HTMLElement).style.display = 'none');
-        // Also try clicking any close/dismiss button
-        const closeBtn = document.querySelector('.gm-err-container button, [aria-label="Close"]') as HTMLElement;
-        if (closeBtn) closeBtn.click();
-      }, 500);
-    }
     if (onMapReady) {
       onMapReady(map.current);
     }

@@ -54,6 +54,16 @@ jobs:
         run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
 
+      - name: Require the Maps key build arg
+        env:
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
+        run: |
+          if [ -z "$VITE_GOOGLE_MAPS_API_KEY" ]; then
+            echo "GitHub secret VITE_GOOGLE_MAPS_API_KEY is empty. The map is loaded with this browser key at image build time."
+            exit 1
+          fi
+
+
       - name: Build and push production image
         run: |
           docker build --build-arg VITE_GOOGLE_MAPS_API_KEY="${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}" --tag "${IMAGE}:${GITHUB_SHA}" --tag "${IMAGE}:latest" .

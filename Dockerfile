@@ -13,6 +13,9 @@ COPY patches ./patches
 RUN pnpm install --frozen-lockfile
 
 COPY . .
+# Browser-visible Maps JavaScript key, baked in by Vite. GitHub Actions passes
+# it from the VITE_GOOGLE_MAPS_API_KEY secret. An empty value still builds
+# (CI does that); the map then logs and does not initialize.
 ARG VITE_GOOGLE_MAPS_API_KEY
 ENV VITE_GOOGLE_MAPS_API_KEY=${VITE_GOOGLE_MAPS_API_KEY}
 RUN pnpm run build && pnpm prune --prod
